@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model municipalities {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  meetings  meetings[]
+}
+
+model users {
+  id    Int     @id @default(autoincrement())
+  dates dates[]
+}
+
+model categoryServices {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model services {
+  id                     Int                      @id @default(autoincrement())
+  idCategoryServices     Int
+  name                   String
+  price                  Decimal
+  status                 Boolean
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime
+  detailPackagesServices detailPackagesServices[]
+}
+
+model activities {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime
+  packages  packages[]
+}
+
+model packages {
+  id                     Int                      @id @default(autoincrement())
+  activity               String
+  start                  Int
+  end                    Int
+  idActivity             Int
+  level                  Decimal
+  price                  Decimal
+  reserve                Decimal
+  description            String
+  status                 Boolean
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime
+  activities             activities               @relation(fields: [idActivity], references: [id], onDelete: Cascade)
+  dates                  dates[]
+  detailPackagesServices detailPackagesServices[]
+}
+
+model detailPackagesServices {
+  id        Int      @id @default(autoincrement())
+  idPackage Int
+  idService Int
+  quantity  Int
+  price     Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  packages  packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  services  services @relation(fields: [idService], references: [id], onDelete: Cascade)
+}
+
+model dates {
+  id                Int        @id @default(autoincrement())
+  start             DateTime
+  end               DateTime
+  startRegistration DateTime
+  endRegistration   DateTime
+  idPackage         Int
+  amount            Int
+  idUser            Int
+  status            Boolean
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime
+  packages          packages   @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  users             users      @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  meetings          meetings[]
+
+  @@unique([idUser, idPackage])
+}
+
+model meetings {
+  id             Int            @id @default(autoincrement())
+  idDate         Int
+  idMunicipality Int
+  description    String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime
+  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+}
