@@ -87,6 +87,7 @@ model meetings {
   id             Int            @id @default(autoincrement())
   idDate         Int
   idMunicipality Int
+  hour           DateTime
   description    String
   dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
