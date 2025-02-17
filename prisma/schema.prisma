@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,11 +8,9 @@ datasource db {
 }
 
 model municipalities {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime
-  meetings  meetings[]
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  meetings meetings[]
 }
 
 model users {
@@ -27,10 +19,9 @@ model users {
 }
 
 model categoryServices {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  services services[]
 }
 
 model services {
@@ -39,17 +30,14 @@ model services {
   name                   String
   price                  Decimal
   status                 Boolean
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime
+  catergoryServices      categoryServices         @relation(fields: [idCategoryServices], references: [id], onDelete: Cascade)
   detailPackagesServices detailPackagesServices[]
 }
 
 model activities {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  createdAt DateTime   @default(now())
-  updatedAt DateTime
-  packages  packages[]
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  packages packages[]
 }
 
 model packages {
@@ -63,8 +51,6 @@ model packages {
   reserve                Decimal
   description            String
   status                 Boolean
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime
   activities             activities               @relation(fields: [idActivity], references: [id], onDelete: Cascade)
   dates                  dates[]
   detailPackagesServices detailPackagesServices[]
@@ -76,8 +62,6 @@ model detailPackagesServices {
   idService Int
   quantity  Int
   price     Decimal
-  createdAt DateTime @default(now())
-  updatedAt DateTime
   packages  packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
   services  services @relation(fields: [idService], references: [id], onDelete: Cascade)
 }
@@ -92,8 +76,6 @@ model dates {
   amount            Int
   idUser            Int
   status            Boolean
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime
   packages          packages   @relation(fields: [idPackage], references: [id], onDelete: Cascade)
   users             users      @relation(fields: [idUser], references: [id], onDelete: Cascade)
   meetings          meetings[]
@@ -106,8 +88,6 @@ model meetings {
   idDate         Int
   idMunicipality Int
   description    String
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime
   dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
 }

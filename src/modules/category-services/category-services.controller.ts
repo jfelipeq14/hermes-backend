@@ -1,29 +1,70 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 
 @Controller('category-services')
 export class CategoryServicesController {
-  constructor(private readonly categoryServicesService: CategoryServicesService) { }
+  constructor(
+    private readonly categoryServicesService: CategoryServicesService,
+  ) { }
 
   @Get()
   findAll() {
-    return this.categoryServicesService.findAll();
+    try {
+      return this.categoryServicesService.findAll();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    try {
+      return this.categoryServicesService.findOne(+id);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Post()
   create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
-    return this.categoryServicesService.create(createCategoryServiceDto);
+    try {
+      if (!createCategoryServiceDto.name) throw new BadRequestException('Name is required');
+
+      return this.categoryServicesService.create(createCategoryServiceDto);
+    } catch (error) {
+      return error.message;
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCategoryServiceDto: UpdateCategoryServiceDto) {
-    return this.categoryServicesService.update(+id, updateCategoryServiceDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCategoryServiceDto: UpdateCategoryServiceDto,
+  ) {
+    try {
+      return this.categoryServicesService.update(+id, updateCategoryServiceDto);
+    } catch (error) {
+      return error;
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.categoryServicesService.remove(+id);
+    try {
+      return this.categoryServicesService.remove(+id);
+    } catch (error) {
+      return error;
+    }
   }
 }
