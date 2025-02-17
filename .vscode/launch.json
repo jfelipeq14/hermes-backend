@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/${input:programPath}",
+            "preLaunchTask": "npm: build",
+            "args": [],
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "sourceMaps": true,
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "programPath",
+            "description": "Select the entry point of your program",
+            "options": [
+                "src/main.ts",
+                "src/app.module.ts"
+            ]
+        }
+    ]
+}
