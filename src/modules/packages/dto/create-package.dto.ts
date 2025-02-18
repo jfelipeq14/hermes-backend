@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDate,
-  IsDecimal,
+  IsDateString,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsString,
 } from 'class-validator';
 
@@ -15,14 +15,14 @@ export class CreatePackageDto {
   activity: string;
 
   @ApiProperty({ required: true, description: 'Start date of the package' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
-  start: number;
+  start: Date;
 
   @ApiProperty({ required: true, description: 'End date of the package' })
-  @IsDate()
+  @IsDateString()
   @IsNotEmpty()
-  end: number;
+  end: Date;
 
   @ApiProperty({ required: true, description: 'Name of the activity' })
   @IsInt()
@@ -30,16 +30,16 @@ export class CreatePackageDto {
   idActivity: number;
 
   @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
-  @IsDecimal()
+  @IsNumber()
   level: number;
 
   @ApiProperty({ required: true, description: 'Price of the package' })
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   price: number;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
-  @IsDecimal()
+  @IsNumber()
   @IsNotEmpty()
   reserve: number;
 
