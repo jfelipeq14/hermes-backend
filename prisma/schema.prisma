@@ -91,15 +91,15 @@ model activities {
 }
 
 model packages {
-  id          Int     @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   activity    String
   start       Int
   end         Int
   idActivity  Int
-  level       Decimal
+  level       Decimal?
   price       Decimal
   reserve     Decimal
-  description String
+  description String?
   status      Boolean
 
   activities activities @relation(fields: [idActivity], references: [id], onDelete: Cascade)

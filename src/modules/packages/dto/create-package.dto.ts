@@ -1,30 +1,47 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean, IsDate, IsDecimal, IsInt, IsNotEmpty, IsString } from "class-validator";
 
 export class CreatePackageDto {
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Name of the package' })
+    @IsString()
+    @IsNotEmpty()
     activity: string;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Start date of the package' })
+    @IsDate()
+    @IsNotEmpty()
     start: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'End date of the package' })
+    @IsDate()
+    @IsNotEmpty()
     end: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Name of the activity' })
+    @IsInt()
+    @IsNotEmpty()
     idActivity: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
+    @IsDecimal()
     level: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Price of the package' })
+    @IsDecimal()
+    @IsNotEmpty()
     price: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Price of the reservation' })
+    @IsDecimal()
+    @IsNotEmpty()
     reserve: number;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Description of the package' })
+    @IsString()
     description: string;
 
-    @ApiProperty()
+    @ApiProperty({ required: true, description: 'Status of the package' })
+    @IsBoolean()
+    @IsNotEmpty()
     status: boolean;
 }
