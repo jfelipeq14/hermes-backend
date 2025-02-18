@@ -39,8 +39,6 @@ export class CategoryServicesController {
   @Post()
   create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
     try {
-      if (!createCategoryServiceDto.name) throw new BadRequestException('Name is required');
-
       return this.categoryServicesService.create(createCategoryServiceDto);
     } catch (error) {
       console.log(error);
