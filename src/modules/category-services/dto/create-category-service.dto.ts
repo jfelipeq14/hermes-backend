@@ -6,5 +6,4 @@ export class CreateCategoryServiceDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
 }

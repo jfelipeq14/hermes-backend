@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
@@ -7,28 +15,48 @@ import { UpdatePackageDto } from './dto/update-package.dto';
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
 
-  @Post()
-  create(@Body() createPackageDto: CreatePackageDto) {
-    return this.packagesService.create(createPackageDto);
-  }
-
   @Get()
   findAll() {
-    return this.packagesService.findAll();
+    try {
+      return this.packagesService.findAll();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.packagesService.findOne(+id);
+    try {
+      return this.packagesService.findOne(+id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Post()
+  create(@Body() createPackageDto: CreatePackageDto) {
+    try {
+      return this.packagesService.create(createPackageDto);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePackageDto: UpdatePackageDto) {
-    return this.packagesService.update(+id, updatePackageDto);
+    try {
+      return this.packagesService.update(+id, updatePackageDto);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.packagesService.remove(+id);
+    try {
+      return this.packagesService.remove(+id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

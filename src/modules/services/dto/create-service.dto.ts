@@ -1,24 +1,30 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDecimal, IsInt, IsNotEmpty, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class CreateServiceDto {
-    @ApiProperty({ required: true })
-    @IsInt()
-    @IsNotEmpty()
-    idCategoryServices: number;
+  @ApiProperty({ required: true })
+  @IsInt()
+  @IsNotEmpty()
+  idCategoryServices: number;
 
-    @ApiProperty({ required: true })
-    @IsString()
-    @IsNotEmpty()
-    name: string;
+  @ApiProperty({ required: true })
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    @ApiProperty({ required: true })
-    @IsDecimal()
-    @IsNotEmpty()
-    price: number;
+  @ApiProperty({ required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  price: number;
 
-    @ApiProperty({ required: true })
-    @IsString()
-    @IsNotEmpty()
-    status: boolean;
+  @ApiProperty({ required: true })
+  @IsBoolean()
+  @IsNotEmpty()
+  status: boolean;
 }

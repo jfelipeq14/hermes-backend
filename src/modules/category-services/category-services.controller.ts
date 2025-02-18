@@ -15,7 +15,7 @@ import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 export class CategoryServicesController {
   constructor(
     private readonly categoryServicesService: CategoryServicesService,
-  ) { }
+  ) {}
 
   @Get()
   findAll() {

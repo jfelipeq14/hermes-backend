@@ -1,4 +1,4 @@
 export class Activity {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }
