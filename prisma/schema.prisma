@@ -7,15 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model countries {
+  id          Int           @id @default(autoincrement())
+  code        String        @unique
+  name        String        @unique
+  departments departments[]
+}
+
+model departments {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique
+  name           String           @unique
+  idCountry      Int
+  countries      countries        @relation(fields: [idCountry], references: [id], onDelete: Cascade)
+  municipalities municipalities[]
+}
+
 model municipalities {
-  id       Int        @id @default(autoincrement())
-  name     String     @unique
-  meetings meetings[]
+  id           Int            @id @default(autoincrement())
+  code         String         @unique
+  name         String         @unique
+  idDepartment Int
+  departments  departments    @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
+  meetings     meetings[]
+  reservations reservations[]
 }
 
 model users {
-  id    Int     @id @default(autoincrement())
-  dates dates[]
+  id           Int            @id @default(autoincrement())
+  dates        dates[]
+  reservations reservations[]
 }
 
 model categoryServices {
@@ -67,7 +88,7 @@ model detailPackagesServices {
 }
 
 model dates {
-  id                Int        @id @default(autoincrement())
+  id                Int            @id @default(autoincrement())
   start             DateTime
   end               DateTime
   startRegistration DateTime
@@ -76,9 +97,10 @@ model dates {
   amount            Int
   idUser            Int
   status            Boolean
-  packages          packages   @relation(fields: [idPackage], references: [id], onDelete: Cascade)
-  users             users      @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  packages          packages       @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  users             users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
   meetings          meetings[]
+  reservations      reservations[]
 
   @@unique([idUser, idPackage])
 }
@@ -91,4 +113,18 @@ model meetings {
   description    String
   dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+}
+
+model reservations {
+  id             Int      @id @default(autoincrement())
+  idDate         Int
+  idMunicipality Int
+  idUser         Int
+  date           DateTime
+  price          Int
+  status         String
+
+  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
 }
