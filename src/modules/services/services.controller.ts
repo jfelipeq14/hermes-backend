@@ -7,15 +7,6 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) { }
 
-  @Post()
-  create(@Body() createServiceDto: CreateServiceDto) {
-    try {
-      return this.servicesService.create(createServiceDto);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   @Get()
   findAll() {
     try {
@@ -29,6 +20,15 @@ export class ServicesController {
   findOne(@Param('id') id: string) {
     try {
       return this.servicesService.findOne(+id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Post()
+  create(@Body() createServiceDto: CreateServiceDto) {
+    try {
+      return this.servicesService.create(createServiceDto);
     } catch (error) {
       console.log(error);
     }
