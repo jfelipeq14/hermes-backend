@@ -7,9 +7,10 @@ import { CountriesModule } from './modules/countries/countries.module';
 import { DepartmentsModule } from './modules/departments/departments.module';
 import { MunicipalitiesModule } from './modules/municipalities/municipalities.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
+import { PackagesModule } from './modules/packages/packages.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, CategoryServicesModule, ServicesModule, CountriesModule, DepartmentsModule, MunicipalitiesModule, ReservationsModule],
+  imports: [PrismaModule, UsersModule, CategoryServicesModule, ServicesModule, CountriesModule, DepartmentsModule, MunicipalitiesModule, PackagesModule, ReservationsModule],
   controllers: [],
   providers: [],
 })

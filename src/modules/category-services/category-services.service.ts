@@ -11,7 +11,8 @@ export class CategoryServicesService {
     try {
       return this.prisma.categoryServices.findMany();
     } catch (error) {
-      return error;
+      console.log(error);
+
     }
   }
 
@@ -23,7 +24,8 @@ export class CategoryServicesService {
         },
       });
     } catch (error) {
-      return error;
+      console.log(error);
+
     }
   }
 
@@ -33,7 +35,8 @@ export class CategoryServicesService {
         data: createCategoryServiceDto,
       });
     } catch (error) {
-      return error;
+      console.log(error);
+
     }
   }
 
@@ -46,7 +49,8 @@ export class CategoryServicesService {
         data: updateCategoryServiceDto,
       });
     } catch (error) {
-      return error;
+      console.log(error);
+
     }
   }
 
@@ -58,7 +62,8 @@ export class CategoryServicesService {
         },
       });
     } catch (error) {
-      return error;
+      console.log(error);
+
     }
   }
 }
