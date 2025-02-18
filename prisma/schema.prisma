@@ -34,9 +34,25 @@ model municipalities {
 }
 
 model users {
-  id           Int            @id @default(autoincrement())
-  dates        dates[]
-  reservations reservations[]
+  id             Int            @id @unique @default(autoincrement())
+  idRol          Int
+  typeDocument   String
+  document       Int            @unique
+  name           String
+  surName        String
+  dateBirth      DateTime
+  email          String         @unique
+  password       String
+  idMunicipality Int
+  address        String
+  phone          String         @unique
+  emergency      String         @unique
+  sex            String
+  bloodType      String
+  eps            String
+  status         Boolean
+  dates          dates[]
+  reservations   reservations[]
 }
 
 model categoryServices {
