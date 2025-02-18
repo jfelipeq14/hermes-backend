@@ -3,14 +3,14 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const servicios = await prisma.$transaction(async (prisma) => {
-    const servicio = await prisma.categoryServices.create({
+  const categorias = await prisma.$transaction(async (prisma) => {
+    const categoria = await prisma.categoryServices.create({
       data: {
         name: 'Alimentación',
       },
     });
 
-    return servicio;
+    return categoria;
   });
 
   const municipalities = await prisma.$transaction(
