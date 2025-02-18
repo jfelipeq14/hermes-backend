@@ -7,10 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model countries {
+  id          Int           @id @default(autoincrement())
+  code        String        @unique
+  name        String        @unique
+  departments departments[]
+}
+
+model departments {
+  id             Int              @id @default(autoincrement())
+  code           String           @unique
+  name           String           @unique
+  idCountry      Int
+  countries      countries        @relation(fields: [idCountry], references: [id], onDelete: Cascade)
+  municipalities municipalities[]
+}
+
 model municipalities {
-  id       Int        @id @default(autoincrement())
-  name     String     @unique
-  meetings meetings[]
+  id           Int         @id @default(autoincrement())
+  code         String      @unique
+  name         String      @unique
+  idDepartment Int
+  departments  departments @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
+  meetings     meetings[]
 }
 
 model users {
