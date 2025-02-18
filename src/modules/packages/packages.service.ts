@@ -5,7 +5,28 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PackagesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
+
+  findAll() {
+    try {
+      return this.prisma.packages.findMany();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  findOne(id: number) {
+    try {
+      return this.prisma.packages.findUnique({
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   create(createPackageDto: CreatePackageDto) {
     try {
       return this.prisma.packages.create({
@@ -16,19 +37,28 @@ export class PackagesService {
     }
   }
 
-  findAll() {
-    return `This action returns all packages`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} package`;
-  }
-
   update(id: number, updatePackageDto: UpdatePackageDto) {
-    return `This action updates a #${id} package`;
+    try {
+      return this.prisma.packages.update({
+        where: {
+          id: id,
+        },
+        data: updatePackageDto,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} package`;
+    try {
+      return this.prisma.packages.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
