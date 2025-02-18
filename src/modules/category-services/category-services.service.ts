@@ -5,14 +5,13 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class CategoryServicesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
     try {
       return this.prisma.categoryServices.findMany();
     } catch (error) {
       console.log(error);
-
     }
   }
 
@@ -25,7 +24,6 @@ export class CategoryServicesService {
       });
     } catch (error) {
       console.log(error);
-
     }
   }
 
@@ -36,7 +34,6 @@ export class CategoryServicesService {
       });
     } catch (error) {
       console.log(error);
-
     }
   }
 
@@ -50,7 +47,6 @@ export class CategoryServicesService {
       });
     } catch (error) {
       console.log(error);
-
     }
   }
 
@@ -63,7 +59,6 @@ export class CategoryServicesService {
       });
     } catch (error) {
       console.log(error);
-
     }
   }
 }

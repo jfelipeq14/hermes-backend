@@ -11,8 +11,19 @@ import { PackagesModule } from './modules/packages/packages.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, CategoryServicesModule, ServicesModule, CountriesModule, DepartmentsModule, MunicipalitiesModule, PackagesModule, ReservationsModule, ActivitiesModule],
+  imports: [
+    PrismaModule,
+    UsersModule,
+    CountriesModule,
+    DepartmentsModule,
+    MunicipalitiesModule,
+    CategoryServicesModule,
+    ServicesModule,
+    ActivitiesModule,
+    PackagesModule,
+    ReservationsModule,
+  ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

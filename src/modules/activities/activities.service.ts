@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ActivitiesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
     try {
@@ -18,7 +18,7 @@ export class ActivitiesService {
   findOne(id: number) {
     try {
       return this.prisma.activities.findUnique({
-        where: { id, }
+        where: { id },
       });
     } catch (error) {
       console.log(error);
@@ -28,7 +28,7 @@ export class ActivitiesService {
   create(createActivityDto: CreateActivityDto) {
     try {
       return this.prisma.activities.create({
-        data: createActivityDto
+        data: createActivityDto,
       });
     } catch (error) {
       console.log(error);
@@ -39,7 +39,7 @@ export class ActivitiesService {
     try {
       return this.prisma.activities.update({
         where: { id },
-        data: updateActivityDto
+        data: updateActivityDto,
       });
     } catch (error) {
       console.log(error);
@@ -49,7 +49,7 @@ export class ActivitiesService {
   remove(id: number) {
     try {
       return this.prisma.activities.delete({
-        where: { id }
+        where: { id },
       });
     } catch (error) {
       console.log(error);

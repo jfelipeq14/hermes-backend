@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ServicesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
     try {
@@ -19,8 +19,8 @@ export class ServicesService {
     try {
       return this.prisma.services.findUnique({
         where: {
-          id
-        }
+          id,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -41,9 +41,9 @@ export class ServicesService {
     try {
       return this.prisma.services.update({
         where: {
-          id
+          id,
         },
-        data: updateServiceDto
+        data: updateServiceDto,
       });
     } catch (error) {
       console.log(error);
@@ -54,8 +54,8 @@ export class ServicesService {
     try {
       return this.prisma.services.delete({
         where: {
-          id
-        }
+          id,
+        },
       });
     } catch (error) {
       console.log(error);
