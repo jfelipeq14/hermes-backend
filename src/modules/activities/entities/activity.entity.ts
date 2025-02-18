@@ -1,1 +1,4 @@
-export class Activity {}
+export class Activity {
+    id: number;
+    name: string;
+}
