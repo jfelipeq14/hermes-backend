@@ -8,9 +8,10 @@ import { DepartmentsModule } from './modules/departments/departments.module';
 import { MunicipalitiesModule } from './modules/municipalities/municipalities.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PackagesModule } from './modules/packages/packages.module';
+import { ActivitiesModule } from './modules/activities/activities.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, CategoryServicesModule, ServicesModule, CountriesModule, DepartmentsModule, MunicipalitiesModule, PackagesModule, ReservationsModule],
+  imports: [PrismaModule, UsersModule, CategoryServicesModule, ServicesModule, CountriesModule, DepartmentsModule, MunicipalitiesModule, PackagesModule, ReservationsModule, ActivitiesModule],
   controllers: [],
   providers: [],
 })
