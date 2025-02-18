@@ -6,23 +6,53 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 @Injectable()
 export class ActivitiesService {
   constructor(private prisma: PrismaService) { }
-  create(createActivityDto: CreateActivityDto) {
-    return 'This action adds a new activity';
-  }
 
   findAll() {
-    return `This action returns all activities`;
+    try {
+      return this.prisma.activities.findMany();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} activity`;
+    try {
+      return this.prisma.activities.findUnique({
+        where: { id, }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  create(createActivityDto: CreateActivityDto) {
+    try {
+      return this.prisma.activities.create({
+        data: createActivityDto
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   update(id: number, updateActivityDto: UpdateActivityDto) {
-    return `This action updates a #${id} activity`;
+    try {
+      return this.prisma.activities.update({
+        where: { id },
+        data: updateActivityDto
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} activity`;
+    try {
+      return this.prisma.activities.delete({
+        where: { id }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
