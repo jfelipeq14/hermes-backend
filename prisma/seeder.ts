@@ -15,7 +15,19 @@ async function main() {
         },
     );
 
-    console.log(servicios);
+    const municipalities = await prisma.$transaction(
+        async (prisma) => {
+            const municipality = await prisma.municipalities.create({
+                data: {
+                    code: '001',
+                    name: 'Medellín',
+                    idDepartment: 1,
+                },
+            });
+
+            return municipality
+        },
+    );
 }
 
 main()
