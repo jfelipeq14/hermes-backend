@@ -23,7 +23,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.findAll();
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -32,7 +32,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.findOne(+id);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -41,7 +41,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.create(createCategoryServiceDto);
     } catch (error) {
-      return error.message;
+      console.log(error);
     }
   }
 
@@ -53,7 +53,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.update(+id, updateCategoryServiceDto);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 
@@ -62,7 +62,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.remove(+id);
     } catch (error) {
-      return error;
+      console.log(error);
     }
   }
 }
