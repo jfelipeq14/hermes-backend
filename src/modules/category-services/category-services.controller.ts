@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  BadRequestException,
 } from '@nestjs/common';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
