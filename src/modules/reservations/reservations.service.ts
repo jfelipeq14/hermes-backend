@@ -8,22 +8,21 @@ export class ReservationsService {
   create(createReservationDto: CreateReservationDto) {
     return 'This action adds a new reservation';
   }
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
   findAll() {
     try {
       return this.prisma.reservations.findMany();
     } catch (error) {
       console.log(error);
     }
-
   }
 
   findOne(id: number) {
     try {
       return this.prisma.reservations.findUnique({
         where: {
-          id
-        }
+          id,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -35,6 +34,6 @@ export class ReservationsService {
   }
 
   remove(id: number) {
-    return this.prisma
+    return this.prisma;
   }
 }

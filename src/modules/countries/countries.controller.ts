@@ -1,4 +1,4 @@
-import { Controller, Get} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { CountriesService } from './countries.service';
 
 @Controller('countries')
@@ -13,5 +13,4 @@ export class CountriesController {
       console.log(error);
     }
   }
-
 }

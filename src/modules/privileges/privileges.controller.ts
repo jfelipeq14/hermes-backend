@@ -1,7 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { PrivilegesService } from './privileges.service';
-import { CreatePrivilegeDto } from './dto/create-privilege.dto';
-import { UpdatePrivilegeDto } from './dto/update-privilege.dto';
 
 @Controller('privileges')
 export class PrivilegesController {
