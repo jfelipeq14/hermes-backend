@@ -5,13 +5,13 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PackagesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
     try {
       return this.prisma.packages.findMany({
         include: {
-          detailPackagesServices: true,
+          services: true,
           dates: true,
         },
       });
@@ -27,7 +27,7 @@ export class PackagesService {
           id: id,
         },
         include: {
-          detailPackagesServices: true,
+          services: true,
           dates: true,
         },
       });
@@ -41,7 +41,7 @@ export class PackagesService {
       return this.prisma.packages.create({
         data: {
           ...createPackageDto,
-          detailPackagesServices: {
+          services: {
             create: createPackageDto.detailPackagesServices,
           },
         },
@@ -59,10 +59,10 @@ export class PackagesService {
         },
         data: {
           ...updatePackageDto,
-          detailPackagesServices: {
+          services: {
             create: updatePackageDto.detailPackagesServices,
           },
-        }
+        },
       });
     } catch (error) {
       console.log(error);
