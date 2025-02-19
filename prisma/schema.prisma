@@ -75,9 +75,9 @@ model rolePrivileges {
 
 model users {
   id             Int      @id @unique @default(autoincrement())
-  idRole         Int // Cambiado de idRol a idRole para consistencia
+  idRole         Int
   typeDocument   String
-  document       Int      @unique
+  document       String   @unique
   name           String
   surName        String
   dateBirth      DateTime

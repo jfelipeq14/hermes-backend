@@ -28,31 +28,30 @@ CREATE TABLE "municipalities" (
 );
 
 -- CreateTable
-CREATE TABLE "roles" (
+CREATE TABLE "permits" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL,
 
-    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "permits_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "privileges" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "status" BOOLEAN NOT NULL,
+    "idPermit" INTEGER NOT NULL,
 
     CONSTRAINT "privileges_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "permits" (
+CREATE TABLE "roles" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL,
-    "idPrivilege" INTEGER NOT NULL,
 
-    CONSTRAINT "permits_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -69,7 +68,7 @@ CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "idRole" INTEGER NOT NULL,
     "typeDocument" TEXT NOT NULL,
-    "document" INTEGER NOT NULL,
+    "document" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "surName" TEXT NOT NULL,
     "dateBirth" TIMESTAMP(3) NOT NULL,
@@ -199,16 +198,13 @@ CREATE UNIQUE INDEX "municipalities_code_key" ON "municipalities"("code");
 CREATE UNIQUE INDEX "municipalities_name_key" ON "municipalities"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
+CREATE UNIQUE INDEX "permits_name_key" ON "permits"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "privileges_name_key" ON "privileges"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "permits_name_key" ON "permits"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "rolePrivileges_idRole_idPrivilege_key" ON "rolePrivileges"("idRole", "idPrivilege");
+CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_id_key" ON "users"("id");
@@ -241,7 +237,7 @@ ALTER TABLE "departments" ADD CONSTRAINT "departments_idCountry_fkey" FOREIGN KE
 ALTER TABLE "municipalities" ADD CONSTRAINT "municipalities_idDepartment_fkey" FOREIGN KEY ("idDepartment") REFERENCES "departments"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "permits" ADD CONSTRAINT "permits_idPrivilege_fkey" FOREIGN KEY ("idPrivilege") REFERENCES "privileges"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "privileges" ADD CONSTRAINT "privileges_idPermit_fkey" FOREIGN KEY ("idPermit") REFERENCES "permits"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "rolePrivileges" ADD CONSTRAINT "rolePrivileges_idRole_fkey" FOREIGN KEY ("idRole") REFERENCES "roles"("id") ON DELETE CASCADE ON UPDATE CASCADE;
