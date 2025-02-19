@@ -36,12 +36,57 @@ model municipalities {
 
   meetings     meetings[]
   reservations reservations[]
-  users        users[]
+  user         User[]
 }
 
-model users {
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PrivilegeType {
+  READ
+  WRITE
+  DELETE
+  MANAGE
+}
+
+model Privilege {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  type        PrivilegeType
+  description String?
+  status      Boolean       @default(true)
+
+  userPrivileges UserPrivilege[]
+  permits        Permit[]
+}
+
+model UserPrivilege {
+  id          String   @id @default(uuid())
+  userId      Int
+  privilegeId Int
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  privilege Privilege @relation(fields: [privilegeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, privilegeId])
+}
+
+model Permit {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
+  privilegeId Int
+  status      Boolean @default(true)
+
+  privilege Privilege @relation(fields: [privilegeId], references: [id], onDelete: Cascade)
+}
+
+// Modelos de usuarios
+model User {
   id             Int      @id @unique @default(autoincrement())
-  idRol          Int
+  idRole         Int
   typeDocument   String
   document       Int      @unique
   name           String
@@ -58,10 +103,11 @@ model users {
   eps            String
   status         Boolean
 
-  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-
-  dates        dates[]
-  reservations reservations[]
+  dates            dates[]
+  reservations     reservations[]
+  municipalities   municipalities? @relation(fields: [municipalitiesId], references: [id])
+  municipalitiesId Int?
+  UserPrivilege    UserPrivilege[]
 }
 
 model categoryServices {
@@ -131,7 +177,7 @@ model dates {
   status            Boolean
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
-  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  users    User     @relation(fields: [idUser], references: [id], onDelete: Cascade)
 
   meetings     meetings[]
   reservations reservations[]
@@ -161,5 +207,5 @@ model reservations {
 
   dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  users          User           @relation(fields: [idUser], references: [id], onDelete: Cascade)
 }
