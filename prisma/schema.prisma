@@ -36,57 +36,46 @@ model municipalities {
 
   meetings     meetings[]
   reservations reservations[]
-  user         User[]
+  users        users[]
 }
 
-enum Role {
-  USER
-  ADMIN
+model permits {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  status     Boolean
+  privileges privileges[]
 }
 
-enum PrivilegeType {
-  READ
-  WRITE
-  DELETE
-  MANAGE
+model privileges {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  idPermit Int
+
+  permits        permits          @relation(fields: [idPermit], references: [id], onDelete: Cascade)
+  rolePrivileges rolePrivileges[]
 }
 
-model Privilege {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  type        PrivilegeType
-  description String?
-  status      Boolean       @default(true)
+model roles {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  status Boolean
 
-  userPrivileges UserPrivilege[]
-  permits        Permit[]
+  rolePrivileges rolePrivileges[]
+  users          users[] // Añadimos la relación con usuarios
 }
 
-model UserPrivilege {
-  id          String   @id @default(uuid())
-  userId      Int
-  privilegeId Int
-  createdAt   DateTime @default(now())
+model rolePrivileges {
+  id          Int @id @default(autoincrement())
+  idRole      Int
+  idPrivilege Int
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  privilege Privilege @relation(fields: [privilegeId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, privilegeId])
+  role      roles      @relation(fields: [idRole], references: [id], onDelete: Cascade)
+  privilege privileges @relation(fields: [idPrivilege], references: [id], onDelete: Cascade)
 }
 
-model Permit {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
-  privilegeId Int
-  status      Boolean @default(true)
-
-  privilege Privilege @relation(fields: [privilegeId], references: [id], onDelete: Cascade)
-}
-
-// Modelos de usuarios
-model User {
+model users {
   id             Int      @id @unique @default(autoincrement())
-  idRole         Int
+  idRole         Int // Cambiado de idRol a idRole para consistencia
   typeDocument   String
   document       Int      @unique
   name           String
@@ -103,11 +92,11 @@ model User {
   eps            String
   status         Boolean
 
-  dates            dates[]
-  reservations     reservations[]
-  municipalities   municipalities? @relation(fields: [municipalitiesId], references: [id])
-  municipalitiesId Int?
-  UserPrivilege    UserPrivilege[]
+  role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+
+  dates        dates[]
+  reservations reservations[]
 }
 
 model categoryServices {
@@ -177,7 +166,7 @@ model dates {
   status            Boolean
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
-  users    User     @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
 
   meetings     meetings[]
   reservations reservations[]
@@ -207,5 +196,5 @@ model reservations {
 
   dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-  users          User           @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
 }

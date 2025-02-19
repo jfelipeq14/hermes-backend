@@ -9,6 +9,9 @@ import { MunicipalitiesModule } from './modules/municipalities/municipalities.mo
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PackagesModule } from './modules/packages/packages.module';
 import { ActivitiesModule } from './modules/activities/activities.module';
+import { PermitsModule } from './modules/permits/permits.module';
+import { PrivilegesModule } from './modules/privileges/privileges.module';
+import { RolesModule } from './modules/roles/roles.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { ActivitiesModule } from './modules/activities/activities.module';
     ActivitiesModule,
     PackagesModule,
     ReservationsModule,
+    PermitsModule,
+    PrivilegesModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],
