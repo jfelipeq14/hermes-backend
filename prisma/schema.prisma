@@ -39,11 +39,45 @@ model municipalities {
   users        users[]
 }
 
+model permits {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  status     Boolean
+  privileges privileges[]
+}
+
+model privileges {
+  id       Int    @id @default(autoincrement())
+  name     String @unique
+  idPermit Int
+
+  permits        permits          @relation(fields: [idPermit], references: [id], onDelete: Cascade)
+  rolePrivileges rolePrivileges[]
+}
+
+model roles {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  status Boolean
+
+  rolePrivileges rolePrivileges[]
+  users          users[] // Añadimos la relación con usuarios
+}
+
+model rolePrivileges {
+  id          Int @id @default(autoincrement())
+  idRole      Int
+  idPrivilege Int
+
+  role      roles      @relation(fields: [idRole], references: [id], onDelete: Cascade)
+  privilege privileges @relation(fields: [idPrivilege], references: [id], onDelete: Cascade)
+}
+
 model users {
   id             Int      @id @unique @default(autoincrement())
-  idRol          Int
+  idRole         Int
   typeDocument   String
-  document       Int      @unique
+  document       String   @unique
   name           String
   surName        String
   dateBirth      DateTime
@@ -58,6 +92,7 @@ model users {
   eps            String
   status         Boolean
 
+  role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
 
   dates        dates[]

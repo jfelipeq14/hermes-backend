@@ -26,18 +26,16 @@ async function main() {
     return department_;
   });
 
-  const municipalities = await prisma.$transaction(
-    async (prisma) => {
-      const municipality_ = await prisma.municipalities.create({
-        data: {
-          code: '0500',
-          name: 'Medellín',
-          idDepartment: departments.id,
-        },
-      });
-      return municipality_;
-    },
-  );
+  const municipalities = await prisma.$transaction(async (prisma) => {
+    const municipality_ = await prisma.municipalities.create({
+      data: {
+        code: '0500',
+        name: 'Medellín',
+        idDepartment: departments.id,
+      },
+    });
+    return municipality_;
+  });
 
   const roles = await prisma.$transaction(async (prisma) => {
     const role_ = await prisma.roles.create({
@@ -51,30 +49,28 @@ async function main() {
     return role_;
   });
 
-  const users = await prisma.$transaction(
-    async (prisma) => {
-      const user_ = await prisma.users.create({
-        data: {
-          idRol: roles.id,
-          typeDocument: "CC",
-          document: "1001015566",
-          name: "Juan",
-          surName: "Perez",
-          dateBirth: new Date(),
-          email: "juanperez@gmail.com",
-          password: "123456",
-          idMunicipality: municipalities.id,
-          address: "Calle 123",
-          phone: "123456789",
-          emergency: "123456789",
-          sex: "Masculino",
-          bloodType: "A+",
-          eps: "Sura",
-          status: true,
-        }
-      })
-    }
-  )
+  const users = await prisma.$transaction(async (prisma) => {
+    const user_ = await prisma.users.create({
+      data: {
+        idRol: roles.id,
+        typeDocument: 'CC',
+        document: '1001015566',
+        name: 'Juan',
+        surName: 'Perez',
+        dateBirth: new Date(),
+        email: 'juanperez@gmail.com',
+        password: '123456',
+        idMunicipality: municipalities.id,
+        address: 'Calle 123',
+        phone: '123456789',
+        emergency: '123456789',
+        sex: 'Masculino',
+        bloodType: 'A+',
+        eps: 'Sura',
+        status: true,
+      },
+    });
+  });
 
   const activities = await prisma.$transaction(async (prisma) => {
     const activity = await prisma.activities.create({
@@ -128,39 +124,37 @@ async function main() {
   });
 
   const detailPackagesServices = await prisma.$transaction(async (prisma) => {
-    const detailPackagesService_ = await prisma.detailPackagesServices.createMany({
-      data: [
-        {
-          idPackage: packages.id,
-          idService: servicios.id,
-          quantity: 1,
-          price: 100,
-        },
-      ],
-    });
+    const detailPackagesService_ =
+      await prisma.detailPackagesServices.createMany({
+        data: [
+          {
+            idPackage: packages.id,
+            idService: servicios.id,
+            quantity: 1,
+            price: 100,
+          },
+        ],
+      });
 
     return detailPackagesService_;
   });
 
-  const dates = await prisma.$transaction(
-    async (prisma) => {
-      const date_ = await prisma.dates.createMany({
-        data: [
-          {
-            start: new Date(),
-            end: new Date(),
-            startRegistration: new Date(),
-            endRegistration: new Date(),
-            idPackage: packages.id,
-            amount: 1,
-            idUser: users.id,
-            status: true,
-          }
-        ]
-      })
-    }
-  )
-
+  const dates = await prisma.$transaction(async (prisma) => {
+    const date_ = await prisma.dates.createMany({
+      data: [
+        {
+          start: new Date(),
+          end: new Date(),
+          startRegistration: new Date(),
+          endRegistration: new Date(),
+          idPackage: packages.id,
+          amount: 1,
+          idUser: users.id,
+          status: true,
+        },
+      ],
+    });
+  });
 }
 
 main()
