@@ -9,7 +9,12 @@ export class PackagesService {
 
   findAll() {
     try {
-      return this.prisma.packages.findMany();
+      return this.prisma.packages.findMany({
+        include: {
+          detailPackagesServices: true,
+          dates: true,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -30,7 +35,12 @@ export class PackagesService {
   create(createPackageDto: CreatePackageDto) {
     try {
       return this.prisma.packages.create({
-        data: createPackageDto,
+        data: {
+          ...createPackageDto,
+          detailPackagesServices: {
+            create: createPackageDto.detailPackagesServices,
+          },
+        },
       });
     } catch (error) {
       console.log(error);
@@ -43,7 +53,19 @@ export class PackagesService {
         where: {
           id: id,
         },
-        data: updatePackageDto,
+        data: {
+          ...updatePackageDto,
+          detailPackagesServices: updatePackageDto.detailPackagesServices
+            ? {
+                update: updatePackageDto.detailPackagesServices.map(
+                  (service) => ({
+                    where: { id: service.idService },
+                    data: service,
+                  }),
+                ),
+              }
+            : undefined,
+        },
       });
     } catch (error) {
       console.log(error);

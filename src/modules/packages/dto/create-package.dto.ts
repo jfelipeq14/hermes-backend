@@ -6,7 +6,27 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class CreateDetailPackageServiceDto {
+  @ApiProperty({ required: true })
+  @IsInt()
+  @IsNotEmpty()
+  idService: number;
+
+  @ApiProperty({ required: true })
+  @IsInt()
+  @IsNotEmpty()
+  quantity: number;
+
+  @ApiProperty({ required: true })
+  @IsNumber()
+  @IsNotEmpty()
+  price: number;
+}
 
 export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Name of the package' })
@@ -17,12 +37,12 @@ export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Start date of the package' })
   @IsDateString()
   @IsNotEmpty()
-  start: Date;
+  start: string;
 
   @ApiProperty({ required: true, description: 'End date of the package' })
   @IsDateString()
   @IsNotEmpty()
-  end: Date;
+  end: string;
 
   @ApiProperty({ required: true, description: 'Name of the activity' })
   @IsInt()
@@ -51,4 +71,10 @@ export class CreatePackageDto {
   @IsBoolean()
   @IsNotEmpty()
   status: boolean;
+
+  @ApiProperty({ type: [CreateDetailPackageServiceDto], required: true })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateDetailPackageServiceDto)
+  detailPackagesServices: CreateDetailPackageServiceDto[];
 }
