@@ -37,11 +37,32 @@ async function main() {
     return municipality_;
   });
 
+  const permits = await prisma.$transaction(async (prisma) => {
+    const permit_ = await prisma.permits.create({
+      data: {
+        name: 'Users',
+        status: true,
+      },
+    });
+
+    return permit_;
+  });
+
+  const privileges = await prisma.$transaction(async (prisma) => {
+    const privilege_ = await prisma.privileges.create({
+      data: {
+        name: 'Create',
+        idPermit: permits.id,
+      },
+    });
+
+    return privilege_;
+  });
+
   const roles = await prisma.$transaction(async (prisma) => {
     const role_ = await prisma.roles.create({
       data: {
         name: 'Administrador',
-        description: 'Administrador de la empresa',
         status: true,
       },
     });
@@ -49,10 +70,21 @@ async function main() {
     return role_;
   });
 
+  const rolePrivileges = await prisma.$transaction(async (prisma) => {
+    const rolePrivilege_ = await prisma.rolePrivileges.create({
+      data: {
+        idRole: roles.id,
+        idPrivilege: privileges.id,
+      },
+    });
+
+    return rolePrivilege_;
+  });
+
   const users = await prisma.$transaction(async (prisma) => {
     const user_ = await prisma.users.create({
       data: {
-        idRol: roles.id,
+        idRole: roles.id,
         typeDocument: 'CC',
         document: '1001015566',
         name: 'Juan',
@@ -70,6 +102,8 @@ async function main() {
         status: true,
       },
     });
+
+    return user_;
   });
 
   const activities = await prisma.$transaction(async (prisma) => {
@@ -82,27 +116,27 @@ async function main() {
     return activity;
   });
 
-  const categorias = await prisma.$transaction(async (prisma) => {
-    const categoria_ = await prisma.categoryServices.create({
+  const categoryServices = await prisma.$transaction(async (prisma) => {
+    const categoryService_ = await prisma.categoryServices.create({
       data: {
         name: 'Alimentación',
       },
     });
 
-    return categoria_;
+    return categoryService_;
   });
 
-  const servicios = await prisma.$transaction(async (prisma) => {
-    const servicio_ = await prisma.services.create({
+  const services = await prisma.$transaction(async (prisma) => {
+    const service_ = await prisma.services.create({
       data: {
-        idCategoryServices: categorias.id,
+        idCategoryServices: categoryServices.id,
         name: 'Desayuno',
         price: 100,
         status: true,
       },
     });
 
-    return servicio_;
+    return service_;
   });
 
   const packages = await prisma.$transaction(async (prisma) => {
@@ -124,36 +158,61 @@ async function main() {
   });
 
   const detailPackagesServices = await prisma.$transaction(async (prisma) => {
-    const detailPackagesService_ =
-      await prisma.detailPackagesServices.createMany({
-        data: [
-          {
-            idPackage: packages.id,
-            idService: servicios.id,
-            quantity: 1,
-            price: 100,
-          },
-        ],
-      });
+    const detailPackagesService_ = await prisma.detailPackagesServices.create({
+      data: {
+        idPackage: packages.id,
+        idService: services.id,
+        quantity: 1,
+        price: 100,
+      },
+    });
 
     return detailPackagesService_;
   });
 
   const dates = await prisma.$transaction(async (prisma) => {
-    const date_ = await prisma.dates.createMany({
-      data: [
-        {
-          start: new Date(),
-          end: new Date(),
-          startRegistration: new Date(),
-          endRegistration: new Date(),
-          idPackage: packages.id,
-          amount: 1,
-          idUser: users.id,
-          status: true,
-        },
-      ],
+    const date_ = await prisma.dates.create({
+      data: {
+        start: new Date(),
+        end: new Date(),
+        startRegistration: new Date(),
+        endRegistration: new Date(),
+        idPackage: packages.id,
+        amount: 1,
+        idUser: users.id,
+        status: true,
+      },
     });
+
+    return date_;
+  });
+
+  const meetings = await prisma.$transaction(async (prisma) => {
+    const meeting_ = await prisma.meetings.create({
+      data: {
+        idDate: dates.id,
+        idMunicipality: municipalities.id,
+        hour: new Date(),
+        description: 'En x parte',
+      },
+    });
+
+    return meeting_;
+  });
+
+  const reservations = await prisma.$transaction(async (prisma) => {
+    const reservation_ = await prisma.reservations.create({
+      data: {
+        idDate: dates.id,
+        idMunicipality: municipalities.id,
+        idUser: users.id,
+        date: new Date(),
+        price: 100,
+        status: 'R',
+      },
+    });
+
+    return reservation_;
   });
 }
 
