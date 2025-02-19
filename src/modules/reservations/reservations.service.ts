@@ -31,10 +31,27 @@ export class ReservationsService {
   }
 
   update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
+    try {
+      return this.prisma.reservations.update({
+        where: {
+          id
+        },
+        data: updateReservationDto
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   remove(id: number) {
-    return this.prisma
+    try {
+      return this.prisma.reservations.delete({
+        where: {
+          id
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
