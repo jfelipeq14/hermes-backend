@@ -3,8 +3,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class CountriesService {
-
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
   findAll() {
     try {
       return this.prisma.countries.findMany();
@@ -12,5 +11,4 @@ export class CountriesService {
       console.log(error);
     }
   }
-
 }

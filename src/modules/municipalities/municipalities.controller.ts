@@ -5,7 +5,6 @@ import { MunicipalitiesService } from './municipalities.service';
 export class MunicipalitiesController {
   constructor(private readonly municipalitiesService: MunicipalitiesService) {}
 
-
   @Get()
   findAll() {
     try {
@@ -14,5 +13,4 @@ export class MunicipalitiesController {
       console.log(error);
     }
   }
-
 }

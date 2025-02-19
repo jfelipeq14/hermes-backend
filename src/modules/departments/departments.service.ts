@@ -3,8 +3,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class DepartmentsService {
-
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   findAll() {
     try {
       return this.prisma.departments.findMany();

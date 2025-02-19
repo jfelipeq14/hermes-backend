@@ -99,6 +99,13 @@ model users {
   reservations reservations[]
 }
 
+model activities {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  packages packages[]
+}
+
 model categoryServices {
   id   Int    @id @default(autoincrement())
   name String @unique
@@ -115,14 +122,7 @@ model services {
 
   catergoryServices categoryServices @relation(fields: [idCategoryServices], references: [id], onDelete: Cascade)
 
-  detailPackagesServices detailPackagesServices[]
-}
-
-model activities {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-
-  packages packages[]
+  packages detailPackagesServices[]
 }
 
 model packages {
@@ -139,19 +139,21 @@ model packages {
 
   activities activities @relation(fields: [idActivity], references: [id], onDelete: Cascade)
 
-  dates                  dates[]
-  detailPackagesServices detailPackagesServices[]
+  dates    dates[]
+  services detailPackagesServices[]
 }
 
 model detailPackagesServices {
-  id        Int     @id @default(autoincrement())
-  idPackage Int
-  idService Int
-  quantity  Int
-  price     Decimal
+  id Int @id @default(autoincrement())
 
-  packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
-  services services @relation(fields: [idService], references: [id], onDelete: Cascade)
+  packages  packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  idPackage Int
+
+  services  services @relation(fields: [idService], references: [id], onDelete: Cascade)
+  idService Int
+
+  quantity Int
+  price    Decimal
 }
 
 model dates {

@@ -1,10 +1,9 @@
-import { Controller, Get} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { DepartmentsService } from './departments.service';
 
 @Controller('departments')
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}
-
 
   @Get()
   findAll() {
@@ -14,5 +13,4 @@ export class DepartmentsController {
       console.log(error);
     }
   }
-
 }

@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateUserDto{
-
+export class CreateUserDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsInt()
@@ -23,10 +22,10 @@ export class CreateUserDto{
   @IsString()
   name: string;
 
-  @ApiProperty({ required: true })                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  surName: string;  
+  surName: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
@@ -46,7 +45,7 @@ export class CreateUserDto{
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsInt()
-  idMunicipality : number;
+  idMunicipality: number;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
@@ -78,11 +77,8 @@ export class CreateUserDto{
   @IsString()
   eps: string;
 
-  @ApiProperty({ required: true })  
+  @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsBoolean()
   status: boolean;
-
 }
-
-

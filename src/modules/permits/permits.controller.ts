@@ -1,19 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { PermitsService } from './permits.service';
-import { CreatePermitDto } from './dto/create-permit.dto';
-import { UpdatePermitDto } from './dto/update-permit.dto';
 
 @Controller('permits')
 export class PermitsController {
-  constructor(private readonly permitsService: PermitsService) { }
+  constructor(private readonly permitsService: PermitsService) {}
 
   // @Post()
   // create(@Body() createPermitDto: CreatePermitDto) {
