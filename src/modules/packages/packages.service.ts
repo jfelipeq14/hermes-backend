@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PackagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   findAll() {
     try {
@@ -25,6 +25,10 @@ export class PackagesService {
       return this.prisma.packages.findUnique({
         where: {
           id: id,
+        },
+        include: {
+          detailPackagesServices: true,
+          dates: true,
         },
       });
     } catch (error) {
@@ -55,17 +59,10 @@ export class PackagesService {
         },
         data: {
           ...updatePackageDto,
-          detailPackagesServices: updatePackageDto.detailPackagesServices
-            ? {
-                update: updatePackageDto.detailPackagesServices.map(
-                  (service) => ({
-                    where: { id: service.idService },
-                    data: service,
-                  }),
-                ),
-              }
-            : undefined,
-        },
+          detailPackagesServices: {
+            create: updatePackageDto.detailPackagesServices,
+          },
+        }
       });
     } catch (error) {
       console.log(error);
