@@ -15,22 +15,21 @@ export class ReservationsService {
       console.log(error);
     }
   }
-
+  
   findAll() {
     try {
       return this.prisma.reservations.findMany();
     } catch (error) {
       console.log(error);
     }
-
   }
 
   findOne(id: number) {
     try {
       return this.prisma.reservations.findUnique({
         where: {
-          id
-        }
+          id,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -60,5 +59,6 @@ export class ReservationsService {
     } catch (error) {
       console.log(error);
     }
+
   }
 }

@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePrivilegeDto } from './dto/create-privilege.dto';
-import { UpdatePrivilegeDto } from './dto/update-privilege.dto';
 
 @Injectable()
 export class PrivilegesService {
@@ -22,5 +20,5 @@ export class PrivilegesService {
 
   // remove(id: number) {
   //   return `This action removes a #${id} privilege`;
-  // }  
+  // }
 }

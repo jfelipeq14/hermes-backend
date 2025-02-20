@@ -1,171 +1,226 @@
-// import { PrismaClient, Role, PrivilegeType } from '@prisma/client';
-// import * as bcrypt from 'bcrypt';
+import { PrismaClient } from '@prisma/client';
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-// async function main() {
-//   // Limpiar tablas existentes
-//   await prisma.permit.deleteMany();
-//   await prisma.userPrivilege.deleteMany();
-//   await prisma.privilege.deleteMany();
-//   await prisma.user.deleteMany();
-//   await prisma.municipalities.deleteMany();
+async function main() {
+  const countries = await prisma.$transaction(async (prisma) => {
+    const country_ = await prisma.countries.create({
+      data: {
+        code: '57',
+        name: 'Colombia',
+      },
+    });
 
-//   // Crear municipio de ejemplo
-//   const municipality = await prisma.municipalities.create({
-//     data: {
-//       code: '001',
-//       name: 'Municipio Principal',
-//       idDepartment: 1, // Asegúrate de que este ID exista en tu tabla departments
-//     },
-//   });
+    return country_;
+  });
 
-//   // Función auxiliar para hashear contraseñas
-//   const hashPassword = async (password: string) => {
-//     const salt = await bcrypt.genSalt(10);
-//     return bcrypt.hash(password, salt);
-//   };
+  const departments = await prisma.$transaction(async (prisma) => {
+    const department_ = await prisma.departments.create({
+      data: {
+        code: '05',
+        name: 'Antioquia',
+        idCountry: countries.id,
+      },
+    });
 
-//   // Crear usuarios iniciales
-//   const adminUser = await prisma.user.create({
-//     data: {
-//       idRole: 1, // ID del rol admin
-//       typeDocument: 'CC',
-//       document: 1234567890,
-//       name: 'Admin',
-//       surName: 'System',
-//       dateBirth: new Date('1990-01-01'),
-//       email: 'admin@example.com',
-//       password: await hashPassword('admin123'),
-//       municipalitiesId: municipality.id,
-//       address: 'Calle Admin 123',
-//       phone: '3001234567',
-//       emergency: '3009876543',
-//       sex: 'M',
-//       bloodType: 'O+',
-//       eps: 'EPS Ejemplo',
-//       status: true,
-//     },
-//   });
+    return department_;
+  });
 
-//   const regularUser = await prisma.user.create({
-//     data: {
-//       idRole: 3, // ID del rol usuario regular
-//       typeDocument: 'CC',
-//       document: 1234567892,
-//       name: 'Regular',
-//       surName: 'User',
-//       dateBirth: new Date('1992-01-01'),
-//       email: 'user@example.com',
-//       password: await hashPassword('user123'),
-//       municipalitiesId: municipality.id,
-//       address: 'Calle User 123',
-//       phone: '3001234569',
-//       emergency: '3009876545',
-//       sex: 'M',
-//       bloodType: 'B+',
-//       eps: 'EPS Ejemplo',
-//       status: true,
-//     },
-//   });
+  const municipalities = await prisma.$transaction(async (prisma) => {
+    const municipality_ = await prisma.municipalities.create({
+      data: {
+        code: '0500',
+        name: 'Medellín',
+        idDepartment: departments.id,
+      },
+    });
+    return municipality_;
+  });
 
-//   // Crear privilegios
-//   const userManagementPrivilege = await prisma.privilege.create({
-//     data: {
-//       name: 'User Management',
-//       type: PrivilegeType.MANAGE,
-//       description: 'Gestión completa de usuarios',
-//       status: true,
-//     },
-//   });
+  const permits = await prisma.$transaction(async (prisma) => {
+    const permit_ = await prisma.permits.create({
+      data: {
+        name: 'Users',
+        status: true,
+      },
+    });
 
-//   const contentManagementPrivilege = await prisma.privilege.create({
-//     data: {
-//       name: 'Content Management',
-//       type: PrivilegeType.WRITE,
-//       description: 'Gestión de contenido',
-//       status: true,
-//     },
-//   });
+    return permit_;
+  });
 
-//   const readOnlyPrivilege = await prisma.privilege.create({
-//     data: {
-//       name: 'Read Only Access',
-//       type: PrivilegeType.READ,
-//       description: 'Acceso de solo lectura',
-//       status: true,
-//     },
-//   });
+  const privileges = await prisma.$transaction(async (prisma) => {
+    const privilege_ = await prisma.privileges.create({
+      data: {
+        name: 'Create',
+        idPermit: permits.id,
+      },
+    });
 
-//   // Crear permisos para cada privilegio
-//   await prisma.permit.createMany({
-//     data: [
-//       {
-//         name: 'Crear Usuario',
-//         privilegeId: userManagementPrivilege.id,
-//         status: true,
-//       },
-//       {
-//         name: 'Editar Usuario',
-//         privilegeId: userManagementPrivilege.id,
-//         status: true,
-//       },
-//       {
-//         name: 'Eliminar Usuario',
-//         privilegeId: userManagementPrivilege.id,
-//         status: true,
-//       },
-//       {
-//         name: 'Crear Contenido',
-//         privilegeId: contentManagementPrivilege.id,
-//         status: true,
-//       },
-//       {
-//         name: 'Editar Contenido',
-//         privilegeId: contentManagementPrivilege.id,
-//         status: true,
-//       },
-//       {
-//         name: 'Ver Contenido',
-//         privilegeId: readOnlyPrivilege.id,
-//         status: true,
-//       },
-//     ],
-//   });
+    return privilege_;
+  });
 
-//   // Asignar privilegios a usuarios
-//   await prisma.userPrivilege.createMany({
-//     data: [
-//       // Admin: todos los privilegios
-//       {
-//         userId: adminUser.id,
-//         privilegeId: userManagementPrivilege.id,
-//       },
-//       {
-//         userId: adminUser.id,
-//         privilegeId: contentManagementPrivilege.id,
-//       },
-//       {
-//         userId: adminUser.id,
-//         privilegeId: readOnlyPrivilege.id,
-//       },
+  const roles = await prisma.$transaction(async (prisma) => {
+    const role_ = await prisma.roles.create({
+      data: {
+        name: 'Administrador',
+        status: true,
+      },
+    });
 
-//       // Usuario regular: solo lectura
-//       {
-//         userId: regularUser.id,
-//         privilegeId: readOnlyPrivilege.id,
-//       },
-//     ],
-//   });
+    return role_;
+  });
 
-//   console.log('Base de datos poblada exitosamente');
-// }
+  const rolePrivileges = await prisma.$transaction(async (prisma) => {
+    const rolePrivilege_ = await prisma.rolePrivileges.create({
+      data: {
+        idRole: roles.id,
+        idPrivilege: privileges.id,
+      },
+    });
 
-// main()
-//   .catch((e) => {
-//     console.error('Error al poblar la base de datos:', e);
-//     process.exit(1);
-//   })
-//   .finally(async () => {
-//     await prisma.$disconnect();
-//   });
+    return rolePrivilege_;
+  });
+
+  const users = await prisma.$transaction(async (prisma) => {
+    const user_ = await prisma.users.create({
+      data: {
+        idRole: roles.id,
+        typeDocument: 'CC',
+        document: '1001015566',
+        name: 'Juan',
+        surName: 'Perez',
+        dateBirth: new Date(),
+        email: 'juanperez@gmail.com',
+        password: '123456',
+        idMunicipality: municipalities.id,
+        address: 'Calle 123',
+        phone: '123456789',
+        emergency: '123456789',
+        sex: 'Masculino',
+        bloodType: 'A+',
+        eps: 'Sura',
+        status: true,
+      },
+    });
+
+    return user_;
+  });
+
+  const activities = await prisma.$transaction(async (prisma) => {
+    const activity = await prisma.activities.create({
+      data: {
+        name: 'Senderismo',
+      },
+    });
+
+    return activity;
+  });
+
+  const categoryServices = await prisma.$transaction(async (prisma) => {
+    const categoryService_ = await prisma.categoryServices.create({
+      data: {
+        name: 'Alimentación',
+      },
+    });
+
+    return categoryService_;
+  });
+
+  const services = await prisma.$transaction(async (prisma) => {
+    const service_ = await prisma.services.create({
+      data: {
+        idCategoryServices: categoryServices.id,
+        name: 'Desayuno',
+        price: 100,
+        status: true,
+      },
+    });
+
+    return service_;
+  });
+
+  const packages = await prisma.$transaction(async (prisma) => {
+    const package_ = await prisma.packages.create({
+      data: {
+        activity: 'Venecia',
+        start: new Date(),
+        end: new Date(),
+        idActivity: activities.id,
+        level: 1,
+        price: 100,
+        reserve: 50,
+        description: 'Caminata por allá',
+        status: true,
+      },
+    });
+
+    return package_;
+  });
+
+  const detailPackagesServices = await prisma.$transaction(async (prisma) => {
+    const detailPackagesService_ = await prisma.detailPackagesServices.create({
+      data: {
+        idPackage: packages.id,
+        idService: services.id,
+        quantity: 1,
+        price: 100,
+      },
+    });
+
+    return detailPackagesService_;
+  });
+
+  const dates = await prisma.$transaction(async (prisma) => {
+    const date_ = await prisma.dates.create({
+      data: {
+        start: new Date(),
+        end: new Date(),
+        startRegistration: new Date(),
+        endRegistration: new Date(),
+        idPackage: packages.id,
+        amount: 1,
+        idUser: users.id,
+        status: true,
+      },
+    });
+
+    return date_;
+  });
+
+  const meetings = await prisma.$transaction(async (prisma) => {
+    const meeting_ = await prisma.meetings.create({
+      data: {
+        idDate: dates.id,
+        idMunicipality: municipalities.id,
+        hour: new Date(),
+        description: 'En x parte',
+      },
+    });
+
+    return meeting_;
+  });
+
+  const reservations = await prisma.$transaction(async (prisma) => {
+    const reservation_ = await prisma.reservations.create({
+      data: {
+        idDate: dates.id,
+        idMunicipality: municipalities.id,
+        idUser: users.id,
+        date: new Date(),
+        price: 100,
+        status: 'R',
+      },
+    });
+
+    return reservation_;
+  });
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
