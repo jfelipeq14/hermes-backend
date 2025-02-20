@@ -15,11 +15,6 @@ import { UpdateReservationDto } from './dto/update-reservation.dto';
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
-  }
-
   @Get()
   findAll() {
     try {
@@ -36,6 +31,11 @@ export class ReservationsController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  @Post()
+  create(@Body() createReservationDto: CreateReservationDto) {
+    return this.reservationsService.create(createReservationDto);
   }
 
   @Patch(':id')

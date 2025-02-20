@@ -3,12 +3,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PermitsService {
-  // create(createPermitDto: CreatePermitDto) {
-  //   return 'This action adds a new permit';
-  // }
-
   constructor(private prisma: PrismaService) {}
-
   findAll() {
     try {
       return this.prisma.permits.findMany();
@@ -19,6 +14,10 @@ export class PermitsService {
 
   // findOne(id: number) {
   //   return `This action returns a #${id} permit`;
+  // }
+
+  // create(createPermitDto: CreatePermitDto) {
+  //   return 'This action adds a new permit';
   // }
 
   // update(id: number, updatePermitDto: UpdatePermitDto) {

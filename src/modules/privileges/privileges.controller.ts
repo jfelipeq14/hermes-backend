@@ -5,11 +5,6 @@ import { PrivilegesService } from './privileges.service';
 export class PrivilegesController {
   constructor(private readonly privilegesService: PrivilegesService) {}
 
-  // @Post()
-  // create(@Body() createPrivilegeDto: CreatePrivilegeDto) {
-  //   return this.privilegesService.create(createPrivilegeDto);
-  // }
-
   @Get()
   findAll() {
     return this.privilegesService.findAll();
@@ -18,6 +13,11 @@ export class PrivilegesController {
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.privilegesService.findOne(+id);
+  // }
+
+  // @Post()
+  // create(@Body() createPrivilegeDto: CreatePrivilegeDto) {
+  //   return this.privilegesService.create(createPrivilegeDto);
   // }
 
   // @Patch(':id')

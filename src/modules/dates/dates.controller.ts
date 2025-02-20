@@ -14,16 +14,6 @@ import { UpdateDateDto } from './dto/update-date.dto';
 @Controller('dates')
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
-
-  @Post()
-  create(@Body() createDateDto: CreateDateDto) {
-    try {
-      return this.datesService.create(createDateDto);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   @Get()
   findAll() {
     try {
@@ -37,6 +27,15 @@ export class DatesController {
   findOne(@Param('id') id: string) {
     try {
       return this.datesService.findOne(+id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Post()
+  create(@Body() createDateDto: CreateDateDto) {
+    try {
+      return this.datesService.create(createDateDto);
     } catch (error) {
       console.log(error);
     }
