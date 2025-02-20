@@ -163,7 +163,7 @@ async function main() {
         idPackage: packages.id,
         idService: services.id,
         quantity: 1,
-        price: 100,
+        price: services.price,
       },
     });
 

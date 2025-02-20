@@ -12,6 +12,7 @@ import { ActivitiesModule } from './modules/activities/activities.module';
 import { PermitsModule } from './modules/permits/permits.module';
 import { PrivilegesModule } from './modules/privileges/privileges.module';
 import { RolesModule } from './modules/roles/roles.module';
+import { DatesModule } from './modules/dates/dates.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RolesModule } from './modules/roles/roles.module';
     PermitsModule,
     PrivilegesModule,
     RolesModule,
+    DatesModule,
   ],
   controllers: [],
   providers: [],

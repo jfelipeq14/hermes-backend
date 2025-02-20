@@ -42,12 +42,12 @@ export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Start date of the package' })
   @IsDateString()
   @IsNotEmpty()
-  start: string;
+  start: Date;
 
   @ApiProperty({ required: true, description: 'End date of the package' })
   @IsDateString()
   @IsNotEmpty()
-  end: string;
+  end: Date;
 
   @ApiProperty({ required: true, description: 'Name of the activity' })
   @IsInt()
