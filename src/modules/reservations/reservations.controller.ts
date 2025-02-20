@@ -14,21 +14,37 @@ export class ReservationsController {
 
   @Get()
   findAll() {
-    return this.reservationsService.findAll();
+    try {
+      return this.reservationsService.findAll();
+    } catch (error) {
+      console.log(error);
+    } 
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.reservationsService.findOne(+id);
+    try {
+      return this.reservationsService.findOne(+id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
-    return this.reservationsService.update(+id, updateReservationDto);
+    try {
+      return this.reservationsService.update(+id, updateReservationDto);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.reservationsService.remove(+id);
+    try {
+      return this.reservationsService.remove(+id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

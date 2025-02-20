@@ -5,10 +5,17 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ReservationsService {
-  create(createReservationDto: CreateReservationDto) {
-    return 'This action adds a new reservation';
-  }
   constructor(private prisma: PrismaService) { }
+  create(createReservationDto: CreateReservationDto) {
+    try {
+      return this.prisma.reservations.create({
+        data: createReservationDto
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   findAll() {
     try {
       return this.prisma.reservations.findMany();
