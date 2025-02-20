@@ -7,16 +7,6 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class PrivilegesService {
   constructor(private prisma: PrismaService) {}
 
-  create(createPrivilegeDto: CreatePrivilegeDto) {
-    try {
-      return this.prisma.privileges.create({
-        data: createPrivilegeDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   findAll() {
     try {
       return this.prisma.privileges.findMany();
@@ -36,6 +26,16 @@ export class PrivilegesService {
       console.log(error);
     }
     return `This action returns a #${id} privilege`;
+  }
+
+  create(createPrivilegeDto: CreatePrivilegeDto) {
+    try {
+      return this.prisma.privileges.create({
+        data: createPrivilegeDto,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   update(id: number, updatePrivilegeDto: UpdatePrivilegeDto) {
