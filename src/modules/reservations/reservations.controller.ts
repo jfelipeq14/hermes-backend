@@ -26,7 +26,7 @@ export class ReservationsController {
       return this.reservationsService.findAll();
     } catch (error) {
       console.log(error);
-    } 
+    }
   }
 
   @Get(':id')
@@ -39,7 +39,10 @@ export class ReservationsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReservationDto: UpdateReservationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateReservationDto: UpdateReservationDto,
+  ) {
     try {
       return this.reservationsService.update(+id, updateReservationDto);
     } catch (error) {
