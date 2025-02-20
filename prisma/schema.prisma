@@ -95,8 +95,9 @@ model users {
   role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
 
-  dates        dates[]
-  reservations reservations[]
+  dates                      dates[]
+  reservations               reservations[]
+  detailReservationTravelers detailReservationTravelers[]
 }
 
 model activities {
@@ -196,7 +197,18 @@ model reservations {
   price          Int
   status         String
 
-  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
-  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  dates                      dates                        @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  municipalities             municipalities               @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+  users                      users                        @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  detailReservationTravelers detailReservationTravelers[]
+}
+
+model detailReservationTravelers {
+  id            Int     @id @default(autoincrement())
+  idReservation Int
+  idTraveler    Int
+  status        Boolean
+
+  reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
+  users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
