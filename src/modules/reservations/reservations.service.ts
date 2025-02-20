@@ -5,10 +5,17 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ReservationsService {
+  constructor(private prisma: PrismaService) { }
   create(createReservationDto: CreateReservationDto) {
-    return 'This action adds a new reservation';
+    try {
+      return this.prisma.reservations.create({
+        data: createReservationDto
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
-  constructor(private prisma: PrismaService) {}
+  
   findAll() {
     try {
       return this.prisma.reservations.findMany();
@@ -30,10 +37,28 @@ export class ReservationsService {
   }
 
   update(id: number, updateReservationDto: UpdateReservationDto) {
-    return `This action updates a #${id} reservation`;
+    try {
+      return this.prisma.reservations.update({
+        where: {
+          id
+        },
+        data: updateReservationDto
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   remove(id: number) {
-    return this.prisma;
+    try {
+      return this.prisma.reservations.delete({
+        where: {
+          id
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 }
