@@ -17,26 +17,46 @@ export class DatesController {
 
   @Post()
   create(@Body() createDateDto: CreateDateDto) {
-    return this.datesService.create(createDateDto);
+    try {
+      return this.datesService.create(createDateDto);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Get()
   findAll() {
-    return this.datesService.findAll();
+    try {
+      return this.datesService.findAll();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.datesService.findOne(+id);
+    try {
+      return this.datesService.findOne(+id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDateDto: UpdateDateDto) {
-    return this.datesService.update(+id, updateDateDto);
+    try {
+      return this.datesService.update(+id, updateDateDto);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.datesService.remove(+id);
+    try {
+      return this.datesService.remove(+id);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
