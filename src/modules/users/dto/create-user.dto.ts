@@ -30,7 +30,7 @@ export class CreateUserDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  dateBirth: string;
+  dateBirth: Date;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
