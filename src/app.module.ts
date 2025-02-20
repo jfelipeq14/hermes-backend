@@ -17,6 +17,9 @@ import { DatesModule } from './modules/dates/dates.module';
 @Module({
   imports: [
     PrismaModule,
+    PermitsModule,
+    PrivilegesModule,
+    RolesModule,
     UsersModule,
     CountriesModule,
     DepartmentsModule,
@@ -26,9 +29,6 @@ import { DatesModule } from './modules/dates/dates.module';
     ActivitiesModule,
     PackagesModule,
     ReservationsModule,
-    PermitsModule,
-    PrivilegesModule,
-    RolesModule,
     DatesModule,
   ],
   controllers: [],
