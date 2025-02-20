@@ -9,7 +9,11 @@ export class DatesService {
 
   findAll() {
     try {
-      return this.prisma.dates.findMany();
+      return this.prisma.dates.findMany({
+        include: {
+          meetings: true,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -21,6 +25,9 @@ export class DatesService {
         where: {
           id,
         },
+        include: {
+          meetings: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -29,8 +36,17 @@ export class DatesService {
 
   create(createDateDto: CreateDateDto) {
     try {
+      const { meetings, ...dateData } = createDateDto;
       return this.prisma.dates.create({
-        data: createDateDto,
+        data: {
+          ...dateData,
+          meetings: {
+            create: meetings,
+          },
+        },
+        include: {
+          meetings: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -39,11 +55,20 @@ export class DatesService {
 
   update(id: number, updateDateDto: UpdateDateDto) {
     try {
+      const { meetings, ...dateData } = updateDateDto;
       return this.prisma.dates.update({
         where: {
           id,
         },
-        data: updateDateDto,
+        data: {
+          ...dateData,
+          meetings: {
+            create: meetings,
+          },
+        },
+        include: {
+          meetings: true,
+        },
       });
     } catch (error) {
       console.log(error);

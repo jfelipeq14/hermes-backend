@@ -6,15 +6,6 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 @Injectable()
 export class ReservationsService {
   constructor(private prisma: PrismaService) {}
-  create(createReservationDto: CreateReservationDto) {
-    try {
-      return this.prisma.reservations.create({
-        data: createReservationDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   findAll() {
     try {
@@ -30,6 +21,16 @@ export class ReservationsService {
         where: {
           id,
         },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  create(createReservationDto: CreateReservationDto) {
+    try {
+      return this.prisma.reservations.create({
+        data: createReservationDto,
       });
     } catch (error) {
       console.log(error);
