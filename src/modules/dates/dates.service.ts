@@ -30,7 +30,7 @@ export class DatesService {
   create(createDateDto: CreateDateDto) {
     try {
       return this.prisma.dates.create({
-        data: CreateDateDto,
+        data: createDateDto,
       });
     } catch (error) {
       console.log(error);
