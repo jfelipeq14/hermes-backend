@@ -5,17 +5,17 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
   create(createReservationDto: CreateReservationDto) {
     try {
       return this.prisma.reservations.create({
-        data: createReservationDto
+        data: createReservationDto,
       });
     } catch (error) {
       console.log(error);
     }
   }
-  
+
   findAll() {
     try {
       return this.prisma.reservations.findMany();
@@ -40,9 +40,9 @@ export class ReservationsService {
     try {
       return this.prisma.reservations.update({
         where: {
-          id
+          id,
         },
-        data: updateReservationDto
+        data: updateReservationDto,
       });
     } catch (error) {
       console.log(error);
@@ -53,12 +53,11 @@ export class ReservationsService {
     try {
       return this.prisma.reservations.delete({
         where: {
-          id
-        }
+          id,
+        },
       });
     } catch (error) {
       console.log(error);
     }
-
   }
 }
