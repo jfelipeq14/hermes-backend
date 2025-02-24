@@ -20,7 +20,10 @@ export class DatesController {
   async findAll() {
     const dates = await this.datesService.findAll();
     if (!dates)
-      throw new HttpException('No hay programaciones', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'No existen programaciones',
+        HttpStatus.NOT_FOUND,
+      );
     return dates;
   }
 

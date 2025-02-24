@@ -21,7 +21,7 @@ export class ActivitiesController {
   async findAll() {
     const activities_ = await this.activitiesService.findAll();
     if (!activities_) {
-      throw new HttpException('No hay actividades', HttpStatus.NOT_FOUND);
+      throw new HttpException('No existen actividades', HttpStatus.NOT_FOUND);
     }
     return activities_;
   }

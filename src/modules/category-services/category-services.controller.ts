@@ -23,7 +23,7 @@ export class CategoryServicesController {
   async findAll() {
     const categoryServices_ = await this.categoryServicesService.findAll();
     if (!categoryServices_) {
-      throw new HttpException('No hay categorias', HttpStatus.NOT_FOUND);
+      throw new HttpException('No existen categorias', HttpStatus.NOT_FOUND);
     }
     return categoryServices_;
   }

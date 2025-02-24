@@ -21,7 +21,7 @@ export class PackagesController {
   async findAll() {
     const packages_ = await this.packagesService.findAll();
     if (!packages_)
-      throw new HttpException('No hay paquetes', HttpStatus.NOT_FOUND);
+      throw new HttpException('No existen paquetes', HttpStatus.NOT_FOUND);
     return packages_;
   }
 
