@@ -201,6 +201,7 @@ model reservations {
   municipalities             municipalities               @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
   users                      users                        @relation(fields: [idUser], references: [id], onDelete: Cascade)
   detailReservationTravelers detailReservationTravelers[]
+  payments                   payments[]
 }
 
 model detailReservationTravelers {
@@ -213,3 +214,13 @@ model detailReservationTravelers {
   users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
 
+model payments {
+  id            Int     @id @default(autoincrement())
+  idReservation Int
+  date          DateTime
+  price         Decimal
+  voucher       String
+  status        Boolean
+
+  reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
+}
