@@ -214,6 +214,17 @@ async function main() {
 
     return reservation_;
   });
+  const detailReservationTravelers = await prisma.$transaction(async (prisma) => {
+    const detailReservationTraveler_ = await prisma.detailReservationTravelers.create({
+      data: {
+        idReservation: reservations.id,
+        idTraveler: users.id,
+        status: true,
+      },
+    });
+
+    return detailReservationTraveler_;
+  });
 }
 
 main()

@@ -9,7 +9,9 @@ export class ReservationsService {
 
   findAll() {
     try {
-      return this.prisma.reservations.findMany();
+      return this.prisma.reservations.findMany({
+        include: { detailReservationTravelers: true },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -21,16 +23,27 @@ export class ReservationsService {
         where: {
           id,
         },
+        include: { detailReservationTravelers: true },
       });
     } catch (error) {
       console.log(error);
     }
   }
 
-  create(createReservationDto: CreateReservationDto) {
+  async create(createReservationDto: CreateReservationDto) {
     try {
-      return this.prisma.reservations.create({
-        data: createReservationDto,
+      const { detailReservationTravelers, ...reservationData } =
+        createReservationDto;
+      return await this.prisma.reservations.create({
+        data: {
+          ...reservationData,
+          detailReservationTravelers: {
+            create: detailReservationTravelers,
+          },
+        },
+        include: {
+          detailReservationTravelers: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -39,11 +52,21 @@ export class ReservationsService {
 
   update(id: number, updateReservationDto: UpdateReservationDto) {
     try {
+      const { detailReservationTravelers, ...reservationData } =
+        updateReservationDto;
       return this.prisma.reservations.update({
         where: {
           id,
         },
-        data: updateReservationDto,
+        data: {
+          ...reservationData,
+          detailReservationTravelers: {
+            create: detailReservationTravelers,
+          },
+        },
+        include: {
+          detailReservationTravelers: true,
+        },
       });
     } catch (error) {
       console.log(error);

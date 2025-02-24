@@ -212,3 +212,4 @@ model detailReservationTravelers {
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
   users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
+
