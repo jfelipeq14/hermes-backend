@@ -15,11 +15,6 @@ class CreateDetailPackageServiceDto {
   @ApiProperty({ required: true })
   @IsInt()
   @IsNotEmpty()
-  idPackage: number;
-
-  @ApiProperty({ required: true })
-  @IsInt()
-  @IsNotEmpty()
   idService: number;
 
   @ApiProperty({ required: true })

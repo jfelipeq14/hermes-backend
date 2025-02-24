@@ -18,6 +18,9 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     PrismaModule,
+    PermitsModule,
+    PrivilegesModule,
+    RolesModule,
     UsersModule,
     CountriesModule,
     DepartmentsModule,
@@ -26,12 +29,9 @@ import { AuthModule } from './auth/auth.module';
     ServicesModule,
     ActivitiesModule,
     PackagesModule,
-    ReservationsModule,
-    PermitsModule,
-    PrivilegesModule,
-    RolesModule,
     DatesModule,
     AuthModule,
+    ReservationsModule,
   ],
   controllers: [],
   providers: [],

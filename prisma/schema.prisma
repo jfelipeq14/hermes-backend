@@ -123,7 +123,7 @@ model services {
 
   catergoryServices categoryServices @relation(fields: [idCategoryServices], references: [id], onDelete: Cascade)
 
-  packages detailPackagesServices[]
+  detailPackagesServices detailPackagesServices[]
 }
 
 model packages {
@@ -132,16 +132,16 @@ model packages {
   start       DateTime
   end         DateTime
   idActivity  Int
-  level       Decimal?
+  level       Decimal
   price       Decimal
   reserve     Decimal
-  description String?
+  description String
   status      Boolean
 
   activities activities @relation(fields: [idActivity], references: [id], onDelete: Cascade)
 
-  dates    dates[]
-  services detailPackagesServices[]
+  dates                  dates[]
+  detailPackagesServices detailPackagesServices[]
 }
 
 model detailPackagesServices {
@@ -212,3 +212,4 @@ model detailReservationTravelers {
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
   users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
+

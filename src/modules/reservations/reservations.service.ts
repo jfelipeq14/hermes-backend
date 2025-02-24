@@ -6,19 +6,12 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 @Injectable()
 export class ReservationsService {
   constructor(private prisma: PrismaService) {}
-  create(createReservationDto: CreateReservationDto) {
-    try {
-      return this.prisma.reservations.create({
-        data: createReservationDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   findAll() {
     try {
-      return this.prisma.reservations.findMany();
+      return this.prisma.reservations.findMany({
+        include: { detailReservationTravelers: true },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -30,6 +23,27 @@ export class ReservationsService {
         where: {
           id,
         },
+        include: { detailReservationTravelers: true },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async create(createReservationDto: CreateReservationDto) {
+    try {
+      const { detailReservationTravelers, ...reservationData } =
+        createReservationDto;
+      return await this.prisma.reservations.create({
+        data: {
+          ...reservationData,
+          detailReservationTravelers: {
+            create: detailReservationTravelers,
+          },
+        },
+        include: {
+          detailReservationTravelers: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -38,11 +52,21 @@ export class ReservationsService {
 
   update(id: number, updateReservationDto: UpdateReservationDto) {
     try {
+      const { detailReservationTravelers, ...reservationData } =
+        updateReservationDto;
       return this.prisma.reservations.update({
         where: {
           id,
         },
-        data: updateReservationDto,
+        data: {
+          ...reservationData,
+          detailReservationTravelers: {
+            create: detailReservationTravelers,
+          },
+        },
+        include: {
+          detailReservationTravelers: true,
+        },
       });
     } catch (error) {
       console.log(error);
