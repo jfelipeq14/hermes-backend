@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,15 +17,25 @@ async function bootstrap() {
     .setTitle('Hermes')
     .setDescription('The Hermes API description')
     .setVersion('0.1')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      in: 'header',
+      name: 'Authorization',
+      description: 'Enter JWT Bearer token',
+    })
+    .addSecurityRequirements('berer')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
-  app.enableCors({
-    origin: 'http://localhost:3000',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  });
+
+  const jwtAuthGuard = app.get(JwtAuthGuard);
+
+  app.useGlobalGuards(jwtAuthGuard);
+
 
   await app.listen(process.env.PORT ?? 3000);
 }
