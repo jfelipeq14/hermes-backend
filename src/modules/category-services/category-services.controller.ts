@@ -21,20 +21,20 @@ export class CategoryServicesController {
 
   @Get()
   async findAll() {
-    const categoryService = await this.categoryServicesService.findAll();
-    if (!categoryService) {
+    const categoryServices_ = await this.categoryServicesService.findAll();
+    if (!categoryServices_) {
       throw new HttpException('No hay categorias', HttpStatus.NOT_FOUND);
     }
-    return categoryService;
+    return categoryServices_;
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const categoryService = await this.categoryServicesService.findOne(+id);
-    if (!categoryService) {
+    const categoryService_ = await this.categoryServicesService.findOne(+id);
+    if (!categoryService_) {
       throw new HttpException('No existe esa categoria', HttpStatus.NOT_FOUND);
     }
-    return categoryService;
+    return categoryService_;
   }
 
   @Post()

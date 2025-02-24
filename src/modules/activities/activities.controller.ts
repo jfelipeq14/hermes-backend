@@ -19,20 +19,20 @@ export class ActivitiesController {
 
   @Get()
   async findAll() {
-    const activities = await this.activitiesService.findAll();
-    if (!activities) {
+    const activities_ = await this.activitiesService.findAll();
+    if (!activities_) {
       throw new HttpException('No hay actividades', HttpStatus.NOT_FOUND);
     }
-    return activities;
+    return activities_;
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const activity = await this.activitiesService.findOne(+id);
-    if (!activity) {
+    const activity_ = await this.activitiesService.findOne(+id);
+    if (!activity_) {
       throw new HttpException('No existe esa actividad', HttpStatus.NOT_FOUND);
     }
-    return activity;
+    return activity_;
   }
 
   @Post()
