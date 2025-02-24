@@ -5,11 +5,6 @@ import { PermitsService } from './permits.service';
 export class PermitsController {
   constructor(private readonly permitsService: PermitsService) {}
 
-  // @Post()
-  // create(@Body() createPermitDto: CreatePermitDto) {
-  //   return this.permitsService.create(createPermitDto);
-  // }
-
   @Get()
   findAll() {
     return this.permitsService.findAll();
@@ -18,6 +13,11 @@ export class PermitsController {
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.permitsService.findOne(+id);
+  // }
+
+  // @Post()
+  // create(@Body() createPermitDto: CreatePermitDto) {
+  //   return this.permitsService.create(createPermitDto);
   // }
 
   // @Patch(':id')

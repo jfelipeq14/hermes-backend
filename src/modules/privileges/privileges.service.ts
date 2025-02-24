@@ -1,24 +1,65 @@
 import { Injectable } from '@nestjs/common';
+import { CreatePrivilegeDto } from './dto/create-privilege.dto';
+import { UpdatePrivilegeDto } from './dto/update-privilege.dto';
+import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PrivilegesService {
-  // create(createPrivilegeDto: CreatePrivilegeDto) {
-  //   return 'This action adds a new privilege';
-  // }
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return `This action returns all privileges`;
+    try {
+      return this.prisma.privileges.findMany();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} privilege`;
-  // }
+  findOne(id: number) {
+    try {
+      return this.prisma.privileges.findUnique({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    return `This action returns a #${id} privilege`;
+  }
 
-  // update(id: number, updatePrivilegeDto: UpdatePrivilegeDto) {
-  //   return `This action updates a #${id} privilege`;
-  // }
+  create(createPrivilegeDto: CreatePrivilegeDto) {
+    try {
+      return this.prisma.privileges.create({
+        data: createPrivilegeDto,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} privilege`;
-  // }
+  update(id: number, updatePrivilegeDto: UpdatePrivilegeDto) {
+    try {
+      return this.prisma.privileges.update({
+        where: {
+          id,
+        },
+        data: updatePrivilegeDto,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  remove(id: number) {
+    try {
+      return this.prisma.privileges.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

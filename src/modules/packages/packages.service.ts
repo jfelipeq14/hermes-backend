@@ -11,7 +11,7 @@ export class PackagesService {
     try {
       return this.prisma.packages.findMany({
         include: {
-          services: true,
+          detailPackagesServices: true,
           dates: true,
         },
       });
@@ -27,7 +27,7 @@ export class PackagesService {
           id: id,
         },
         include: {
-          services: true,
+          detailPackagesServices: true,
           dates: true,
         },
       });
@@ -36,14 +36,18 @@ export class PackagesService {
     }
   }
 
-  create(createPackageDto: CreatePackageDto) {
+  async create(createPackageDto: CreatePackageDto) {
     try {
-      return this.prisma.packages.create({
+      const { detailPackagesServices, ...packageData } = createPackageDto;
+      return await this.prisma.packages.create({
         data: {
-          ...createPackageDto,
-          services: {
-            create: createPackageDto.detailPackagesServices,
+          ...packageData,
+          detailPackagesServices: {
+            create: detailPackagesServices,
           },
+        },
+        include: {
+          detailPackagesServices: true,
         },
       });
     } catch (error) {
@@ -51,17 +55,21 @@ export class PackagesService {
     }
   }
 
-  update(id: number, updatePackageDto: UpdatePackageDto) {
+  async update(id: number, updatePackageDto: UpdatePackageDto) {
     try {
-      return this.prisma.packages.update({
+      const { detailPackagesServices, ...packageData } = updatePackageDto;
+      return await this.prisma.packages.update({
         where: {
           id: id,
         },
         data: {
-          ...updatePackageDto,
-          services: {
-            create: updatePackageDto.detailPackagesServices,
+          ...packageData,
+          detailPackagesServices: {
+            create: detailPackagesServices,
           },
+        },
+        include: {
+          detailPackagesServices: true,
         },
       });
     } catch (error) {
@@ -69,9 +77,9 @@ export class PackagesService {
     }
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     try {
-      return this.prisma.packages.delete({
+      return await this.prisma.packages.delete({
         where: {
           id: id,
         },
