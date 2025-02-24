@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
     IsDateString,
     IsInt,
@@ -6,7 +7,21 @@ import {
     IsNumber,
     IsString,
     IsBoolean,
+    IsArray,
+    ValidateNested,
 } from 'class-validator';
+
+class CreateDetailReservationTravelersDto {
+    @ApiProperty({ required: true, description: 'Traveler of the reservation' })
+    @IsNotEmpty()
+    @IsInt()
+    idTraveler: number;
+
+    @ApiProperty({ required: true, description: 'Status of the traveler' })
+    @IsBoolean()
+    @IsNotEmpty()
+    status: boolean;
+}
 
 export class CreateReservationDto {
     @ApiProperty({ required: true, description: 'Date of the programation' })
@@ -14,8 +29,10 @@ export class CreateReservationDto {
     @IsInt()
     idDate: number;
 
-    @ApiProperty({ required: true, description: 'Municipality of the reservation'})
-    
+    @ApiProperty({
+        required: true,
+        description: 'Municipality of the reservation',
+    })
     @IsNotEmpty()
     @IsInt()
     idMunicipality: number;
@@ -39,20 +56,10 @@ export class CreateReservationDto {
     @IsString()
     @IsNotEmpty()
     status: string;
-}
-export class DetailReservationTravelersDto {
-    @ApiProperty({ required: true, description: 'Reservation of the traveler' })
-    @IsNotEmpty()
-    @IsInt()
-    idReservation: number;
 
-    @ApiProperty({ required: true, description: 'Traveler of the reservation' })
-    @IsNotEmpty()
-    @IsInt()
-    idTraveler: number;
-
-    @ApiProperty({ required: true, description: 'Status of the traveler' })
-    @IsBoolean()
-    @IsNotEmpty()
-    status: boolean;
+    @ApiProperty({ type: [CreateDetailReservationTravelersDto], required: true })
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => CreateDetailReservationTravelersDto)
+    detailReservationTravelers: CreateDetailReservationTravelersDto[];
 }
