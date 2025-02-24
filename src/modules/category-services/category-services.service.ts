@@ -2,63 +2,51 @@ import { Injectable } from '@nestjs/common';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { ErrorHandler } from 'src/utils/error.handler';
 
 @Injectable()
 export class CategoryServicesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
-  findAll() {
-    try {
-      return this.prisma.categoryServices.findMany();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    return await this.prisma.categoryServices.findMany();
   }
 
-  findOne(id: number) {
-    try {
-      return this.prisma.categoryServices.findUnique({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(id: number) {
+    return await this.prisma.categoryServices.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  create(createCategoryServiceDto: CreateCategoryServiceDto) {
+  async create(createCategoryServiceDto: CreateCategoryServiceDto) {
     try {
-      return this.prisma.categoryServices.create({
+      return await this.prisma.categoryServices.create({
         data: createCategoryServiceDto,
       });
     } catch (error) {
-      console.log(error);
+      throw new ErrorHandler({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: error,
+      });
     }
   }
 
   update(id: number, updateCategoryServiceDto: UpdateCategoryServiceDto) {
-    try {
-      return this.prisma.categoryServices.update({
-        where: {
-          id,
-        },
-        data: updateCategoryServiceDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.categoryServices.update({
+      where: {
+        id,
+      },
+      data: updateCategoryServiceDto,
+    });
   }
 
   remove(id: number) {
-    try {
-      return this.prisma.categoryServices.delete({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.categoryServices.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

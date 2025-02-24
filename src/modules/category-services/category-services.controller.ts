@@ -10,19 +10,23 @@ import {
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
+import { ErrorHandler } from 'src/utils/error.handler';
 
 @Controller('category-services')
 export class CategoryServicesController {
   constructor(
     private readonly categoryServicesService: CategoryServicesService,
-  ) {}
+  ) { }
 
   @Get()
   findAll() {
     try {
       return this.categoryServicesService.findAll();
     } catch (error) {
-      console.log(error);
+      throw new ErrorHandler({
+        type: 'INTERNAL_SERVER_ERROR',
+        message: error
+      })
     }
   }
 
@@ -31,7 +35,10 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.findOne(+id);
     } catch (error) {
-      console.log(error);
+      throw new ErrorHandler({
+        type: "INTERNAL_SERVER_ERROR",
+        message: error
+      })
     }
   }
 
@@ -40,7 +47,10 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.create(createCategoryServiceDto);
     } catch (error) {
-      console.log(error);
+      throw new ErrorHandler({
+        type: "INTERNAL_SERVER_ERROR",
+        message: error
+      })
     }
   }
 
@@ -52,7 +62,10 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.update(+id, updateCategoryServiceDto);
     } catch (error) {
-      console.log(error);
+      throw new ErrorHandler({
+        type: "INTERNAL_SERVER_ERROR",
+        message: error
+      })
     }
   }
 
@@ -61,7 +74,10 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.remove(+id);
     } catch (error) {
-      console.log(error);
+      throw new ErrorHandler({
+        type: "INTERNAL_SERVER_ERROR",
+        message: error
+      })
     }
   }
 }
