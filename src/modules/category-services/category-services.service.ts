@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
-import { ErrorHandler } from 'src/utils/error.handler';
 
 @Injectable()
 export class CategoryServicesService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
     return await this.prisma.categoryServices.findMany();
@@ -21,20 +20,13 @@ export class CategoryServicesService {
   }
 
   async create(createCategoryServiceDto: CreateCategoryServiceDto) {
-    try {
-      return await this.prisma.categoryServices.create({
-        data: createCategoryServiceDto,
-      });
-    } catch (error) {
-      throw new ErrorHandler({
-        type: 'INTERNAL_SERVER_ERROR',
-        message: error,
-      });
-    }
+    return await this.prisma.categoryServices.create({
+      data: createCategoryServiceDto,
+    });
   }
 
-  update(id: number, updateCategoryServiceDto: UpdateCategoryServiceDto) {
-    return this.prisma.categoryServices.update({
+  async update(id: number, updateCategoryServiceDto: UpdateCategoryServiceDto) {
+    return await this.prisma.categoryServices.update({
       where: {
         id,
       },
@@ -42,8 +34,8 @@ export class CategoryServicesService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.categoryServices.delete({
+  async remove(id: number) {
+    return await this.prisma.categoryServices.delete({
       where: {
         id,
       },

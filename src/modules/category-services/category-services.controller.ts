@@ -6,51 +6,45 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
-import { ErrorHandler } from 'src/utils/error.handler';
 
 @Controller('category-services')
 export class CategoryServicesController {
   constructor(
     private readonly categoryServicesService: CategoryServicesService,
-  ) { }
+  ) {}
 
   @Get()
-  findAll() {
-    try {
-      return this.categoryServicesService.findAll();
-    } catch (error) {
-      throw new ErrorHandler({
-        type: 'INTERNAL_SERVER_ERROR',
-        message: error
-      })
+  async findAll() {
+    const categoryService = await this.categoryServicesService.findAll();
+    if (!categoryService) {
+      throw new HttpException('No hay categorias', HttpStatus.NOT_FOUND);
     }
+    return categoryService;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.categoryServicesService.findOne(+id);
-    } catch (error) {
-      throw new ErrorHandler({
-        type: "INTERNAL_SERVER_ERROR",
-        message: error
-      })
+  async findOne(@Param('id') id: string) {
+    const categoryService = await this.categoryServicesService.findOne(+id);
+    if (!categoryService) {
+      throw new HttpException('No existe esa categoria', HttpStatus.NOT_FOUND);
     }
+    return categoryService;
   }
 
   @Post()
-  create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
+  async create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
     try {
-      return this.categoryServicesService.create(createCategoryServiceDto);
+      return await this.categoryServicesService.create(
+        createCategoryServiceDto,
+      );
     } catch (error) {
-      throw new ErrorHandler({
-        type: "INTERNAL_SERVER_ERROR",
-        message: error
-      })
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -62,10 +56,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.update(+id, updateCategoryServiceDto);
     } catch (error) {
-      throw new ErrorHandler({
-        type: "INTERNAL_SERVER_ERROR",
-        message: error
-      })
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -74,10 +65,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.remove(+id);
     } catch (error) {
-      throw new ErrorHandler({
-        type: "INTERNAL_SERVER_ERROR",
-        message: error
-      })
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }
