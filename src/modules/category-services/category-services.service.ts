@@ -7,58 +7,38 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class CategoryServicesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    try {
-      return this.prisma.categoryServices.findMany();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    return await this.prisma.categoryServices.findMany();
   }
 
-  findOne(id: number) {
-    try {
-      return this.prisma.categoryServices.findUnique({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(id: number) {
+    return await this.prisma.categoryServices.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  create(createCategoryServiceDto: CreateCategoryServiceDto) {
-    try {
-      return this.prisma.categoryServices.create({
-        data: createCategoryServiceDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async create(createCategoryServiceDto: CreateCategoryServiceDto) {
+    return await this.prisma.categoryServices.create({
+      data: createCategoryServiceDto,
+    });
   }
 
-  update(id: number, updateCategoryServiceDto: UpdateCategoryServiceDto) {
-    try {
-      return this.prisma.categoryServices.update({
-        where: {
-          id,
-        },
-        data: updateCategoryServiceDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async update(id: number, updateCategoryServiceDto: UpdateCategoryServiceDto) {
+    return await this.prisma.categoryServices.update({
+      where: {
+        id,
+      },
+      data: updateCategoryServiceDto,
+    });
   }
 
-  remove(id: number) {
-    try {
-      return this.prisma.categoryServices.delete({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async remove(id: number) {
+    return await this.prisma.categoryServices.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

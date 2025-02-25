@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
@@ -16,47 +18,47 @@ export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
 
   @Get()
-  findAll() {
-    try {
-      return this.packagesService.findAll();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    const packages_ = await this.packagesService.findAll();
+    if (!packages_)
+      throw new HttpException('No existen paquetes', HttpStatus.NOT_FOUND);
+    return packages_;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.packagesService.findOne(+id);
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(@Param('id') id: string) {
+    const package_ = await this.packagesService.findOne(+id);
+    if (!package_)
+      throw new HttpException('No existe ese paquete', HttpStatus.NOT_FOUND);
   }
 
   @Post()
-  create(@Body() createPackageDto: CreatePackageDto) {
+  async create(@Body() createPackageDto: CreatePackageDto) {
     try {
-      return this.packagesService.create(createPackageDto);
+      return await this.packagesService.create(createPackageDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePackageDto: UpdatePackageDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updatePackageDto: UpdatePackageDto,
+  ) {
     try {
-      return this.packagesService.update(+id, updatePackageDto);
+      return await this.packagesService.update(+id, updatePackageDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.packagesService.remove(+id);
+      return await this.packagesService.remove(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
@@ -18,29 +20,31 @@ export class CategoryServicesController {
   ) {}
 
   @Get()
-  findAll() {
-    try {
-      return this.categoryServicesService.findAll();
-    } catch (error) {
-      console.log(error);
+  async findAll() {
+    const categoryServices_ = await this.categoryServicesService.findAll();
+    if (!categoryServices_) {
+      throw new HttpException('No existen categorias', HttpStatus.NOT_FOUND);
     }
+    return categoryServices_;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.categoryServicesService.findOne(+id);
-    } catch (error) {
-      console.log(error);
+  async findOne(@Param('id') id: string) {
+    const categoryService_ = await this.categoryServicesService.findOne(+id);
+    if (!categoryService_) {
+      throw new HttpException('No existe esa categoria', HttpStatus.NOT_FOUND);
     }
+    return categoryService_;
   }
 
   @Post()
-  create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
+  async create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
     try {
-      return this.categoryServicesService.create(createCategoryServiceDto);
+      return await this.categoryServicesService.create(
+        createCategoryServiceDto,
+      );
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -52,7 +56,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.update(+id, updateCategoryServiceDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -61,7 +65,7 @@ export class CategoryServicesController {
     try {
       return this.categoryServicesService.remove(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }
