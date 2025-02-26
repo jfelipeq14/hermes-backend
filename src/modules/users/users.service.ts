@@ -18,7 +18,9 @@ export class UsersService {
   findOne(id: number) {
     try {
       return this.prisma.users.findUnique({
-        where: { id },
+        where: {
+          id: id,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -38,7 +40,9 @@ export class UsersService {
   update(id: number, updateUserDto: UpdateUserDto) {
     try {
       return this.prisma.users.update({
-        where: { id },
+        where: {
+          id: id,
+        },
         data: updateUserDto,
       });
     } catch (error) {
@@ -49,7 +53,9 @@ export class UsersService {
   remove(id: number) {
     try {
       return this.prisma.users.delete({
-        where: { id },
+        where: {
+          id: id,
+        },
       });
     } catch (error) {
       console.log(error);

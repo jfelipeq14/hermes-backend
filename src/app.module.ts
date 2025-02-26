@@ -13,12 +13,11 @@ import { PermitsModule } from './modules/permits/permits.module';
 import { PrivilegesModule } from './modules/privileges/privileges.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { DatesModule } from './modules/dates/dates.module';
-import { AuthModule } from './modules/auth/auth.module';
+// import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
     PrismaModule,
-    AuthModule,
     PermitsModule,
     PrivilegesModule,
     RolesModule,
