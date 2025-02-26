@@ -1,32 +1,65 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { PermitsService } from './permits.service';
+import { CreatePermitDto } from './dto/create-permit.dto';
+import { UpdatePermitDto } from './dto/update-permit.dto';
 
 @Controller('permits')
 export class PermitsController {
   constructor(private readonly permitsService: PermitsService) {}
 
   @Get()
-  findAll() {
-    return this.permitsService.findAll();
+  async findAll() {
+    const permits_ = await this.permitsService.findAll();
+    if (!permits_)
+      throw new HttpException('No permits found', HttpStatus.NOT_FOUND);
+    return permits_;
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.permitsService.findOne(+id);
-  // }
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const permit_ = await this.permitsService.findOne(+id);
+    if (!permit_)
+      throw new HttpException('No permit found', HttpStatus.NOT_FOUND);
+    return permit_;
+  }
 
-  // @Post()
-  // create(@Body() createPermitDto: CreatePermitDto) {
-  //   return this.permitsService.create(createPermitDto);
-  // }
+  @Post()
+  async create(@Body() createPermitDto: CreatePermitDto) {
+    try {
+      return await this.permitsService.create(createPermitDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePermitDto: UpdatePermitDto) {
-  //   return this.permitsService.update(+id, updatePermitDto);
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePermitDto: UpdatePermitDto,
+  ) {
+    try {
+      return await this.permitsService.update(+id, updatePermitDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.permitsService.remove(+id);
-  // }
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.permitsService.remove(+id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }

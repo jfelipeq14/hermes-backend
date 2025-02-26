@@ -6,64 +6,61 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
-  Req,
+  // UseGuards,
+  // Req,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
-
-
+// import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+// import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  findAll(@Req() req: AuthenticatedUserRequest) {
-    try {
-      return this.usersService.findAll();
-    } catch (error) {
-      console.log(error);
-    }
+  // @UseGuards(JwtAuthGuard)
+  async findAll(/*@Req() req: AuthenticatedUserRequest*/) {
+    const users_ = await this.usersService.findAll();
+    if (!users_)
+      throw new HttpException('No existen usuarios', HttpStatus.NOT_FOUND);
+    return users_;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.usersService.findOne(+id);
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(@Param('id') id: string) {
+    const users_ = await this.usersService.findOne(+id);
+    if (!users_)
+      throw new HttpException('No existe ese usuario', HttpStatus.NOT_FOUND);
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     try {
-      return this.usersService.create(createUserDto);
+      return await this.usersService.create(createUserDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {
-      return this.usersService.update(+id, updateUserDto);
+      return await this.usersService.update(+id, updateUserDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.usersService.remove(+id);
+      return await this.usersService.remove(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }
