@@ -11,7 +11,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
     PassportModule,
     PrismaModule,
     JwtModule.register({
-      secret: 'qwerty',
+      secret: process.env.JWT_SECRET || 'hermes',
       signOptions: { expiresIn: '24 h' },
     }),
   ],

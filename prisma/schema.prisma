@@ -74,23 +74,23 @@ model rolePrivileges {
 }
 
 model users {
-  id             Int      @id @unique @default(autoincrement())
+  id             Int       @id @unique @default(autoincrement())
   idRole         Int
   typeDocument   String
-  document       String   @unique
+  document       String    @unique
   name           String
   surName        String
-  dateBirth      DateTime
-  email          String   @unique
+  dateBirth      DateTime?
+  email          String    @unique
   password       String
   idMunicipality Int
-  address        String
-  phone          String   @unique
-  emergency      String   @unique
-  sex            String
-  bloodType      String
-  eps            String
-  status         Boolean
+  address        String?
+  phone          String    @unique
+  emergency      String?   @unique
+  sex            String?
+  bloodType      String?
+  eps            String?
+  status         Boolean   @default(true)
 
   role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
@@ -212,4 +212,3 @@ model detailReservationTravelers {
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
   users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
-

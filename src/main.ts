@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+// import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -31,23 +31,21 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
-
   // const jwtAuthGuard = app.get(JwtAuthGuard);
 
   // app.useGlobalGuards(jwtAuthGuard);
 
-  const jwtAuthGuard = app.get(JwtAuthGuard);
+  // const jwtAuthGuard = app.get(JwtAuthGuard);
 
-  app.useGlobalGuards(jwtAuthGuard);
-
+  // app.useGlobalGuards(jwtAuthGuard);
 
   await app.listen(process.env.PORT ?? 3000);
 }
 
 bootstrap()
   .then(() => {
-    console.log('Application is running on port 3000');
+    console.log('Ok');
   })
   .catch(() => {
-    console.log('Application is running on port 3000');
+    console.log('Error');
   });
