@@ -1,4 +1,4 @@
-import { Role } from "../../roles/entities/role.entity";
+import { Role } from '../../roles/entities/role.entity';
 
 export interface AuthenticatedUserRequest extends Request {
   user: {
@@ -6,5 +6,4 @@ export interface AuthenticatedUserRequest extends Request {
     email: string;
     role: Role;
   };
-  
 }

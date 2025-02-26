@@ -12,19 +12,19 @@ export class AuthService {
 
   async validateUser(user: LoginDto) {
     try {
-    const foundUser = await this.prisma.users.findUnique({
-      where: {
-        email: user.email,
-      },
-    }) as any;
-    
-    return this.jwtService.sign({
-      id: foundUser.id,
-      email: foundUser.email,
-      role: foundUser.idRole,
-    });
-  }catch(error){
-    console.log(error);
-  }
+      const foundUser = (await this.prisma.users.findUnique({
+        where: {
+          email: user.email,
+        },
+      })) as any;
+
+      return this.jwtService.sign({
+        id: foundUser.id,
+        email: foundUser.email,
+        role: foundUser.idRole,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

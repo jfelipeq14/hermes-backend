@@ -21,7 +21,6 @@ export class AuthController {
       return await this.authService.validateUser(data);
     } catch (error) {
       console.log(error);
-      
     }
   }
 }
