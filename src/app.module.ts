@@ -35,4 +35,4 @@ import { DatesModule } from './modules/dates/dates.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }

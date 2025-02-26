@@ -8,51 +8,31 @@ export class ActivitiesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    try {
-      return this.prisma.activities.findMany();
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.activities.findMany();
   }
 
   findOne(id: number) {
-    try {
-      return this.prisma.activities.findUnique({
-        where: { id },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.activities.findUnique({
+      where: { id },
+    });
   }
 
   create(createActivityDto: CreateActivityDto) {
-    try {
-      return this.prisma.activities.create({
-        data: createActivityDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.activities.create({
+      data: createActivityDto,
+    });
   }
 
   update(id: number, updateActivityDto: UpdateActivityDto) {
-    try {
-      return this.prisma.activities.update({
-        where: { id },
-        data: updateActivityDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.activities.update({
+      where: { id },
+      data: updateActivityDto,
+    });
   }
 
   remove(id: number) {
-    try {
-      return this.prisma.activities.delete({
-        where: { id },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.activities.delete({
+      where: { id },
+    });
   }
 }

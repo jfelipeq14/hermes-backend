@@ -31,9 +31,15 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
+
   // const jwtAuthGuard = app.get(JwtAuthGuard);
 
   // app.useGlobalGuards(jwtAuthGuard);
+
+  const jwtAuthGuard = app.get(JwtAuthGuard);
+
+  app.useGlobalGuards(jwtAuthGuard);
+
 
   await app.listen(process.env.PORT ?? 3000);
 }

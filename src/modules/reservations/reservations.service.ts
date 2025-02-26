@@ -8,80 +8,60 @@ export class ReservationsService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    try {
-      return this.prisma.reservations.findMany({
-        include: { detailReservationTravelers: true },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.reservations.findMany({
+      include: { detailReservationTravelers: true },
+    });
   }
 
   findOne(id: number) {
-    try {
-      return this.prisma.reservations.findUnique({
-        where: {
-          id,
-        },
-        include: { detailReservationTravelers: true },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.reservations.findUnique({
+      where: {
+        id,
+      },
+      include: { detailReservationTravelers: true },
+    });
   }
 
   async create(createReservationDto: CreateReservationDto) {
-    try {
-      const { detailReservationTravelers, ...reservationData } =
-        createReservationDto;
-      return await this.prisma.reservations.create({
-        data: {
-          ...reservationData,
-          detailReservationTravelers: {
-            create: detailReservationTravelers,
-          },
+    const { detailReservationTravelers, ...reservationData } =
+      createReservationDto;
+    return await this.prisma.reservations.create({
+      data: {
+        ...reservationData,
+        detailReservationTravelers: {
+          create: detailReservationTravelers,
         },
-        include: {
-          detailReservationTravelers: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      include: {
+        detailReservationTravelers: true,
+      },
+    });
   }
 
   update(id: number, updateReservationDto: UpdateReservationDto) {
-    try {
-      const { detailReservationTravelers, ...reservationData } =
-        updateReservationDto;
-      return this.prisma.reservations.update({
-        where: {
-          id,
+    const { detailReservationTravelers, ...reservationData } =
+      updateReservationDto;
+    return this.prisma.reservations.update({
+      where: {
+        id,
+      },
+      data: {
+        ...reservationData,
+        detailReservationTravelers: {
+          create: detailReservationTravelers,
         },
-        data: {
-          ...reservationData,
-          detailReservationTravelers: {
-            create: detailReservationTravelers,
-          },
-        },
-        include: {
-          detailReservationTravelers: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      include: {
+        detailReservationTravelers: true,
+      },
+    });
   }
 
   remove(id: number) {
-    try {
-      return this.prisma.reservations.delete({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.reservations.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

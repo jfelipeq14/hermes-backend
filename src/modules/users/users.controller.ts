@@ -16,6 +16,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 // import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 // import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
 
 @Controller('users')
 export class UsersController {
