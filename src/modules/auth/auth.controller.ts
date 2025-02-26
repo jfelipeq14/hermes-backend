@@ -5,22 +5,32 @@ import {
   HttpStatus,
   Post,
 } from '@nestjs/common';
-import { LoginDto } from '../../modules/auth/dto/create-auth.dto';
 import { AuthService } from './auth.service';
-import { Public } from '@prisma/client/runtime/library';
 import { IsPublic } from './decorators/public.decorator';
+import { SignUpDto } from './dto/sign-up';
+import { LogInDto } from './dto/log-in';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post('login')
+  @Post('log-in')
   @IsPublic()
-  async login(@Body() data: LoginDto) {
+  async logIn(@Body() logInDto: LogInDto) {
     try {
-      return await this.authService.validateUser(data);
+      return await this.authService.logIn(logInDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Post('sign-up')
+  @IsPublic()
+  async signUp(@Body() signUpDto: SignUpDto) {
+    try {
+      return await this.authService.signUp(signUpDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }

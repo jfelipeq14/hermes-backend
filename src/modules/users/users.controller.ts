@@ -6,16 +6,14 @@ import {
   Patch,
   Param,
   Delete,
-  // UseGuards,
-  // Req,
+  UseGuards,
   HttpException,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-// import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-// import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
 
@@ -24,8 +22,8 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  // @UseGuards(JwtAuthGuard)
-  async findAll(/*@Req() req: AuthenticatedUserRequest*/) {
+  @UseGuards(JwtAuthGuard)
+  async findAll(@Req() req: AuthenticatedUserRequest) {
     const users_ = await this.usersService.findAll();
     if (!users_)
       throw new HttpException('No existen usuarios', HttpStatus.NOT_FOUND);
