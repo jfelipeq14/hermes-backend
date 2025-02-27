@@ -18,7 +18,7 @@ import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     PrismaModule,
-    // AuthModule,
+    AuthModule,
     PermitsModule,
     PrivilegesModule,
     RolesModule,
@@ -36,4 +36,4 @@ import { AuthModule } from './modules/auth/auth.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
