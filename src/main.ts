@@ -17,23 +17,23 @@ async function bootstrap() {
     .setTitle('Hermes')
     .setDescription('The Hermes API description')
     .setVersion('0.1')
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-      in: 'header',
-      name: 'Authorization',
-      description: 'Enter JWT Bearer token',
-    })
-    .addSecurityRequirements('bearer')
+    // .addBearerAuth({
+    //   type: 'http',
+    //   scheme: 'bearer',
+    //   bearerFormat: 'JWT',
+    //   in: 'header',
+    //   name: 'Authorization',
+    //   description: 'Enter JWT Bearer token',
+    // })
+    // .addSecurityRequirements('bearer')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('', app, document);
 
-  const jwtAuthGuard = app.get(JwtAuthGuard);
+  // const jwtAuthGuard = app.get(JwtAuthGuard);
 
-  app.useGlobalGuards(jwtAuthGuard);
+  // app.useGlobalGuards(jwtAuthGuard);
 
   await app.listen(process.env.PORT ?? 3000);
 }
