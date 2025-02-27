@@ -3,17 +3,15 @@
 export const IsStringRegex = new RegExp(
   '^[A-Z][a-zñ]{3,}[^\\d\\W_]*(\\s[A-Za-zñ][a-zñ]{2,}[^\\d\\W_]*)*$',
 );
-
 export const IsEmailRegex = new RegExp(
   '^\[a\-z0\-9\.\!\#</span>%&*+/=?^_`{|}~-]+@[a-z0-9-]+\.[a-z0-9.]{2,}$',
 );
-
 export const IsPassword = new RegExp(
   '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$',
 );
-
 export const IsPriceRegex = new RegExp('^[1-9][0-9]*(\.[0-9]{1,2})?$');
 export const IsNumberRegex = new RegExp('^[0-9]+$');
+export const IsLevelRegex = new RegExp('^[0-9]+$');
 export const IsPhoneRegex = new RegExp('^\\+?[0-9]{1,3}[-\\s\\.]?[0-9]{6,}$');
 export const IsBloodRegex = new RegExp('^(A|B|AB|O)+[+|-]$');
 export const IsSexRegex = new RegExp('^(M|F)$');
