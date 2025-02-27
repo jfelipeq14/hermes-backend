@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsBoolean,
   IsDateString,
   IsInt,
   IsNotEmpty,
@@ -11,7 +10,12 @@ import {
   Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsNumb } from 'src/utils/regex';
+import {
+  IsLevelRegex,
+  IsNumberRegex,
+  IsPriceRegex,
+  IsStringRegex,
+} from 'src/utils/regex';
 
 class CreateDetailPackageServiceDto {
   @ApiProperty({ required: true })
@@ -21,12 +25,13 @@ class CreateDetailPackageServiceDto {
 
   @ApiProperty({ required: true })
   @IsInt()
-  @Matches(IsNumb)
+  @Matches(IsNumberRegex)
   @IsNotEmpty()
   quantity: number;
 
   @ApiProperty({ required: true })
   @IsNumber()
+  @Matches(IsPriceRegex)
   @IsNotEmpty()
   price: number;
 }
@@ -34,6 +39,7 @@ class CreateDetailPackageServiceDto {
 export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Name of the package' })
   @IsString()
+  @Matches(IsStringRegex)
   @IsNotEmpty()
   activity: string;
 
@@ -54,26 +60,30 @@ export class CreatePackageDto {
 
   @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
   @IsNumber()
+  @Matches(IsLevelRegex)
   level: number;
 
   @ApiProperty({ required: true, description: 'Price of the package' })
   @IsNumber()
+  @Matches(IsPriceRegex)
   @IsNotEmpty()
   price: number;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
   @IsNumber()
+  @Matches(IsPriceRegex)
   @IsNotEmpty()
   reserve: number;
 
   @ApiProperty({ required: true, description: 'Description of the package' })
   @IsString()
+  @Matches(IsStringRegex)
   description: string;
 
-  @ApiProperty({ required: true, description: 'Status of the package' })
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
+  // @ApiProperty({ required: true, description: 'Status of the package' })
+  // @IsBoolean()
+  // @IsNotEmpty()
+  // status: boolean;
 
   @ApiProperty({ type: [CreateDetailPackageServiceDto], required: true })
   @IsArray()

@@ -2,13 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsBoolean,
   IsDateString,
   IsInt,
   IsNotEmpty,
   IsString,
+  Matches,
   ValidateNested,
 } from 'class-validator';
+import { IsNumberRegex, IsStringRegex } from 'src/utils/regex';
 
 class CreateMeetingDto {
   @ApiProperty({ required: true, description: 'The municipality of meeting' })
@@ -26,6 +27,7 @@ class CreateMeetingDto {
     description: 'The description of the meeting',
   })
   @IsString()
+  @Matches(IsStringRegex)
   @IsNotEmpty()
   description: string;
 }
@@ -58,6 +60,7 @@ export class CreateDateDto {
 
   @ApiProperty({ required: true, description: '' })
   @IsInt()
+  @Matches(IsNumberRegex)
   @IsNotEmpty()
   amount: number;
 
@@ -66,10 +69,10 @@ export class CreateDateDto {
   @IsNotEmpty()
   idUser: number;
 
-  @ApiProperty({ required: true, description: '' })
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
+  // @ApiProperty({ required: true, description: '' })
+  // @IsBoolean()
+  // @IsNotEmpty()
+  // status: boolean;
 
   @ApiProperty({ type: [CreateMeetingDto], required: true })
   @IsArray()
