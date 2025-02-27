@@ -8,8 +8,10 @@ import {
   IsString,
   IsArray,
   ValidateNested,
+  Matches,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsNumb } from 'src/utils/regex';
 
 class CreateDetailPackageServiceDto {
   @ApiProperty({ required: true })
@@ -19,6 +21,7 @@ class CreateDetailPackageServiceDto {
 
   @ApiProperty({ required: true })
   @IsInt()
+  @Matches(IsNumb)
   @IsNotEmpty()
   quantity: number;
 
