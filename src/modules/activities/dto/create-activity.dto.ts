@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length, Matches, min, minLength } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+  min,
+  minLength,
+} from 'class-validator';
 import { IsName } from 'src/utils/regex';
 
 export class CreateActivityDto {

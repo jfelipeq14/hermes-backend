@@ -16,7 +16,7 @@ import { Activity } from './entities/activity.entity';
 
 @Controller('activities')
 export class ActivitiesController {
-  constructor(private readonly activitiesService: ActivitiesService) { }
+  constructor(private readonly activitiesService: ActivitiesService) {}
 
   @Get()
   async findAll(): Promise<Activity[]> {
