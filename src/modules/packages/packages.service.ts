@@ -61,11 +61,30 @@ export class PackagesService {
     });
   }
 
-  async remove(id: number) {
-    return await this.prisma.packages.delete({
+  async changeStatus(id: number) {
+    const packageData = await this.prisma.packages.findUnique({
       where: {
         id: id,
       },
     });
+
+    if (packageData) {
+      const dates = await this.prisma.dates.findMany({
+        where: {
+          idPackage: packageData.id,
+        },
+      });
+
+      if (!dates) {
+        return await this.prisma.packages.update({
+          where: {
+            id: id,
+          },
+          data: {
+            status: !packageData.status,
+          },
+        });
+      }
+    }
   }
 }
