@@ -14,7 +14,9 @@ export class RolesService {
           rolePrivileges: true,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findOne(id: number) {

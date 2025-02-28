@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { compare, encrypt } from 'src/providers/bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
