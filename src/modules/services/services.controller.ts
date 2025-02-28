@@ -7,7 +7,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -54,10 +53,10 @@ export class ServicesController {
     }
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Patch(':id/status')
+  async changeStatus(@Param('id') id: string) {
     try {
-      return await this.servicesService.remove(+id);
+      return await this.servicesService.changeStatus(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

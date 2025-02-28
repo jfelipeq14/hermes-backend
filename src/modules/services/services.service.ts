@@ -7,26 +7,26 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class ServicesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.services.findMany();
+  async findAll() {
+    return await this.prisma.services.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.services.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.services.findUnique({
       where: {
         id,
       },
     });
   }
 
-  create(createServiceDto: CreateServiceDto) {
-    return this.prisma.services.create({
+  async create(createServiceDto: CreateServiceDto) {
+    return await this.prisma.services.create({
       data: createServiceDto,
     });
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    return this.prisma.services.update({
+  async update(id: number, updateServiceDto: UpdateServiceDto) {
+    return await this.prisma.services.update({
       where: {
         id,
       },
@@ -34,11 +34,21 @@ export class ServicesService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.services.delete({
+  async changeStatus(id: number) {
+    const service = await this.prisma.services.findUnique({
       where: {
         id,
       },
     });
+
+    if (service)
+      return this.prisma.services.update({
+        where: {
+          id,
+        },
+        data: {
+          status: !service.status,
+        },
+      });
   }
 }
