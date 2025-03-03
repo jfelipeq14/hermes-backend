@@ -8,84 +8,83 @@ export class PackagesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    try {
-      return this.prisma.packages.findMany({
-        include: {
-          detailPackagesServices: true,
-          dates: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.packages.findMany({
+      include: {
+        detailPackagesServices: true,
+        dates: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    try {
-      return this.prisma.packages.findUnique({
-        where: {
-          id: id,
-        },
-        include: {
-          detailPackagesServices: true,
-          dates: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.packages.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        detailPackagesServices: true,
+        dates: true,
+      },
+    });
   }
 
   async create(createPackageDto: CreatePackageDto) {
-    try {
-      const { detailPackagesServices, ...packageData } = createPackageDto;
-      return await this.prisma.packages.create({
-        data: {
-          ...packageData,
-          detailPackagesServices: {
-            create: detailPackagesServices,
-          },
+    const { detailPackagesServices, ...packageData } = createPackageDto;
+    return await this.prisma.packages.create({
+      data: {
+        ...packageData,
+        detailPackagesServices: {
+          create: detailPackagesServices,
         },
-        include: {
-          detailPackagesServices: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      include: {
+        detailPackagesServices: true,
+      },
+    });
   }
 
   async update(id: number, updatePackageDto: UpdatePackageDto) {
-    try {
-      const { detailPackagesServices, ...packageData } = updatePackageDto;
-      return await this.prisma.packages.update({
-        where: {
-          id: id,
+    const { detailPackagesServices, ...packageData } = updatePackageDto;
+    return await this.prisma.packages.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...packageData,
+        detailPackagesServices: {
+          create: detailPackagesServices,
         },
-        data: {
-          ...packageData,
-          detailPackagesServices: {
-            create: detailPackagesServices,
-          },
-        },
-        include: {
-          detailPackagesServices: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      include: {
+        detailPackagesServices: true,
+      },
+    });
   }
 
-  async remove(id: number) {
-    try {
-      return await this.prisma.packages.delete({
+  async changeStatus(id: number) {
+    const packageData = await this.prisma.packages.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (packageData) {
+      const dates = await this.prisma.dates.findMany({
         where: {
-          id: id,
+          idPackage: packageData.id,
         },
       });
-    } catch (error) {
-      console.log(error);
+
+      if (!dates) {
+        return await this.prisma.packages.update({
+          where: {
+            id: id,
+          },
+          data: {
+            status: !packageData.status,
+          },
+        });
+      }
     }
   }
 }

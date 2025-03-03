@@ -9,7 +9,11 @@ export class RolesService {
 
   findAll() {
     try {
-      return this.prisma.roles.findMany();
+      return this.prisma.roles.findMany({
+        include: {
+          rolePrivileges: true,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -18,7 +22,12 @@ export class RolesService {
   findOne(id: number) {
     try {
       return this.prisma.roles.findUnique({
-        where: { id },
+        where: {
+          id: id,
+        },
+        include: {
+          rolePrivileges: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -27,8 +36,17 @@ export class RolesService {
 
   create(createRoleDto: CreateRoleDto) {
     try {
+      const { rolePrivileges, ...roleData } = createRoleDto;
       return this.prisma.roles.create({
-        data: createRoleDto,
+        data: {
+          ...roleData,
+          rolePrivileges: {
+            create: rolePrivileges,
+          },
+        },
+        include: {
+          rolePrivileges: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -37,9 +55,18 @@ export class RolesService {
 
   update(id: number, updateRoleDto: UpdateRoleDto) {
     try {
+      const { rolePrivileges, ...roleData } = updateRoleDto;
       return this.prisma.roles.update({
         where: { id },
-        data: updateRoleDto,
+        data: {
+          ...roleData,
+          rolePrivileges: {
+            create: rolePrivileges,
+          },
+        },
+        include: {
+          rolePrivileges: true,
+        },
       });
     } catch (error) {
       console.log(error);
@@ -49,7 +76,9 @@ export class RolesService {
   remove(id: number) {
     try {
       return this.prisma.roles.delete({
-        where: { id },
+        where: {
+          id: id,
+        },
       });
     } catch (error) {
       console.log(error);

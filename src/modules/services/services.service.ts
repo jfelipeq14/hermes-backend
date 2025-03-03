@@ -7,58 +7,48 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class ServicesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    try {
-      return this.prisma.services.findMany();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    return await this.prisma.services.findMany();
   }
 
-  findOne(id: number) {
-    try {
-      return this.prisma.services.findUnique({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(id: number) {
+    return await this.prisma.services.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  create(createServiceDto: CreateServiceDto) {
-    try {
-      return this.prisma.services.create({
-        data: createServiceDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  async create(createServiceDto: CreateServiceDto) {
+    return await this.prisma.services.create({
+      data: createServiceDto,
+    });
   }
 
-  update(id: number, updateServiceDto: UpdateServiceDto) {
-    try {
+  async update(id: number, updateServiceDto: UpdateServiceDto) {
+    return await this.prisma.services.update({
+      where: {
+        id,
+      },
+      data: updateServiceDto,
+    });
+  }
+
+  async changeStatus(id: number) {
+    const service = await this.prisma.services.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (service)
       return this.prisma.services.update({
         where: {
           id,
         },
-        data: updateServiceDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  remove(id: number) {
-    try {
-      return this.prisma.services.delete({
-        where: {
-          id,
+        data: {
+          status: !service.status,
         },
       });
-    } catch (error) {
-      console.log(error);
-    }
   }
 }

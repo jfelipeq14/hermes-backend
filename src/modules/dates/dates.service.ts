@@ -8,82 +8,62 @@ export class DatesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    try {
-      return this.prisma.dates.findMany({
-        include: {
-          meetings: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.dates.findMany({
+      include: {
+        meetings: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    try {
-      return this.prisma.dates.findUnique({
-        where: {
-          id,
-        },
-        include: {
-          meetings: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.dates.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        meetings: true,
+      },
+    });
   }
 
   create(createDateDto: CreateDateDto) {
-    try {
-      const { meetings, ...dateData } = createDateDto;
-      return this.prisma.dates.create({
-        data: {
-          ...dateData,
-          meetings: {
-            create: meetings,
-          },
+    const { meetings, ...dateData } = createDateDto;
+    return this.prisma.dates.create({
+      data: {
+        ...dateData,
+        meetings: {
+          create: meetings,
         },
-        include: {
-          meetings: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      include: {
+        meetings: true,
+      },
+    });
   }
 
   update(id: number, updateDateDto: UpdateDateDto) {
-    try {
-      const { meetings, ...dateData } = updateDateDto;
-      return this.prisma.dates.update({
-        where: {
-          id,
+    const { meetings, ...dateData } = updateDateDto;
+    return this.prisma.dates.update({
+      where: {
+        id,
+      },
+      data: {
+        ...dateData,
+        meetings: {
+          create: meetings,
         },
-        data: {
-          ...dateData,
-          meetings: {
-            create: meetings,
-          },
-        },
-        include: {
-          meetings: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      },
+      include: {
+        meetings: true,
+      },
+    });
   }
 
   remove(id: number) {
-    try {
-      return this.prisma.dates.delete({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.dates.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

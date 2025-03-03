@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Get,
@@ -6,6 +8,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -16,47 +20,44 @@ export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Get()
-  findAll() {
-    try {
-      return this.rolesService.findAll();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    const roles_ = await this.rolesService.findAll();
+    if (!roles_)
+      throw new HttpException('No roles found', HttpStatus.NOT_FOUND);
+    return roles_;
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.rolesService.findOne(+id);
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(@Param('id') id: string) {
+    const role_ = await this.rolesService.findOne(+id);
+    if (!role_) throw new HttpException('No role found', HttpStatus.NOT_FOUND);
+    return role_;
   }
 
   @Post()
-  create(@Body() createRoleDto: CreateRoleDto) {
+  async create(@Body() createRoleDto: CreateRoleDto) {
     try {
-      return this.rolesService.create(createRoleDto);
+      return await this.rolesService.create(createRoleDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+  async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     try {
-      return this.rolesService.update(+id, updateRoleDto);
+      return await this.rolesService.update(+id, updateRoleDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.rolesService.remove(+id);
+      return await this.rolesService.remove(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }

@@ -1,0 +1,90 @@
+"tabla_nombre","columna_nombre","columna_defecto","columna_nulo","columna_tipo_dato","columna_longitud","columna_descripcion","columna_dominio"
+"category_services","id_categoryservice","nextval('category_services_id_categoryservice_seq'::regclass)","NO","integer",32,NULL,NULL
+"category_services","name",NULL,"NO","character varying",60,NULL,NULL
+"customers","name",NULL,"NO","character varying",60,NULL,NULL
+"customers","country",NULL,"NO","integer",32,NULL,NULL
+"customers","address",NULL,"NO","character varying",40,NULL,NULL
+"customers","bloodtype",NULL,"NO","character varying",3,NULL,NULL
+"customers","healthposition",NULL,"NO","character varying",60,NULL,NULL
+"customers","lastname",NULL,"NO","character varying",50,NULL,NULL
+"customers","idUser",NULL,"NO","integer",32,NULL,NULL
+"customers","sex",NULL,"NO","character",1,NULL,NULL
+"customers","departament",NULL,"NO","integer",32,NULL,NULL
+"customers","municipality",NULL,"NO","integer",32,NULL,NULL
+"customers","state",NULL,"NO","boolean",NULL,NULL,NULL
+"customers","identification",NULL,"NO","character varying",30,NULL,NULL
+"customers","idCustomer","nextval('customers_idCustomer_seq'::regclass)","NO","integer",32,NULL,NULL
+"customers","documenttype",NULL,"NO","character varying",2,NULL,NULL
+"customers","eps",NULL,"NO","character varying",60,NULL,NULL
+"customers","phone",NULL,"NO","character varying",15,NULL,NULL
+"detail_package_service","id_detail_package_service","nextval('detail_package_service_id_detail_package_service_seq'::regclass)","NO","integer",32,NULL,NULL
+"detail_package_service","id_service",NULL,"NO","integer",32,NULL,NULL
+"detail_package_service","quantity",NULL,"NO","integer",32,NULL,NULL
+"detail_package_service","id_package",NULL,"NO","integer",32,NULL,NULL
+"detail_package_service","price",NULL,"YES","numeric",15,NULL,NULL
+"detail_programming_packages","id_package",NULL,"NO","integer",32,NULL,NULL
+"detail_programming_packages","price_package",NULL,"YES","numeric",15,NULL,NULL
+"detail_programming_packages","idDetailProgrammingPackage","nextval('detail_programming_packages_idDetailProgrammingPackage_seq'::regclass)","NO","integer",32,NULL,NULL
+"detail_programming_packages","id_programation",NULL,"NO","integer",32,NULL,NULL
+"detail_programming_packages","status_programation_package",NULL,"YES","boolean",NULL,NULL,NULL
+"detail_programming_packages_service","idDetailProgrammingPackage_service","nextval('detail_programming_packages_s_idDetailProgrammingPackage_seq'::regclass)","NO","integer",32,NULL,NULL
+"detail_programming_packages_service","idDetailProgrammingPackage",NULL,"NO","integer",32,NULL,NULL
+"detail_programming_packages_service","id_detail_package_service",NULL,"NO","integer",32,NULL,NULL
+"detail_programming_packages_service","price_service",NULL,"YES","numeric",15,NULL,NULL
+"detail_programming_packages_service","quantity",NULL,"NO","integer",32,NULL,NULL
+"packages","price",NULL,"YES","numeric",15,NULL,NULL
+"packages","destination",NULL,"YES","character varying",60,NULL,NULL
+"packages","id_package","nextval('packages_id_package_seq'::regclass)","NO","integer",32,NULL,NULL
+"packages","status",NULL,"YES","boolean",NULL,NULL,NULL
+"packages","name",NULL,"YES","character varying",60,NULL,NULL
+"pay","price",NULL,"NO","numeric",15,NULL,NULL
+"pay","idPay","nextval('pay_idPay_seq'::regclass)","NO","integer",32,NULL,NULL
+"pay","idReservation",NULL,"NO","integer",32,NULL,NULL
+"pay","status",NULL,"NO","character",1,NULL,NULL
+"pay","date_pay","CURRENT_DATE","YES","date",NULL,NULL,NULL
+"pay","voucher",NULL,"NO","character varying",255,NULL,NULL
+"permissions","id_permission","nextval('permissions_id_permission_seq'::regclass)","NO","integer",32,NULL,NULL
+"permissions","name",NULL,"NO","character varying",60,NULL,NULL
+"permissions","state",NULL,"NO","boolean",NULL,NULL,NULL
+"privileges","id_privilege","nextval('privileges_id_privilege_seq'::regclass)","NO","integer",32,NULL,NULL
+"privileges","id_permission",NULL,"NO","integer",32,NULL,NULL
+"privileges","name",NULL,"NO","character varying",60,NULL,NULL
+"programation_packages","date_ending",NULL,"NO","date",NULL,NULL,NULL
+"programation_packages","date_execution",NULL,"NO","date",NULL,NULL,NULL
+"programation_packages","date_start",NULL,"NO","date",NULL,NULL,NULL
+"programation_packages","date_end",NULL,"NO","date",NULL,NULL,NULL
+"programation_packages","id_programation","nextval('programation_packages_id_programation_seq'::regclass)","NO","integer",32,NULL,NULL
+"reservations","dateReservation","CURRENT_DATE","YES","date",NULL,NULL,NULL
+"reservations","numberCompanions",NULL,"NO","integer",32,NULL,NULL
+"reservations","status",NULL,"NO","character",1,NULL,NULL
+"reservations","priceReservation",NULL,"NO","numeric",15,NULL,NULL
+"reservations","travelCustomer",NULL,"NO","boolean",NULL,NULL,NULL
+"reservations","idCustomer",NULL,"NO","integer",32,NULL,NULL
+"reservations","idDetailProgrammingPackage",NULL,"NO","integer",32,NULL,NULL
+"reservations","idReservation","nextval('reservations_idReservation_seq'::regclass)","NO","integer",32,NULL,NULL
+"reserve_companions","idReserveCompanion","nextval('reserve_companions_idReserveCompanion_seq'::regclass)","NO","integer",32,NULL,NULL
+"reserve_companions","sex",NULL,"YES","character",1,NULL,NULL
+"reserve_companions","idReservation","nextval('reserve_companions_idReservation_seq'::regclass)","NO","integer",32,NULL,NULL
+"reserve_companions","lastname",NULL,"YES","character varying",50,NULL,NULL
+"reserve_companions","name",NULL,"YES","character varying",60,NULL,NULL
+"reserve_companions","bloodtype",NULL,"YES","character varying",3,NULL,NULL
+"reserve_companions","phone",NULL,"YES","character varying",15,NULL,NULL
+"reserve_companions","eps",NULL,"YES","character varying",60,NULL,NULL
+"reserve_companions","healthposition",NULL,"YES","character varying",60,NULL,NULL
+"reserve_companions","rh",NULL,"YES","character",1,NULL,NULL
+"role_privilege","idRole",NULL,"NO","integer",32,NULL,NULL
+"role_privilege","idRole_privilege","nextval('role_privilege_idRole_privilege_seq'::regclass)","NO","integer",32,NULL,NULL
+"role_privilege","id_privilege",NULL,"NO","integer",32,NULL,NULL
+"roles","idRole","nextval('roles_idRole_seq'::regclass)","NO","integer",32,NULL,NULL
+"roles","state",NULL,"NO","boolean",NULL,NULL,NULL
+"roles","name",NULL,"NO","character varying",60,NULL,NULL
+"services","name",NULL,"NO","character varying",60,NULL,NULL
+"services","price",NULL,"NO","numeric",15,NULL,NULL
+"services","id_categoryservice",NULL,"NO","integer",32,NULL,NULL
+"services","id_service","nextval('services_id_service_seq'::regclass)","NO","integer",32,NULL,NULL
+"services","status",NULL,"NO","boolean",NULL,NULL,NULL
+"users","idRole",NULL,"NO","integer",32,NULL,NULL
+"users","idUser","nextval('users_idUser_seq'::regclass)","NO","integer",32,NULL,NULL
+"users","state",NULL,"YES","boolean",NULL,NULL,NULL
+"users","email",NULL,"NO","character varying",255,NULL,NULL
+"users","password",NULL,"NO","character varying",255,NULL,NULL

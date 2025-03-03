@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Get,
@@ -5,7 +7,8 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -16,47 +19,46 @@ export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
   @Get()
-  findAll() {
-    try {
-      return this.servicesService.findAll();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    const services_ = await this.servicesService.findAll();
+    if (!services_)
+      throw new HttpException('No existen servicios', HttpStatus.NOT_FOUND);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.servicesService.findOne(+id);
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(@Param('id') id: string) {
+    const service_ = await this.servicesService.findOne(+id);
+    if (!service_)
+      throw new HttpException('No existe el servicio', HttpStatus.NOT_FOUND);
   }
 
   @Post()
-  create(@Body() createServiceDto: CreateServiceDto) {
+  async create(@Body() createServiceDto: CreateServiceDto) {
     try {
-      return this.servicesService.create(createServiceDto);
+      return await this.servicesService.create(createServiceDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateServiceDto: UpdateServiceDto,
+  ) {
     try {
-      return this.servicesService.update(+id, updateServiceDto);
+      return await this.servicesService.update(+id, updateServiceDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Patch(':id/status')
+  async changeStatus(@Param('id') id: string) {
     try {
-      return this.servicesService.remove(+id);
+      return await this.servicesService.changeStatus(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }
