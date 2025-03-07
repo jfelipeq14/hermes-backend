@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -15,14 +16,12 @@ import { LogInDto } from './dto/log-in';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @IsPublic()
+@UseGuards(JwtAuthGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  //agreggue estas lineas de codigo
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
-  //
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
     try {
@@ -32,8 +31,7 @@ export class AuthController {
     }
   }
 
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
     try {

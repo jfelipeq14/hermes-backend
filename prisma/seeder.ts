@@ -90,13 +90,13 @@ async function main() {
         name: 'Juan',
         surName: 'Perez',
         dateBirth: new Date(),
-        email: 'juanperez@gmail.com',
-        password: '123456',
+        email: 'juan@gmail.com',
+        password: '123',
         idMunicipality: municipalities.id,
         address: 'Calle 123',
         phone: '123456789',
         emergency: '123456789',
-        sex: 'Masculino',
+        sex: 'M',
         bloodType: 'A+',
         eps: 'Sura',
         status: true,
@@ -214,17 +214,20 @@ async function main() {
 
     return reservation_;
   });
-  const detailReservationTravelers = await prisma.$transaction(async (prisma) => {
-    const detailReservationTraveler_ = await prisma.detailReservationTravelers.create({
-      data: {
-        idReservation: reservations.id,
-        idTraveler: users.id,
-        status: true,
-      },
-    });
+  const detailReservationTravelers = await prisma.$transaction(
+    async (prisma) => {
+      const detailReservationTraveler_ =
+        await prisma.detailReservationTravelers.create({
+          data: {
+            idReservation: reservations.id,
+            idTraveler: users.id,
+            status: true,
+          },
+        });
 
-    return detailReservationTraveler_;
-  });
+      return detailReservationTraveler_;
+    },
+  );
 }
 
 main()
