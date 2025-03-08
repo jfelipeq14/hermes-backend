@@ -8,11 +8,7 @@ export class DatesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.prisma.dates.findMany({
-      include: {
-        meetings: true,
-      },
-    });
+    return this.prisma.dates.findMany({});
   }
 
   findOne(id: number) {
@@ -20,50 +16,41 @@ export class DatesService {
       where: {
         id,
       },
-      include: {
-        meetings: true,
-      },
     });
   }
 
   create(createDateDto: CreateDateDto) {
-    const { meetings, ...dateData } = createDateDto;
     return this.prisma.dates.create({
-      data: {
-        ...dateData,
-        meetings: {
-          create: meetings,
-        },
-      },
-      include: {
-        meetings: true,
-      },
+      data: createDateDto,
     });
   }
 
   update(id: number, updateDateDto: UpdateDateDto) {
-    const { meetings, ...dateData } = updateDateDto;
     return this.prisma.dates.update({
       where: {
         id,
       },
-      data: {
-        ...dateData,
-        meetings: {
-          update: {
-            where: {
-              id,
-            },
-            data: {
-              ...meetings,
-            },
-          },
-        },
-      },
-      include: {
-        meetings: true,
+      data: updateDateDto,
+    });
+  }
+
+  async changeStatus(id: number) {
+    const datesData = await this.prisma.dates.findUnique({
+      where: {
+        id: id,
       },
     });
+
+    if (datesData) {
+      return await this.prisma.packages.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status: !datesData.status,
+        },
+      });
+    }
   }
 
   remove(id: number) {
