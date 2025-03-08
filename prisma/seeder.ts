@@ -1,3 +1,7 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -10,7 +14,6 @@ async function main() {
         name: 'Colombia',
       },
     });
-
     return country_;
   });
 
@@ -179,7 +182,6 @@ async function main() {
         endRegistration: new Date(),
         idPackage: packages.id,
         amount: 1,
-        idUser: users.id,
         status: true,
       },
     });
@@ -191,7 +193,7 @@ async function main() {
     const meeting_ = await prisma.meetings.create({
       data: {
         idDate: dates.id,
-        idMunicipality: municipalities.id,
+        zone: 'N',
         hour: new Date(),
         description: 'En x parte',
       },
