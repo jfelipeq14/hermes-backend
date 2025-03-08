@@ -96,10 +96,9 @@ model users {
   role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
 
-  dates                      dates[]
   reservations               reservations[]
   detailReservationTravelers detailReservationTravelers[]
-  responsible                responsibles[]
+  responsibles               responsibles[]
 }
 
 model activities {
@@ -171,8 +170,6 @@ model dates {
 
   meetings     meetings[]
   reservations reservations[]
-  users        users?         @relation(fields: [usersId], references: [id])
-  usersId      Int?
 }
 
 model meetings {
@@ -182,8 +179,8 @@ model meetings {
   hour        DateTime @db.Time
   description String   @db.VarChar(255)
 
-  dates       dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
-  responsible responsibles[]
+  dates        dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  responsibles responsibles[]
 }
 
 model responsibles {
@@ -191,8 +188,8 @@ model responsibles {
   idUser    Int
   idMeeting Int
 
-  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
   meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
+  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
 }
 
 model reservations {
