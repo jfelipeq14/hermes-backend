@@ -50,7 +50,14 @@ export class DatesService {
       data: {
         ...dateData,
         meetings: {
-          create: meetings,
+          update: {
+            where: {
+              id,
+            },
+            data: {
+              ...meetings,
+            },
+          },
         },
       },
       include: {

@@ -5,76 +5,51 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
-  IsString,
   Matches,
   ValidateNested,
 } from 'class-validator';
-import { IsNumberRegex, IsStringRegex } from 'src/utils/regex';
-
-class CreateMeetingDto {
-  @ApiProperty({ required: true, description: 'The municipality of meeting' })
-  @IsInt()
-  @IsNotEmpty()
-  idMunicipality: number;
-
-  @ApiProperty({ required: true, description: 'The hour of the meeting' })
-  @IsDateString()
-  @IsNotEmpty()
-  hour: Date;
-
-  @ApiProperty({
-    required: true,
-    description: 'The description of the meeting',
-  })
-  @IsString()
-  @Matches(IsStringRegex)
-  @IsNotEmpty()
-  description: string;
-}
+import { IsNumberRegex } from 'src/utils/regex';
+import { CreateMeetingDto } from './create-meeting.dto';
 
 export class CreateDateDto {
-  @ApiProperty({ required: true, description: 'The date of the event' })
+  @ApiProperty({
+    required: true,
+    description: 'The date of the start of the event',
+  })
   @IsDateString()
   @IsNotEmpty()
   start: Date;
 
-  @ApiProperty({ required: true, description: 'The date of the event' })
+  @ApiProperty({
+    required: true,
+    description: 'The date of the end of the event',
+  })
   @IsDateString()
   @IsNotEmpty()
   end: Date;
 
-  @ApiProperty({ required: true, description: 'The title of the event' })
+  @ApiProperty({ required: true, description: 'The start registration date' })
   @IsDateString()
   @IsNotEmpty()
   startRegistration: Date;
 
-  @ApiProperty({ required: true, description: '' })
+  @ApiProperty({ required: true, description: 'The end registration date' })
   @IsDateString()
   @IsNotEmpty()
   endRegistration: Date;
 
-  @ApiProperty({ required: true, description: '' })
+  @ApiProperty({ required: true, description: 'The package of the date' })
   @IsInt()
   @IsNotEmpty()
   idPackage: number;
 
-  @ApiProperty({ required: true, description: '' })
+  @ApiProperty({ required: true, description: 'The amount of the date' })
   @IsInt()
   @Matches(IsNumberRegex)
   @IsNotEmpty()
   amount: number;
 
-  @ApiProperty({ required: true, description: '' })
-  @IsInt()
-  @IsNotEmpty()
-  idUser: number;
-
-  // @ApiProperty({ required: true, description: '' })
-  // @IsBoolean()
-  // @IsNotEmpty()
-  // status: boolean;
-
-  @ApiProperty({ type: [CreateMeetingDto], required: true })
+  @ApiProperty({ required: true })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateMeetingDto)
