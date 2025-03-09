@@ -9,7 +9,7 @@ datasource db {
 
 model countries {
   id   Int    @id @default(autoincrement())
-  code String @unique @db.VarChar(3)
+  code String @unique @db.VarChar(8)
   name String @unique @db.VarChar(60)
 
   departments departments[]
@@ -17,7 +17,7 @@ model countries {
 
 model departments {
   id        Int    @id @default(autoincrement())
-  code      String @unique @db.VarChar(3)
+  code      String @unique @db.VarChar(8)
   name      String @unique @db.VarChar(60)
   idCountry Int
 
@@ -28,8 +28,8 @@ model departments {
 
 model municipalities {
   id           Int    @id @default(autoincrement())
-  code         String @unique
-  name         String @unique
+  code         String @unique @db.VarChar(8)
+  name         String @unique @db.VarChar(60)
   idDepartment Int
 
   departments departments @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
@@ -188,8 +188,8 @@ model responsibles {
   idUser    Int
   idMeeting Int
 
-  meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
   users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
 }
 
 model reservations {
@@ -201,9 +201,10 @@ model reservations {
   price          Decimal  @db.Decimal(15, 2)
   status         String   @db.Char(1)
 
-  dates                      dates                        @relation(fields: [idDate], references: [id], onDelete: Cascade)
-  municipalities             municipalities               @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-  users                      users                        @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
+
   detailReservationTravelers detailReservationTravelers[]
 }
 
