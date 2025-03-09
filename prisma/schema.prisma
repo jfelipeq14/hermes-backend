@@ -206,6 +206,7 @@ model reservations {
   users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
 
   detailReservationTravelers detailReservationTravelers[]
+  payments                   payments[]
 }
 
 model detailReservationTravelers {
@@ -217,3 +218,16 @@ model detailReservationTravelers {
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
   users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
+
+
+model payments {
+  id            Int     @id @default(autoincrement())
+  idReservation Int
+  date          DateTime @db.Date
+  price         Decimal  @db.Decimal(15, 2)
+  voucher       String   @db.VarChar(60)
+  status        Boolean  @default(true)
+
+  reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
+}
+

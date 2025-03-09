@@ -13,6 +13,9 @@ import { PermitsModule } from './modules/permits/permits.module';
 import { PrivilegesModule } from './modules/privileges/privileges.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { DatesModule } from './modules/dates/dates.module';
+
+import { PaymentsModule } from './modules/payments/payments.module';
+
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -32,6 +35,7 @@ import { AuthModule } from './modules/auth/auth.module';
     PackagesModule,
     DatesModule,
     ReservationsModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [],

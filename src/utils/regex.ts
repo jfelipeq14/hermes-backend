@@ -23,3 +23,4 @@ export const IsDocumentTypeRegex = new RegExp(
 export const IsReservationStatusRegex = new RegExp('^(N|C|P|M|R|E|F)$');
 // -- ESTADOS DE PAGO: REVISAR, PAGO, NO PAGO, ANULADO
 export const IsPaymentStatusRegex = new RegExp('^(R|P|N|A|)$');
+export const ImageExtensionRegex = new RegExp(/\.(png|jpe?g|gif|webp|svg)$/i);
