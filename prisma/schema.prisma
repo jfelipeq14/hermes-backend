@@ -223,10 +223,10 @@ model detailReservationTravelers {
 model payments {
   id            Int     @id @default(autoincrement())
   idReservation Int
-  date          DateTime
-  price         Decimal
-  voucher       String
-  status        Boolean
+  date          DateTime @db.Date
+  price         Decimal  @db.Decimal(15, 2)
+  voucher       String   @db.VarChar(60)
+  status        Boolean  @default(true)
 
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
 }
