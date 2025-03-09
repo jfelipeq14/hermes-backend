@@ -131,7 +131,7 @@ async function main() {
       data: {
         idCategoryServices: categoryServices.id,
         name: 'Desayuno',
-        price: 8000.00,
+        price: 8000.0,
       },
     });
 
@@ -176,7 +176,7 @@ async function main() {
         startRegistration: new Date(),
         endRegistration: new Date(),
         idPackage: packages.id,
-        amount: 1,
+        amount: 20,
       },
     });
 
@@ -189,7 +189,8 @@ async function main() {
         idDate: dates.id,
         zone: 'N',
         hour: new Date(),
-        description: 'Los puntos de encuentro hacie el norte son: Parque Berrio, Moravia, Niquia',
+        description:
+          'Los puntos de encuentro hacie el norte son: Parque Berrio, Moravia, Niquia',
       },
     });
 

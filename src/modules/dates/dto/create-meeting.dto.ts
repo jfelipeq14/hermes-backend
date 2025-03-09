@@ -22,10 +22,4 @@ export class CreateMeetingDto {
   @Matches(IsStringRegex)
   @IsNotEmpty()
   description: string;
-
-  // @ApiProperty({ type: [CreateResponsibleDto], required: true })
-  // @IsArray()
-  // @ValidateNested({ each: true })
-  // @Type(() => CreateResponsibleDto)
-  // responsibles: CreateResponsibleDto[];
 }

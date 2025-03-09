@@ -8,11 +8,7 @@ export class DatesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.prisma.dates.findMany({
-      include: {
-        meetings: true,
-      },
-    });
+    return this.prisma.dates.findMany({});
   }
 
   findOne(id: number) {
@@ -20,50 +16,61 @@ export class DatesService {
       where: {
         id,
       },
-      include: {
-        meetings: true,
-      },
     });
   }
 
   create(createDateDto: CreateDateDto) {
-    const { meetings, ...dateData } = createDateDto;
     return this.prisma.dates.create({
       data: {
-        ...dateData,
-        meetings: {
-          create: meetings,
-        },
-      },
-      include: {
-        meetings: true,
+        start: new Date(createDateDto.start),
+        end: new Date(createDateDto.end),
+        startRegistration: new Date(createDateDto.startRegistration),
+        endRegistration: new Date(createDateDto.endRegistration),
+        idPackage: createDateDto.idPackage,
+        amount: createDateDto.amount,
       },
     });
   }
 
   update(id: number, updateDateDto: UpdateDateDto) {
-    const { meetings, ...dateData } = updateDateDto;
-    return this.prisma.dates.update({
-      where: {
-        id,
-      },
-      data: {
-        ...dateData,
-        meetings: {
-          update: {
-            where: {
-              id,
-            },
-            data: {
-              ...meetings,
-            },
-          },
+    if (updateDateDto) {
+      return this.prisma.dates.update({
+        where: {
+          id,
         },
-      },
-      include: {
-        meetings: true,
+        data: {
+          start: new Date(updateDateDto.start || new Date()),
+          end: new Date(updateDateDto.end || new Date()),
+          startRegistration: new Date(
+            updateDateDto.startRegistration || new Date(),
+          ),
+          endRegistration: new Date(
+            updateDateDto.endRegistration || new Date(),
+          ),
+          idPackage: updateDateDto.idPackage,
+          amount: updateDateDto.amount,
+        },
+      });
+    }
+  }
+
+  async changeStatus(id: number) {
+    const datesData = await this.prisma.dates.findUnique({
+      where: {
+        id: id,
       },
     });
+
+    if (datesData) {
+      return await this.prisma.packages.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status: !datesData.status,
+        },
+      });
+    }
   }
 
   remove(id: number) {
