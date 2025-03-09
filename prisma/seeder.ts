@@ -1,3 +1,7 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -10,7 +14,6 @@ async function main() {
         name: 'Colombia',
       },
     });
-
     return country_;
   });
 
@@ -41,7 +44,6 @@ async function main() {
     const permit_ = await prisma.permits.create({
       data: {
         name: 'Users',
-        status: true,
       },
     });
 
@@ -62,8 +64,7 @@ async function main() {
   const roles = await prisma.$transaction(async (prisma) => {
     const role_ = await prisma.roles.create({
       data: {
-        name: 'Administrador',
-        status: true,
+        name: 'Administrator',
       },
     });
 
@@ -86,20 +87,19 @@ async function main() {
       data: {
         idRole: roles.id,
         typeDocument: 'CC',
-        document: '1001015566',
+        document: '1',
         name: 'Juan',
-        surName: 'Perez',
+        surName: 'Quintero',
         dateBirth: new Date(),
-        email: 'juan@gmail.com',
+        email: 'jq@gmail.com',
         password: '123',
         idMunicipality: municipalities.id,
-        address: 'Calle 123',
-        phone: '123456789',
-        emergency: '123456789',
+        address: 'Calle 1',
+        phone: '123',
+        emergency: '123',
         sex: 'M',
         bloodType: 'A+',
         eps: 'Sura',
-        status: true,
       },
     });
 
@@ -131,8 +131,7 @@ async function main() {
       data: {
         idCategoryServices: categoryServices.id,
         name: 'Desayuno',
-        price: 100,
-        status: true,
+        price: 8000.00,
       },
     });
 
@@ -142,15 +141,14 @@ async function main() {
   const packages = await prisma.$transaction(async (prisma) => {
     const package_ = await prisma.packages.create({
       data: {
-        activity: 'Venecia',
+        activity: 'Cerro Bravo',
         start: new Date(),
         end: new Date(),
         idActivity: activities.id,
         level: 1,
         price: 100,
         reserve: 50,
-        description: 'Caminata por allá',
-        status: true,
+        description: 'Caminata por Cerro Bravo',
       },
     });
 
@@ -179,8 +177,6 @@ async function main() {
         endRegistration: new Date(),
         idPackage: packages.id,
         amount: 1,
-        idUser: users.id,
-        status: true,
       },
     });
 
@@ -191,13 +187,24 @@ async function main() {
     const meeting_ = await prisma.meetings.create({
       data: {
         idDate: dates.id,
-        idMunicipality: municipalities.id,
+        zone: 'N',
         hour: new Date(),
-        description: 'En x parte',
+        description: 'Los puntos de encuentro hacie el norte son: Parque Berrio, Moravia, Niquia',
       },
     });
 
     return meeting_;
+  });
+
+  const responsibles = await prisma.$transaction(async (prisma) => {
+    const responsible_ = await prisma.responsibles.create({
+      data: {
+        idUser: users.id,
+        idMeeting: meetings.id,
+      },
+    });
+
+    return responsible_;
   });
 
   const reservations = await prisma.$transaction(async (prisma) => {
@@ -214,6 +221,7 @@ async function main() {
 
     return reservation_;
   });
+
   const detailReservationTravelers = await prisma.$transaction(
     async (prisma) => {
       const detailReservationTraveler_ =
@@ -221,7 +229,6 @@ async function main() {
           data: {
             idReservation: reservations.id,
             idTraveler: users.id,
-            status: true,
           },
         });
 

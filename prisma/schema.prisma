@@ -9,7 +9,7 @@ datasource db {
 
 model countries {
   id   Int    @id @default(autoincrement())
-  code String @unique @db.VarChar(3)
+  code String @unique @db.VarChar(8)
   name String @unique @db.VarChar(60)
 
   departments departments[]
@@ -17,7 +17,7 @@ model countries {
 
 model departments {
   id        Int    @id @default(autoincrement())
-  code      String @unique @db.VarChar(3)
+  code      String @unique @db.VarChar(8)
   name      String @unique @db.VarChar(60)
   idCountry Int
 
@@ -28,13 +28,12 @@ model departments {
 
 model municipalities {
   id           Int    @id @default(autoincrement())
-  code         String @unique
-  name         String @unique
+  code         String @unique @db.VarChar(8)
+  name         String @unique @db.VarChar(60)
   idDepartment Int
 
   departments departments @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
 
-  meetings     meetings[]
   reservations reservations[]
   users        users[]
 }
@@ -97,9 +96,9 @@ model users {
   role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
 
-  dates                      dates[]
   reservations               reservations[]
   detailReservationTravelers detailReservationTravelers[]
+  responsibles               responsibles[]
 }
 
 model activities {
@@ -147,16 +146,14 @@ model packages {
 }
 
 model detailPackagesServices {
-  id Int @id @default(autoincrement())
-
-  packages  packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  id        Int     @id @default(autoincrement())
   idPackage Int
-
-  services  services @relation(fields: [idService], references: [id], onDelete: Cascade)
   idService Int
+  quantity  Int
+  price     Decimal @db.Decimal(15, 2)
 
-  quantity Int
-  price    Decimal @db.Decimal(15, 2)
+  packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  services services @relation(fields: [idService], references: [id], onDelete: Cascade)
 }
 
 model dates {
@@ -167,27 +164,32 @@ model dates {
   endRegistration   DateTime @db.Date
   idPackage         Int
   amount            Int
-  idUser            Int
   status            Boolean  @default(true)
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
-  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
 
   meetings     meetings[]
   reservations reservations[]
-
-  @@unique([idUser, idPackage])
 }
 
 model meetings {
-  id             Int      @id @default(autoincrement())
-  idDate         Int
-  idMunicipality Int
-  hour           DateTime @db.Time
-  description    String   @db.VarChar(255)
+  id          Int      @id @default(autoincrement())
+  idDate      Int
+  zone        String   @db.Char(1)
+  hour        DateTime @db.Time
+  description String   @db.VarChar(255)
 
-  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
-  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+  dates        dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  responsibles responsibles[]
+}
+
+model responsibles {
+  id        Int @id @default(autoincrement())
+  idUser    Int
+  idMeeting Int
+
+  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
 }
 
 model reservations {
@@ -199,9 +201,10 @@ model reservations {
   price          Decimal  @db.Decimal(15, 2)
   status         String   @db.Char(1)
 
-  dates                      dates                        @relation(fields: [idDate], references: [id], onDelete: Cascade)
-  municipalities             municipalities               @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-  users                      users                        @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
+
   detailReservationTravelers detailReservationTravelers[]
   payments                   payments[]
 }
