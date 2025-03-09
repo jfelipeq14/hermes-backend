@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { UpdateMeetingDto } from './dto/update-meeting.dto';
+import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class MeetingsService {
-  create(createMeetingDto: CreateMeetingDto) {
-    return 'This action adds a new meeting';
-  }
+  constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return `This action returns all meetings`;
+    return this.prisma.meetings.findMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} meeting`;
+    return this.prisma.meetings.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  create(createMeetingDto: CreateMeetingDto) {
+    return this.prisma.meetings.create({
+      data: createMeetingDto,
+    });
   }
 
   update(id: number, updateMeetingDto: UpdateMeetingDto) {
-    return `This action updates a #${id} meeting`;
+    return this.prisma.meetings.update({
+      where: {
+        id,
+      },
+      data: updateMeetingDto,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} meeting`;
+    return this.prisma.meetings.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

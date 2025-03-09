@@ -177,7 +177,7 @@ model meetings {
   idDate      Int
   zone        String   @db.Char(1)
   hour        DateTime @db.Time
-  description String   @db.VarChar(255)
+  description String?  @db.VarChar(255)
 
   dates        dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
   responsibles responsibles[]
@@ -219,9 +219,8 @@ model detailReservationTravelers {
   users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
 }
 
-
 model payments {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   idReservation Int
   date          DateTime @db.Date
   price         Decimal  @db.Decimal(15, 2)
@@ -230,4 +229,3 @@ model payments {
 
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
 }
-
