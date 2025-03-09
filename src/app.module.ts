@@ -18,7 +18,6 @@ import { PaymentsModule } from './modules/payments/payments.module';
 
 import { AuthModule } from './modules/auth/auth.module';
 
-
 @Module({
   imports: [
     PrismaModule,
