@@ -176,7 +176,7 @@ async function main() {
         startRegistration: new Date(),
         endRegistration: new Date(),
         idPackage: packages.id,
-        amount: 1,
+        amount: 20,
       },
     });
 

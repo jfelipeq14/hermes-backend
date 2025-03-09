@@ -1,5 +1,5 @@
-import { IsDateString, IsNotEmpty, Matches, IsInt } from 'class-validator';
-import { IsDateRegex, IsNumberRegex } from 'src/utils/regex';
+import { IsDateString, IsNotEmpty, Matches, IsInt, Min } from 'class-validator';
+import { IsDateRegex } from 'src/utils/regex';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDateDto {
@@ -40,7 +40,8 @@ export class CreateDateDto {
 
   @ApiProperty({ required: true, description: 'The amount of the date' })
   @IsInt()
-  @Matches(IsNumberRegex)
+  // @Matches(IsNumberRegex)
+  @Min(1)
   @IsNotEmpty()
   amount: number;
 }

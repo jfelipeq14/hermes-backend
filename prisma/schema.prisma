@@ -188,8 +188,8 @@ model responsibles {
   idUser    Int
   idMeeting Int
 
-  meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
   users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
 }
 
 model reservations {

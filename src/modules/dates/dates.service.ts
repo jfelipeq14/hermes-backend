@@ -21,17 +21,37 @@ export class DatesService {
 
   create(createDateDto: CreateDateDto) {
     return this.prisma.dates.create({
-      data: createDateDto,
+      data: {
+        start: new Date(createDateDto.start),
+        end: new Date(createDateDto.end),
+        startRegistration: new Date(createDateDto.startRegistration),
+        endRegistration: new Date(createDateDto.endRegistration),
+        idPackage: createDateDto.idPackage,
+        amount: createDateDto.amount,
+      },
     });
   }
 
   update(id: number, updateDateDto: UpdateDateDto) {
-    return this.prisma.dates.update({
-      where: {
-        id,
-      },
-      data: updateDateDto,
-    });
+    if (updateDateDto) {
+      return this.prisma.dates.update({
+        where: {
+          id,
+        },
+        data: {
+          start: new Date(updateDateDto.start || new Date()),
+          end: new Date(updateDateDto.end || new Date()),
+          startRegistration: new Date(
+            updateDateDto.startRegistration || new Date(),
+          ),
+          endRegistration: new Date(
+            updateDateDto.endRegistration || new Date(),
+          ),
+          idPackage: updateDateDto.idPackage,
+          amount: updateDateDto.amount,
+        },
+      });
+    }
   }
 
   async changeStatus(id: number) {
