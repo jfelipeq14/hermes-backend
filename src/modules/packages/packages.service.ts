@@ -19,7 +19,7 @@ export class PackagesService {
   findOne(id: number) {
     return this.prisma.packages.findUnique({
       where: {
-        id: id,
+        id,
       },
       include: {
         detailPackagesServices: true,
@@ -47,7 +47,7 @@ export class PackagesService {
     const { detailPackagesServices, ...packageData } = updatePackageDto;
     return await this.prisma.packages.update({
       where: {
-        id: id,
+        id,
       },
       data: {
         ...packageData,
