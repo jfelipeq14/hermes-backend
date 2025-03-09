@@ -17,6 +17,7 @@ import { DatesModule } from './modules/dates/dates.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 
 import { AuthModule } from './modules/auth/auth.module';
+import { MeetingsModule } from './modules/meetings/meetings.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './modules/auth/auth.module';
     DatesModule,
     ReservationsModule,
     PaymentsModule,
+    MeetingsModule,
   ],
   controllers: [],
   providers: [],
