@@ -8,14 +8,10 @@ import {
   IsArray,
   ValidateNested,
   Matches,
+  Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import {
-  IsLevelRegex,
-  IsNumberRegex,
-  IsPriceRegex,
-  IsStringRegex,
-} from 'src/utils/regex';
+import { IsLevelRegex, IsPriceRegex, IsStringRegex } from 'src/utils/regex';
 
 class CreateDetailPackageServiceDto {
   @ApiProperty({ required: true })
@@ -25,7 +21,7 @@ class CreateDetailPackageServiceDto {
 
   @ApiProperty({ required: true })
   @IsInt()
-  @Matches(IsNumberRegex)
+  @Min(1)
   @IsNotEmpty()
   quantity: number;
 
