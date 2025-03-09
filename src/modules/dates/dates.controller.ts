@@ -10,6 +10,7 @@ import {
   Delete,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { DatesService } from './dates.service';
 import { CreateDateDto } from './dto/create-date.dto';
@@ -18,6 +19,7 @@ import { UpdateDateDto } from './dto/update-date.dto';
 @Controller('dates')
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
+
   @Get()
   async findAll() {
     const dates = await this.datesService.findAll();
@@ -49,10 +51,19 @@ export class DatesController {
     }
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(@Param('id') id: string, @Body() updateDateDto: UpdateDateDto) {
     try {
       return await this.datesService.update(+id, updateDateDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Patch(':id')
+  async changeStatus(@Param('id') id: string) {
+    try {
+      return await this.datesService.changeStatus(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
