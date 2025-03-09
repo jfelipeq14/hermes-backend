@@ -17,22 +17,16 @@ export class PaymentsService {
     });
   }
 
-  create(createPaymentDto: CreatePaymentDto) {
-    return this.prisma.payments.create({
+  async create(createPaymentDto: CreatePaymentDto) {
+    return await this.prisma.payments.create({
       data: createPaymentDto,
     });
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return this.prisma.payments.update({
+  async update(id: number, updatePaymentDto: UpdatePaymentDto) {
+    return await this.prisma.payments.update({
       where: { id },
       data: updatePaymentDto,
-    });
-  }
-
-  remove(id: number) {
-    return this.prisma.payments.delete({
-      where: { id },
     });
   }
 }

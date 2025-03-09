@@ -16,26 +16,26 @@ import {
 
 export class CreatePaymentDto {
   @ApiProperty({ required: true, description: 'Date of the payment' })
-  @IsNotEmpty()
   @IsInt()
+  @IsNotEmpty()
   idReservation: number;
 
   @ApiProperty({ required: true, description: 'Date of the payment' })
   @IsDateString()
-  @IsNotEmpty()
   @Matches(IsDateRegex)
+  @IsNotEmpty()
   date: Date;
 
   @ApiProperty({ required: true, description: 'Price of the payment' })
   @IsNumber()
-  @IsNotEmpty()
   @Matches(IsPriceRegex)
+  @IsNotEmpty()
   price: number;
 
   @ApiProperty({ required: true, description: 'Voucher of the payment' })
   @IsString()
-  @IsNotEmpty()
   @Matches(ImageExtensionRegex)
+  @IsNotEmpty()
   voucher: string;
 
   @ApiProperty({ required: true, description: 'Status of the payment' })
