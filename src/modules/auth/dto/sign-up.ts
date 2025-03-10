@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsNotEmpty, IsString, Matches } from 'class-validator';
+import {
+  IsEmailRegex,
+  IsPassword,
+  IsPhoneRegex,
+  IsStringRegex,
+} from 'src/utils/regex';
 
 export class SignUpDto {
   @ApiProperty({ required: true })
@@ -20,11 +26,13 @@ export class SignUpDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
+  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
+  @Matches(IsStringRegex)
   surName: string;
 
   @ApiProperty({ required: true })
@@ -35,15 +43,18 @@ export class SignUpDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
+  @Matches(IsPhoneRegex)
   phone: string;
 
   @ApiProperty({ required: true })
   @IsEmail()
   @IsNotEmpty()
+  @Matches(IsEmailRegex)
   email: string;
 
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
+  @Matches(IsPassword)
   password: string;
 }

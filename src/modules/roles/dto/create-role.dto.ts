@@ -6,8 +6,10 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  Matches,
   ValidateNested,
 } from 'class-validator';
+import { IsStringRegex } from 'src/utils/regex';
 
 export class CreateRolePrivilegesDto {
   @ApiProperty({ required: true })
@@ -20,6 +22,7 @@ export class CreateRoleDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
+  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })
