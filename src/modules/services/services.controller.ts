@@ -21,7 +21,7 @@ export class ServicesController {
   @Get()
   async findAll() {
     const services_ = await this.servicesService.findAll();
-    if (!services_)
+    if (!services_ || services_.length === 0)
       throw new HttpException('No existen servicios', HttpStatus.NOT_FOUND);
   }
 

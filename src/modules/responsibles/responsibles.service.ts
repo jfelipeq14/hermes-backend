@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateResponsibleDto } from './dto/create-responsible.dto';
 import { UpdateResponsibleDto } from './dto/update-responsible.dto';
+import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ResponsiblesService {
-  create(createResponsibleDto: CreateResponsibleDto) {
-    return 'This action adds a new responsible';
+  constructor(private prisma: PrismaService) {}
+
+  async findAll() {
+    return await this.prisma.responsibles.findMany();
   }
 
-  findAll() {
-    return `This action returns all responsibles`;
+  async findOne(id: number) {
+    return await this.prisma.responsibles.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} responsible`;
+  async create(createResponsibleDto: CreateResponsibleDto) {
+    return await this.prisma.responsibles.create({
+      data: createResponsibleDto,
+    });
   }
 
-  update(id: number, updateResponsibleDto: UpdateResponsibleDto) {
-    return `This action updates a #${id} responsible`;
+  async update(id: number, updateResponsibleDto: UpdateResponsibleDto) {
+    return await this.prisma.responsibles.update({
+      where: {
+        id,
+      },
+      data: updateResponsibleDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} responsible`;
+  async remove(id: number) {
+    return await this.prisma.responsibles.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
