@@ -9,9 +9,16 @@ import {
   ValidateNested,
   Matches,
   Min,
+  MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsLevelRegex, IsPriceRegex, IsStringRegex } from 'src/utils/regex';
+import {
+  DESCRIPTION_VALUE,
+  LEVEL_VALUE,
+  NAMES_VALUE,
+  PRICE_VALUE,
+} from 'src/utils/values';
 
 class CreateDetailPackageServiceDto {
   @ApiProperty({ required: true })
@@ -27,16 +34,18 @@ class CreateDetailPackageServiceDto {
 
   @ApiProperty({ required: true })
   @IsNumber()
-  @Matches(IsPriceRegex)
   @IsNotEmpty()
+  @MaxLength(PRICE_VALUE)
+  @Matches(IsPriceRegex)
   price: number;
 }
 
 export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Name of the package' })
   @IsString()
-  @Matches(IsStringRegex)
   @IsNotEmpty()
+  @MaxLength(NAMES_VALUE)
+  @Matches(IsStringRegex)
   activity: string;
 
   @ApiProperty({ required: true, description: 'Start date of the package' })
@@ -56,30 +65,28 @@ export class CreatePackageDto {
 
   @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
   @IsNumber()
+  @MaxLength(LEVEL_VALUE)
   @Matches(IsLevelRegex)
   level: number;
 
   @ApiProperty({ required: true, description: 'Price of the package' })
   @IsNumber()
-  @Matches(IsPriceRegex)
   @IsNotEmpty()
+  @MaxLength(PRICE_VALUE)
+  @Matches(IsPriceRegex)
   price: number;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
   @IsNumber()
-  @Matches(IsPriceRegex)
   @IsNotEmpty()
+  @MaxLength(PRICE_VALUE)
+  @Matches(IsPriceRegex)
   reserve: number;
 
   @ApiProperty({ required: true, description: 'Description of the package' })
   @IsString()
-  @Matches(IsStringRegex)
+  @MaxLength(DESCRIPTION_VALUE)
   description: string;
-
-  // @ApiProperty({ required: true, description: 'Status of the package' })
-  // @IsBoolean()
-  // @IsNotEmpty()
-  // status: boolean;
 
   @ApiProperty({ type: [CreateDetailPackageServiceDto], required: true })
   @IsArray()
