@@ -16,6 +16,7 @@ import { DatesModule } from './modules/dates/dates.module';
 import { MeetingsModule } from './modules/meetings/meetings.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { ResponsiblesModule } from './modules/responsibles/responsibles.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
     MeetingsModule,
     ReservationsModule,
     PaymentsModule,
+    ResponsiblesModule,
   ],
   controllers: [],
   providers: [],
