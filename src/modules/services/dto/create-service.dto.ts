@@ -5,8 +5,10 @@ import {
   IsNumber,
   IsString,
   Matches,
+  MaxLength,
 } from 'class-validator';
 import { IsPriceRegex, IsStringRegex } from 'src/utils/regex';
+import { NAMES_VALUE, PRICE_VALUE } from 'src/utils/values';
 
 export class CreateServiceDto {
   @ApiProperty({ required: true })
@@ -16,13 +18,15 @@ export class CreateServiceDto {
 
   @ApiProperty({ required: true })
   @IsString()
-  @Matches(IsStringRegex)
   @IsNotEmpty()
+  @MaxLength(NAMES_VALUE)
+  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })
   @IsNumber()
-  @Matches(IsPriceRegex)
   @IsNotEmpty()
+  @MaxLength(PRICE_VALUE)
+  @Matches(IsPriceRegex)
   price: number;
 }
