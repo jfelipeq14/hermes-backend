@@ -12,8 +12,8 @@ import {
   Matches,
 } from 'class-validator';
 import {
-  IsDateRegex,
-  IsPriceRegex,
+  // IsDateRegex,
+  // IsPriceRegex,
   IsReservationStatusRegex,
 } from 'src/utils/regex';
 
@@ -51,13 +51,13 @@ export class CreateReservationDto {
   @ApiProperty({ required: true, description: 'Date of the reservation' })
   @IsNotEmpty()
   @IsDateString()
-  @Matches(IsDateRegex)
+  // @Matches(IsDateRegex)
   date: Date;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
   @IsNotEmpty()
   @IsNumber()
-  @Matches(IsPriceRegex)
+  // @Matches(IsPriceRegex)
   price: number;
 
   @ApiProperty({ required: true, description: 'Status of the reservation' })
