@@ -25,6 +25,17 @@ export class ReservationsService {
   async create(createReservationDto: CreateReservationDto) {
     const { detailReservationTravelers, ...reservationData } =
       createReservationDto;
+    const dates = await this.prisma.dates.findUnique({
+      where: {
+        id: reservationData.idDate,
+      },
+      include: {
+        packages: true,
+      },
+    });
+    if (!dates) throw new Error('No existe la fecha de reserva seleccionada');
+    const price = dates.packages.price;
+    reservationData.price = +price * detailReservationTravelers.length;
     return await this.prisma.reservations.create({
       data: {
         ...reservationData,
@@ -38,9 +49,22 @@ export class ReservationsService {
     });
   }
 
-  update(id: number, updateReservationDto: UpdateReservationDto) {
+  async update(id: number, updateReservationDto: UpdateReservationDto) {
     const { detailReservationTravelers, ...reservationData } =
       updateReservationDto;
+    const dates = await this.prisma.dates.findUnique({
+      where: {
+        id: reservationData.idDate,
+      },
+      include: {
+        packages: true,
+      },
+    });
+    if (!dates) throw new Error('No existe la fecha de reserva seleccionada');
+    const price = dates.packages.price;
+    if (!detailReservationTravelers)
+      throw new Error('No existe el detalle de los viajeros');
+    reservationData.price = +price * detailReservationTravelers.length;
     return this.prisma.reservations.update({
       where: {
         id,
