@@ -3,25 +3,20 @@
 import {
   Body,
   Controller,
-  HttpCode,
   HttpException,
   HttpStatus,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { IsPublic } from './decorators/public.decorator';
 import { SignUpDto } from './dto/sign-up';
 import { LogInDto } from './dto/log-in';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-@IsPublic()
-@UseGuards(JwtAuthGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
+  @IsPublic()
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
     try {
@@ -31,7 +26,7 @@ export class AuthController {
     }
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @IsPublic()
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
