@@ -3,20 +3,22 @@ import {
   IUseToken,
 } from 'src/modules/auth/interfaces/authenticated-user.interface';
 import * as jwt from 'jsonwebtoken';
+import { UnauthorizedException } from '@nestjs/common';
 
-export const useToken = (token: string): IUseToken | string => {
+export const useToken = (token: string, secret: string): IUseToken | string => {
   try {
-    const decoded = jwt.decode(token) as AuthTokenResult;
+    console.log(token);
+    const decoded = jwt.verify(token, secret) as AuthTokenResult;
 
-    const currentDate = new Date();
-    const expirationDate = new Date(decoded.exp);
+    const currentDateInSeconds = Math.floor(Date.now() / 1000);
 
     return {
       role: decoded.role,
       sub: decoded.sub,
-      isExpired: +expirationDate < +currentDate / 1000,
+      isExpired: decoded.exp < currentDateInSeconds,
     };
   } catch (error) {
-    return 'Invalid token ' + error;
+    console.error('Error verifying token:', error); // Log para depuración
+    throw new UnauthorizedException('Invalid token');
   }
 };

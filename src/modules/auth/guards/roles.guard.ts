@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { IS_PUBLIC_KEY, ROLES_KEY } from 'src/utils/constants/key-decorator';
+import { PUBLIC_KEY, ROLES_KEY } from 'src/utils/constants/key-decorator';
 import { ROLES } from 'src/utils/constants/roles';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class RolesGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.get<boolean>(
-      IS_PUBLIC_KEY,
+      PUBLIC_KEY,
       context.getHandler(),
     );
     if (isPublic) {
@@ -40,10 +40,6 @@ export class RolesGuard implements CanActivate {
       } else {
         throw new UnauthorizedException('No tiene permisos para acceder');
       }
-    }
-
-    if (idRole === 1) {
-      return true;
     }
 
     const isAuth = roles.some((role) => role === roles[idRole]);

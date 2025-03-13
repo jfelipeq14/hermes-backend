@@ -1,53 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
+  CanActivate,
   ExecutionContext,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
-import { UsersService } from 'src/modules/users/users.service';
-import { IS_PUBLIC_KEY } from 'src/utils/constants/key-decorator';
-import { IUseToken } from '../interfaces/authenticated-user.interface';
-import { useToken } from 'src/utils/use.token';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(
-    private userService: UsersService,
-    private reflector: Reflector,
-  ) {
-    super();
+export class JwtAuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const token = this.extractTokenFromHeader(request);
+    if (!token) {
+      throw new UnauthorizedException();
+    }
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.JWT_SECRET, // Asegúrate de que esta variable esté configurada
+      });
+      request['user'] = payload;
+    } catch {
+      throw new UnauthorizedException();
+    }
+    return true;
   }
 
-  async canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.get<boolean>(
-      IS_PUBLIC_KEY,
-      context.getHandler(),
-    );
-    if (isPublic) {
-      return true;
-    }
-    const request = context.switchToHttp().getRequest<Request>();
-    const token = request.headers['hermes'];
-    if (!token || Array.isArray(token)) {
-      throw new UnauthorizedException('Invalid token');
-    }
-    const manageToken: IUseToken | string = useToken(token);
-    if (typeof manageToken === 'string') {
-      throw new UnauthorizedException(manageToken);
-    }
-    if (manageToken.isExpired) {
-      throw new UnauthorizedException('Token expired');
-    }
-    const { sub } = manageToken;
-    const user = await this.userService.findOne(parseInt(sub));
-    if (!user) {
-      throw new UnauthorizedException('User invalid');
-    }
-    request['idUser'] = user.id;
-    request['idRole'] = user.idRole;
-    return true;
+  private extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 }

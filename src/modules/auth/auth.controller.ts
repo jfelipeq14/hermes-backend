@@ -12,11 +12,11 @@ import { IsPublic } from './decorators/public.decorator';
 import { SignUpDto } from './dto/sign-up';
 import { LogInDto } from './dto/log-in';
 
-@IsPublic()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @IsPublic()
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
     try {
@@ -26,6 +26,7 @@ export class AuthController {
     }
   }
 
+  @IsPublic()
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
