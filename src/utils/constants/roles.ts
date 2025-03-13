@@ -5,19 +5,7 @@ export enum ROLES {
 }
 
 export enum ACCESS_LEVEL {
-  READ = 'READ',
-  WRITE = 'WRITE',
-  UPDATE = 'UPDATE',
-  DELETE = 'DELETE',
-}
-
-export enum CLIENT_PERMISSIONS {
-  PROFILE = 'PROFILE',
-  PACKAGES = 'PACKAGES',
-  RESERVATIONS = 'RESERVATIONS',
-  PAYMENTS = 'PAYMENTS',
-}
-
-export enum GUIDE_PERMISSIONS {
-  PROGRAMMING = 'PROGRAMMING',
+  ADMIN = 16,
+  GUIDE = 2,
+  CLIENT = 4,
 }

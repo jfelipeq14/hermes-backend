@@ -30,7 +30,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     }
     const request = context.switchToHttp().getRequest<Request>();
-    const token = request.headers['codrr_token'];
+    const token = request.headers['hermes'];
     if (!token || Array.isArray(token)) {
       throw new UnauthorizedException('Invalid token');
     }

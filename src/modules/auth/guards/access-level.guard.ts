@@ -69,7 +69,7 @@ export class AccessLevelGuard implements CanActivate {
 
     const user = await this.userService.findOne(idUser);
 
-    if (user === undefined) {
+    if (!user) {
       throw new UnauthorizedException(
         'No tiene permisos para acceder a esta ruta',
       );
