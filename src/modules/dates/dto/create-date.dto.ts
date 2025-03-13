@@ -8,8 +8,8 @@ export class CreateDateDto {
     description: 'The date of the start of the event',
   })
   @IsDateString()
-  @Matches(IsDateRegex)
   @IsNotEmpty()
+  @Matches(IsDateRegex)
   start: Date;
 
   @ApiProperty({
@@ -17,20 +17,20 @@ export class CreateDateDto {
     description: 'The date of the end of the event',
   })
   @IsDateString()
-  @Matches(IsDateRegex)
   @IsNotEmpty()
+  @Matches(IsDateRegex)
   end: Date;
 
   @ApiProperty({ required: true, description: 'The start registration date' })
   @IsDateString()
-  @Matches(IsDateRegex)
   @IsNotEmpty()
+  @Matches(IsDateRegex)
   startRegistration: Date;
 
   @ApiProperty({ required: true, description: 'The end registration date' })
   @IsDateString()
-  @Matches(IsDateRegex)
   @IsNotEmpty()
+  @Matches(IsDateRegex)
   endRegistration: Date;
 
   @ApiProperty({ required: true, description: 'The package of the date' })
@@ -40,8 +40,7 @@ export class CreateDateDto {
 
   @ApiProperty({ required: true, description: 'The amount of the date' })
   @IsInt()
-  // @Matches(IsNumberRegex)
-  @Min(1)
   @IsNotEmpty()
+  @Min(1)
   amount: number;
 }
