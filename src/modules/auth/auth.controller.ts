@@ -16,12 +16,10 @@ import { LogInDto } from './dto/log-in';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @IsPublic()
-@UseGuards(JwtAuthGuard)
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
-  @HttpCode(HttpStatus.OK)
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
     try {
@@ -31,11 +29,14 @@ export class AuthController {
     }
   }
 
-  @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
-      return await this.authService.signUp(signUpDto);
+      const user = await this.authService.signUp(signUpDto);
+      if (!user) {
+        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      }
+      return user
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

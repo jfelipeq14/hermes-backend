@@ -3,6 +3,7 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsString,
@@ -14,7 +15,7 @@ import { IsStringRegex } from 'src/utils/regex';
 export class CreateRolePrivilegesDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
   idPrivilege: number;
 }
 

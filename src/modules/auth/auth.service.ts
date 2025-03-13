@@ -11,7 +11,7 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
-  ) {}
+  ) { }
 
   async signUp(signUpDto: SignUpDto) {
     const userFound = await this.prisma.users.findUnique({
@@ -30,8 +30,6 @@ export class AuthService {
 
       return userWithoutPassword;
     }
-
-    return null;
   }
 
   async logIn(logInDto: LogInDto) {

@@ -7,6 +7,7 @@ import {
   IsString,
   IsBoolean,
   Matches,
+  Min,
 } from 'class-validator';
 import {
   IsDateRegex,
@@ -27,9 +28,9 @@ export class CreatePaymentDto {
   date: Date;
 
   @ApiProperty({ required: true, description: 'Price of the payment' })
-  @IsNumber()
-  @Matches(IsPriceRegex)
+  @IsInt()
   @IsNotEmpty()
+  @Min(1)
   price: number;
 
   @ApiProperty({ required: true, description: 'Voucher of the payment' })

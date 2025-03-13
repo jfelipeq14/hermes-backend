@@ -33,10 +33,10 @@ class CreateDetailPackageServiceDto {
   quantity: number;
 
   @ApiProperty({ required: true })
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
+  @Min(1)
   @MaxLength(PRICE_VALUE)
-  @Matches(IsPriceRegex)
   price: number;
 }
 
@@ -64,23 +64,23 @@ export class CreatePackageDto {
   idActivity: number;
 
   @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
-  @IsNumber()
+  @IsInt()
   @MaxLength(LEVEL_VALUE)
   @Matches(IsLevelRegex)
   level: number;
 
   @ApiProperty({ required: true, description: 'Price of the package' })
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
+  @Min(1)
   @MaxLength(PRICE_VALUE)
-  @Matches(IsPriceRegex)
   price: number;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
-  @IsNumber()
+  @IsInt()
   @IsNotEmpty()
+  @Min(1)
   @MaxLength(PRICE_VALUE)
-  @Matches(IsPriceRegex)
   reserve: number;
 
   @ApiProperty({ required: true, description: 'Description of the package' })

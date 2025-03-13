@@ -10,6 +10,7 @@ import {
   IsArray,
   ValidateNested,
   Matches,
+  Min,
 } from 'class-validator';
 import {
   IsDateRegex,
@@ -55,9 +56,9 @@ export class CreateReservationDto {
   date: Date;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
+  @IsInt()
   @IsNotEmpty()
-  @IsNumber()
-  @Matches(IsPriceRegex)
+  @Min(1)
   price: number;
 
   @ApiProperty({ required: true, description: 'Status of the reservation' })

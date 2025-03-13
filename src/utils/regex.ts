@@ -9,7 +9,7 @@ export const IsEmailRegex = new RegExp(
 export const IsPassword = new RegExp(
   '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$',
 );
-export const IsPriceRegex = new RegExp('^[1-9][0-9]*(\.[0-9]{1,2})?$');
+export const IsPriceRegex = new RegExp('(\d{1,15})(\.\d{1,2})?$');
 export const IsDateRegex = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const IsLevelRegex = new RegExp('^[0-9]*(\.[0.-9]{1,})$');
 export const IsZoneRegex = new RegExp('^(N|S)$');
