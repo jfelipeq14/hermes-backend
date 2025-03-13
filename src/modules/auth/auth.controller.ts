@@ -3,22 +3,19 @@
 import {
   Body,
   Controller,
-  HttpCode,
   HttpException,
   HttpStatus,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { IsPublic } from './decorators/public.decorator';
 import { SignUpDto } from './dto/sign-up';
 import { LogInDto } from './dto/log-in';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @IsPublic()
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
@@ -36,7 +33,7 @@ export class AuthController {
       if (!user) {
         throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
       }
-      return user
+      return user;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

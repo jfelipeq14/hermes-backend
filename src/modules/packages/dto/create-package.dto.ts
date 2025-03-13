@@ -3,7 +3,6 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsArray,
   ValidateNested,
@@ -12,7 +11,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsLevelRegex, IsPriceRegex, IsStringRegex } from 'src/utils/regex';
+import { IsLevelRegex, IsStringRegex } from 'src/utils/regex';
 import {
   DESCRIPTION_VALUE,
   LEVEL_VALUE,
