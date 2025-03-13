@@ -7,11 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import {
-  ADMIN_KEY,
-  IS_PUBLIC_KEY,
-  ROLES_KEY,
-} from 'src/utils/constants/key-decorator';
+import { PUBLIC_KEY, ROLES_KEY } from 'src/utils/constants/key-decorator';
 import { ROLES } from 'src/utils/constants/roles';
 
 @Injectable()
@@ -22,7 +18,7 @@ export class RolesGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const isPublic = this.reflector.get<boolean>(
-      IS_PUBLIC_KEY,
+      PUBLIC_KEY,
       context.getHandler(),
     );
     if (isPublic) {
@@ -34,29 +30,20 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
     );
 
-    const admin = this.reflector.get<string>(ADMIN_KEY, context.getHandler());
+    const req = context.switchToHttp().getRequest<Request>();
 
-    const request = context.switchToHttp().getRequest<Request>();
-
-    const { idRole } = request;
+    const { idRole } = req;
 
     if (roles === undefined) {
-      if (!admin) {
-        return true;
-      } else if (admin && +idRole === +admin) {
+      if (roles === 1) {
         return true;
       } else {
-        throw new UnauthorizedException(
-          'No tiene permisos para acceder a esta ruta',
-        );
+        throw new UnauthorizedException('No tiene permisos para acceder');
       }
     }
 
-    if (idRole === 1) {
-      return true;
-    }
-
     const isAuth = roles.some((role) => role === roles[idRole]);
+
     if (!isAuth) {
       throw new UnauthorizedException(
         'No tiene permisos para acceder a esta ruta',

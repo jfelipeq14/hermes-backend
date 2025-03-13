@@ -3,8 +3,8 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -12,7 +12,7 @@ import {
 export class CreateRolePrivilegesDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
   idPrivilege: number;
 }
 

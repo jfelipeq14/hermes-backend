@@ -3,7 +3,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -24,16 +23,6 @@ export class UsersService {
           id: id,
         },
       });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async findBy({ key, value }: { key: keyof CreateUserDto; value: any }) {
-    try {
-      const users: User[] = await this.prisma.find();
-
-      return users;
     } catch (error) {
       console.log(error);
     }
@@ -65,15 +54,15 @@ export class UsersService {
     }
   }
 
-  remove(id: number) {
-    try {
-      return this.prisma.users.delete({
-        where: {
-          id: id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // remove(id: number) {
+  //   try {
+  //     return this.prisma.users.delete({
+  //       where: {
+  //         id: id,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 }

@@ -3,16 +3,12 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
   IsBoolean,
   Matches,
+  Min,
 } from 'class-validator';
-import {
-  IsDateRegex,
-  IsPriceRegex,
-  ImageExtensionRegex,
-} from 'src/utils/regex';
+import { IsDateRegex, ImageExtensionRegex } from 'src/utils/regex';
 
 export class CreatePaymentDto {
   @ApiProperty({ required: true, description: 'Date of the payment' })
@@ -27,9 +23,9 @@ export class CreatePaymentDto {
   date: Date;
 
   @ApiProperty({ required: true, description: 'Price of the payment' })
-  @IsNumber()
-  @Matches(IsPriceRegex)
+  @IsInt()
   @IsNotEmpty()
+  @Min(1)
   price: number;
 
   @ApiProperty({ required: true, description: 'Voucher of the payment' })

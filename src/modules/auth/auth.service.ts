@@ -30,8 +30,6 @@ export class AuthService {
 
       return userWithoutPassword;
     }
-
-    return null;
   }
 
   async logIn(logInDto: LogInDto) {

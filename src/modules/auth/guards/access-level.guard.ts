@@ -10,7 +10,7 @@ import { UsersService } from 'src/modules/users/users.service';
 import {
   ACCESS_LEVEL_KEY,
   ADMIN_KEY,
-  IS_PUBLIC_KEY,
+  PUBLIC_KEY,
   ROLES_KEY,
 } from 'src/utils/constants/key-decorator';
 import { ROLES } from 'src/utils/constants/roles';
@@ -24,7 +24,7 @@ export class AccessLevelGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.get<boolean>(
-      IS_PUBLIC_KEY,
+      PUBLIC_KEY,
       context.getHandler(),
     );
     if (isPublic) {
@@ -69,7 +69,7 @@ export class AccessLevelGuard implements CanActivate {
 
     const user = await this.userService.findOne(idUser);
 
-    if (user === undefined) {
+    if (!user) {
       throw new UnauthorizedException(
         'No tiene permisos para acceder a esta ruta',
       );
