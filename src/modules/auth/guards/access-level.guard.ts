@@ -41,6 +41,10 @@ export class AccessLevelGuard implements CanActivate {
       context.getHandler(),
     );
 
+    if (accessLevel === undefined) {
+      return true;
+    }
+
     const admin = this.reflector.get<number>(ADMIN_KEY, context.getHandler());
 
     const request = context.switchToHttp().getRequest<Request>();
@@ -64,6 +68,12 @@ export class AccessLevelGuard implements CanActivate {
     }
 
     const user = await this.userService.findOne(idUser);
+
+    if (user === undefined) {
+      throw new UnauthorizedException(
+        'No tiene permisos para acceder a esta ruta',
+      );
+    }
 
     return true;
   }
