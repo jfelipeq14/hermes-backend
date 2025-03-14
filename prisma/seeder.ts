@@ -62,10 +62,18 @@ async function main() {
   });
 
   const roles = await prisma.$transaction(async (prisma) => {
-    const role_ = await prisma.roles.create({
-      data: {
-        name: 'Administrator',
-      },
+    const role_ = await prisma.roles.createMany({
+      data: [
+        {
+          name: 'Administrator',
+        },
+        {
+          name: 'Guia',
+        },
+        {
+          name: 'Cliente',
+        },
+      ],
     });
 
     return role_;
@@ -74,7 +82,7 @@ async function main() {
   const rolePrivileges = await prisma.$transaction(async (prisma) => {
     const rolePrivilege_ = await prisma.rolePrivileges.create({
       data: {
-        idRole: roles.id,
+        idRole: 1,
         idPrivilege: privileges.id,
       },
     });
@@ -85,7 +93,7 @@ async function main() {
   const users = await prisma.$transaction(async (prisma) => {
     const user_ = await prisma.users.create({
       data: {
-        idRole: roles.id,
+        idRole: 1,
         typeDocument: 'CC',
         document: '1',
         name: 'Juan',

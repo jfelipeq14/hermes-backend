@@ -8,9 +8,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { IsPublic } from './decorators/public.decorator';
 import { SignUpDto } from './dto/sign-up';
 import { LogInDto } from './dto/log-in';
+import { IsPublic } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {

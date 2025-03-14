@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
 import { PUBLIC_KEY, ROLES_KEY } from 'src/utils/constants/key-decorator';
 import { ROLES } from 'src/utils/constants/roles';
 
@@ -14,9 +13,7 @@ import { ROLES } from 'src/utils/constants/roles';
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext) {
     const isPublic = this.reflector.get<boolean>(
       PUBLIC_KEY,
       context.getHandler(),
@@ -32,17 +29,17 @@ export class RolesGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest<Request>();
 
-    const { idRole } = req;
+    const { user } = req;
 
-    if (roles === undefined) {
-      if (roles === 1) {
-        return true;
-      } else {
-        throw new UnauthorizedException('No tiene permisos para acceder');
-      }
+    if (!user) {
+      throw new UnauthorizedException('No tiene permisos para acceder');
     }
 
-    const isAuth = roles.some((role) => role === roles[idRole]);
+    if (!roles) {
+      throw new UnauthorizedException('No tiene permisos para acceder');
+    }
+
+    const isAuth = roles.includes(roles[user.idRole - 1]);
 
     if (!isAuth) {
       throw new UnauthorizedException(

@@ -10,6 +10,7 @@ import {
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -24,6 +25,7 @@ export class ReservationsController {
     }
   }
 
+  @Roles('ADMIN', 'CLIENT')
   @Get(':id')
   findOne(@Param('id') id: string) {
     try {

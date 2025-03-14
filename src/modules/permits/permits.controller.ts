@@ -14,11 +14,13 @@ import {
 import { PermitsService } from './permits.service';
 import { CreatePermitDto } from './dto/create-permit.dto';
 import { UpdatePermitDto } from './dto/update-permit.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('permits')
 export class PermitsController {
   constructor(private readonly permitsService: PermitsService) {}
 
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const permits_ = await this.permitsService.findAll();
