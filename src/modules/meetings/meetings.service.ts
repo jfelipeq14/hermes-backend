@@ -19,6 +19,21 @@ export class MeetingsService {
     });
   }
 
+  findAllByResponsible(id: number) {
+    return this.prisma.meetings.findMany({
+      where: {
+        responsibles: {
+          some: {
+            id,
+          },
+        },
+      },
+      include: {
+        responsibles: true,
+      },
+    });
+  }
+
   create(createMeetingDto: CreateMeetingDto) {
     return this.prisma.meetings.create({
       data: createMeetingDto,

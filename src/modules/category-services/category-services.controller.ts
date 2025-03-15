@@ -14,6 +14,7 @@ import {
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('category-services')
 export class CategoryServicesController {
@@ -21,6 +22,7 @@ export class CategoryServicesController {
     private readonly categoryServicesService: CategoryServicesService,
   ) {}
 
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const categoryServices_ = await this.categoryServicesService.findAll();
@@ -30,6 +32,7 @@ export class CategoryServicesController {
     return categoryServices_;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const categoryService_ = await this.categoryServicesService.findOne(+id);
@@ -39,6 +42,7 @@ export class CategoryServicesController {
     return categoryService_;
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
     try {
@@ -50,6 +54,7 @@ export class CategoryServicesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -62,6 +67,7 @@ export class CategoryServicesController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id') id: string) {
     try {

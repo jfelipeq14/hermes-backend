@@ -90,160 +90,160 @@ async function main() {
     return rolePrivilege_;
   });
 
-  const users = await prisma.$transaction(async (prisma) => {
-    const user_ = await prisma.users.create({
-      data: {
-        idRole: 1,
-        typeDocument: 'CC',
-        document: '1',
-        name: 'Juan',
-        surName: 'Quintero',
-        dateBirth: new Date(),
-        email: 'jq@gmail.com',
-        password: '123',
-        idMunicipality: municipalities.id,
-        address: 'Calle 1',
-        phone: '123',
-        emergency: '123',
-        sex: 'M',
-        bloodType: 'A+',
-        eps: 'Sura',
-      },
-    });
+  // const users = await prisma.$transaction(async (prisma) => {
+  //   const user_ = await prisma.users.create({
+  //     data: {
+  //       idRole: 1,
+  //       typeDocument: 'CC',
+  //       document: '1',
+  //       name: 'Juan',
+  //       surName: 'Quintero',
+  //       dateBirth: new Date(),
+  //       email: 'jq@gmail.com',
+  //       password: '123',
+  //       idMunicipality: municipalities.id,
+  //       address: 'Calle 1',
+  //       phone: '123',
+  //       emergency: '123',
+  //       sex: 'M',
+  //       bloodType: 'A+',
+  //       eps: 'Sura',
+  //     },
+  //   });
 
-    return user_;
-  });
+  //   return user_;
+  // });
 
-  const activities = await prisma.$transaction(async (prisma) => {
-    const activity = await prisma.activities.create({
-      data: {
-        name: 'Senderismo',
-      },
-    });
+  // const activities = await prisma.$transaction(async (prisma) => {
+  //   const activity = await prisma.activities.create({
+  //     data: {
+  //       name: 'Senderismo',
+  //     },
+  //   });
 
-    return activity;
-  });
+  //   return activity;
+  // });
 
-  const categoryServices = await prisma.$transaction(async (prisma) => {
-    const categoryService_ = await prisma.categoryServices.create({
-      data: {
-        name: 'Alimentación',
-      },
-    });
+  // const categoryServices = await prisma.$transaction(async (prisma) => {
+  //   const categoryService_ = await prisma.categoryServices.create({
+  //     data: {
+  //       name: 'Alimentación',
+  //     },
+  //   });
 
-    return categoryService_;
-  });
+  //   return categoryService_;
+  // });
 
-  const services = await prisma.$transaction(async (prisma) => {
-    const service_ = await prisma.services.create({
-      data: {
-        idCategoryServices: categoryServices.id,
-        name: 'Desayuno',
-        price: 8000.0,
-      },
-    });
+  // const services = await prisma.$transaction(async (prisma) => {
+  //   const service_ = await prisma.services.create({
+  //     data: {
+  //       idCategoryServices: categoryServices.id,
+  //       name: 'Desayuno',
+  //       price: 8000.0,
+  //     },
+  //   });
 
-    return service_;
-  });
+  //   return service_;
+  // });
 
-  const packages = await prisma.$transaction(async (prisma) => {
-    const package_ = await prisma.packages.create({
-      data: {
-        activity: 'Cerro Bravo',
-        start: new Date(),
-        end: new Date(),
-        idActivity: activities.id,
-        level: 1,
-        price: 100,
-        reserve: 50,
-        description: 'Caminata por Cerro Bravo',
-      },
-    });
+  // const packages = await prisma.$transaction(async (prisma) => {
+  //   const package_ = await prisma.packages.create({
+  //     data: {
+  //       activity: 'Cerro Bravo',
+  //       start: new Date(),
+  //       end: new Date(),
+  //       idActivity: activities.id,
+  //       level: 1,
+  //       price: 100,
+  //       reserve: 50,
+  //       description: 'Caminata por Cerro Bravo',
+  //     },
+  //   });
 
-    return package_;
-  });
+  //   return package_;
+  // });
 
-  const detailPackagesServices = await prisma.$transaction(async (prisma) => {
-    const detailPackagesService_ = await prisma.detailPackagesServices.create({
-      data: {
-        idPackage: packages.id,
-        idService: services.id,
-        quantity: 1,
-        price: services.price,
-      },
-    });
+  // const detailPackagesServices = await prisma.$transaction(async (prisma) => {
+  //   const detailPackagesService_ = await prisma.detailPackagesServices.create({
+  //     data: {
+  //       idPackage: packages.id,
+  //       idService: services.id,
+  //       quantity: 1,
+  //       price: services.price,
+  //     },
+  //   });
 
-    return detailPackagesService_;
-  });
+  //   return detailPackagesService_;
+  // });
 
-  const dates = await prisma.$transaction(async (prisma) => {
-    const date_ = await prisma.dates.create({
-      data: {
-        start: new Date(),
-        end: new Date(),
-        startRegistration: new Date(),
-        endRegistration: new Date(),
-        idPackage: packages.id,
-        amount: 20,
-      },
-    });
+  // const dates = await prisma.$transaction(async (prisma) => {
+  //   const date_ = await prisma.dates.create({
+  //     data: {
+  //       start: new Date(),
+  //       end: new Date(),
+  //       startRegistration: new Date(),
+  //       endRegistration: new Date(),
+  //       idPackage: packages.id,
+  //       amount: 20,
+  //     },
+  //   });
 
-    return date_;
-  });
+  //   return date_;
+  // });
 
-  const meetings = await prisma.$transaction(async (prisma) => {
-    const meeting_ = await prisma.meetings.create({
-      data: {
-        idDate: dates.id,
-        zone: 'N',
-        hour: new Date(),
-        description:
-          'Los puntos de encuentro hacie el norte son: Parque Berrio, Moravia, Niquia',
-      },
-    });
+  // const meetings = await prisma.$transaction(async (prisma) => {
+  //   const meeting_ = await prisma.meetings.create({
+  //     data: {
+  //       idDate: dates.id,
+  //       zone: 'N',
+  //       hour: new Date(),
+  //       description:
+  //         'Los puntos de encuentro hacie el norte son: Parque Berrio, Moravia, Niquia',
+  //     },
+  //   });
 
-    return meeting_;
-  });
+  //   return meeting_;
+  // });
 
-  const responsibles = await prisma.$transaction(async (prisma) => {
-    const responsible_ = await prisma.responsibles.create({
-      data: {
-        idUser: users.id,
-        idMeeting: meetings.id,
-      },
-    });
+  // const responsibles = await prisma.$transaction(async (prisma) => {
+  //   const responsible_ = await prisma.responsibles.create({
+  //     data: {
+  //       idUser: users.id,
+  //       idMeeting: meetings.id,
+  //     },
+  //   });
 
-    return responsible_;
-  });
+  //   return responsible_;
+  // });
 
-  const reservations = await prisma.$transaction(async (prisma) => {
-    const reservation_ = await prisma.reservations.create({
-      data: {
-        idDate: dates.id,
-        idMunicipality: municipalities.id,
-        idUser: users.id,
-        date: new Date(),
-        price: 100,
-        status: 'R',
-      },
-    });
+  // const reservations = await prisma.$transaction(async (prisma) => {
+  //   const reservation_ = await prisma.reservations.create({
+  //     data: {
+  //       idDate: dates.id,
+  //       idMunicipality: municipalities.id,
+  //       idUser: users.id,
+  //       date: new Date(),
+  //       price: 100,
+  //       status: 'R',
+  //     },
+  //   });
 
-    return reservation_;
-  });
+  //   return reservation_;
+  // });
 
-  const detailReservationTravelers = await prisma.$transaction(
-    async (prisma) => {
-      const detailReservationTraveler_ =
-        await prisma.detailReservationTravelers.create({
-          data: {
-            idReservation: reservations.id,
-            idTraveler: users.id,
-          },
-        });
+  // const detailReservationTravelers = await prisma.$transaction(
+  //   async (prisma) => {
+  //     const detailReservationTraveler_ =
+  //       await prisma.detailReservationTravelers.create({
+  //         data: {
+  //           idReservation: reservations.id,
+  //           idTraveler: users.id,
+  //         },
+  //       });
 
-      return detailReservationTraveler_;
-    },
-  );
+  //     return detailReservationTraveler_;
+  //   },
+  // );
 }
 
 main()

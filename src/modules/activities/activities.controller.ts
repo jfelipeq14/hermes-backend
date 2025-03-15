@@ -31,6 +31,7 @@ export class ActivitiesController {
     return activities_;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Activity> {
     const activity_ = await this.activitiesService.findOne(+id);
@@ -40,6 +41,7 @@ export class ActivitiesController {
     return activity_;
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(
     @Body() createActivityDto: CreateActivityDto,
@@ -51,6 +53,7 @@ export class ActivitiesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -63,6 +66,7 @@ export class ActivitiesController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Activity> {
     try {

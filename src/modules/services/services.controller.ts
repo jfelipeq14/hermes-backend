@@ -13,11 +13,13 @@ import {
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const services_ = await this.servicesService.findAll();
@@ -25,6 +27,7 @@ export class ServicesController {
       throw new HttpException('No existen servicios', HttpStatus.NOT_FOUND);
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service_ = await this.servicesService.findOne(+id);
@@ -32,6 +35,7 @@ export class ServicesController {
       throw new HttpException('No existe el servicio', HttpStatus.NOT_FOUND);
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createServiceDto: CreateServiceDto) {
     try {
@@ -41,6 +45,7 @@ export class ServicesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -53,6 +58,7 @@ export class ServicesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id/status')
   async changeStatus(@Param('id') id: string) {
     try {
