@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
+import { User } from 'src/modules/users/entities/user.entity';
 import { PUBLIC_KEY, ROLES_KEY } from 'src/utils/constants/key-decorator';
 import { ROLES } from 'src/utils/constants/roles';
 
@@ -29,7 +30,7 @@ export class RolesGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest<Request>();
 
-    const { user } = req;
+    const user: User = req.user as User;
 
     if (!user || !user.idRole) {
       throw new UnauthorizedException('No tiene permisos para acceder');
@@ -39,7 +40,7 @@ export class RolesGuard implements CanActivate {
       throw new UnauthorizedException('No tiene permisos para acceder');
     }
 
-    const isAuth = roles.includes(roles[user.idRole - 1]);
+    const isAuth = roles.includes(roles[+user.idRole - 1]);
 
     if (!isAuth) {
       throw new UnauthorizedException(
