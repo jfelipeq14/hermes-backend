@@ -1,11 +1,10 @@
 export class Date {
   id: number;
-  start: Date;
-  end: Date;
-  startRegistration: Date;
-  endRegistration: Date;
+  start: globalThis.Date;
+  end: globalThis.Date;
+  startRegistration: globalThis.Date;
+  endRegistration: globalThis.Date;
   idPackage: number;
   amount: number;
-  idUser: number;
   status: boolean;
 }

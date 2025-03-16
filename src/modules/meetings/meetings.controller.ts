@@ -4,10 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -30,15 +30,6 @@ export class MeetingsController {
     return meetings_;
   }
 
-  @Roles('ADMIN')
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Meeting> {
-    const meeting_ = await this.meetingsService.findOne(+id);
-    if (!meeting_)
-      throw new HttpException('No existe ese encuentro', HttpStatus.NOT_FOUND);
-    return meeting_;
-  }
-
   @Roles('ADMIN', 'GUIDE')
   @Get('responsible/:id')
   async findAllByResponsible(@Param('id') id: string): Promise<Meeting[]> {
@@ -52,6 +43,15 @@ export class MeetingsController {
   }
 
   @Roles('ADMIN')
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<Meeting> {
+    const meeting_ = await this.meetingsService.findOne(+id);
+    if (!meeting_)
+      throw new HttpException('No existe ese encuentro', HttpStatus.NOT_FOUND);
+    return meeting_;
+  }
+
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createMeetingDto: CreateMeetingDto): Promise<Meeting> {
     try {
@@ -62,7 +62,7 @@ export class MeetingsController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateMeetingDto: UpdateMeetingDto,

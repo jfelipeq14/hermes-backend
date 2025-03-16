@@ -4,9 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
+  Put,
   Patch,
   Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -55,7 +56,7 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updatePackageDto: UpdatePackageDto,
@@ -68,7 +69,7 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id/status')
+  @Patch(':id')
   async updateStatus(@Param('id') id: string) {
     try {
       return await this.packagesService.changeStatus(+id);

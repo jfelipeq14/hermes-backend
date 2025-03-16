@@ -11,14 +11,6 @@ export class MeetingsService {
     return this.prisma.meetings.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.meetings.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
   findAllByResponsible(id: number) {
     return this.prisma.meetings.findMany({
       where: {
@@ -30,6 +22,14 @@ export class MeetingsService {
       },
       include: {
         responsibles: true,
+      },
+    });
+  }
+
+  findOne(id: number) {
+    return this.prisma.meetings.findUnique({
+      where: {
+        id,
       },
     });
   }

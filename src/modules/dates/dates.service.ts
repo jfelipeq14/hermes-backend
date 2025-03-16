@@ -7,20 +7,20 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class DatesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.dates.findMany({});
+  async findAll() {
+    return await this.prisma.dates.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.dates.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.dates.findUnique({
       where: {
         id,
       },
     });
   }
 
-  create(createDateDto: CreateDateDto) {
-    return this.prisma.dates.create({
+  async create(createDateDto: CreateDateDto) {
+    return await this.prisma.dates.create({
       data: {
         start: new Date(createDateDto.start),
         end: new Date(createDateDto.end),
@@ -32,9 +32,9 @@ export class DatesService {
     });
   }
 
-  update(id: number, updateDateDto: UpdateDateDto) {
+  async update(id: number, updateDateDto: UpdateDateDto) {
     if (updateDateDto) {
-      return this.prisma.dates.update({
+      return await this.prisma.dates.update({
         where: {
           id,
         },
@@ -62,7 +62,7 @@ export class DatesService {
     });
 
     if (datesData) {
-      return await this.prisma.packages.update({
+      return await this.prisma.dates.update({
         where: {
           id: id,
         },
@@ -73,11 +73,37 @@ export class DatesService {
     }
   }
 
-  remove(id: number) {
-    return this.prisma.dates.delete({
-      where: {
-        id,
-      },
-    });
-  }
+  // async remove(id: number) {
+  //   const dataAsociated = await this.prisma.dates.findUnique({
+  //     where: {
+  //       id,
+  //     },
+  //     include: {
+  //       meetings: true,
+  //       reservations: true,
+  //     },
+  //   });
+
+  //   if (!dataAsociated) {
+  //     throw new Error('No se encontro la programación');
+  //   }
+
+  //   if (dataAsociated.meetings.length > 0) {
+  //     throw new Error(
+  //       'No se puede eliminar una programacion con encuentros asociados',
+  //     );
+  //   }
+
+  //   if (dataAsociated.reservations.length > 0) {
+  //     throw new Error(
+  //       'No se puede eliminar una programacion con reservas asociadas',
+  //     );
+  //   }
+
+  //   return await this.prisma.dates.delete({
+  //     where: {
+  //       id,
+  //     },
+  //   });
+  // }
 }

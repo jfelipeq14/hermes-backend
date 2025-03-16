@@ -4,9 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
+  Put,
   Patch,
   Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -48,7 +49,7 @@ export class ServicesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateServiceDto: UpdateServiceDto,
@@ -61,7 +62,7 @@ export class ServicesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id/status')
+  @Patch(':id')
   async changeStatus(@Param('id') id: string) {
     try {
       return await this.servicesService.changeStatus(+id);

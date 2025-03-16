@@ -4,10 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -25,6 +25,18 @@ export class ResponsiblesController {
   @Get()
   async findAll(): Promise<Responsible[]> {
     const responsibles_ = await this.responsiblesService.findAll();
+    if (!responsibles_ || responsibles_.length === 0)
+      throw new HttpException('No existen responsables', HttpStatus.NOT_FOUND);
+    return responsibles_;
+  }
+
+  @Roles('ADMIN', 'GUIDE')
+  @Get(':idUser')
+  async findAllByGuide(
+    @Param('idUser') idUser: string,
+  ): Promise<Responsible[]> {
+    const responsibles_ =
+      await this.responsiblesService.findAllByGuide(+idUser);
     if (!responsibles_ || responsibles_.length === 0)
       throw new HttpException('No existen responsables', HttpStatus.NOT_FOUND);
     return responsibles_;
@@ -52,7 +64,7 @@ export class ResponsiblesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateResponsibleDto: UpdateResponsibleDto,
@@ -68,7 +80,13 @@ export class ResponsiblesController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Responsible> {
     try {
-      return await this.responsiblesService.remove(+id);
+      const responsible_ = await this.responsiblesService.remove(+id);
+      if (!responsible_)
+        throw new HttpException(
+          'El responsable no existe',
+          HttpStatus.NOT_FOUND,
+        );
+      return responsible_;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

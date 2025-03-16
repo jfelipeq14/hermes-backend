@@ -4,10 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -54,7 +54,7 @@ export class ActivitiesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateActivityDto: UpdateActivityDto,

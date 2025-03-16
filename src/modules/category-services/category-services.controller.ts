@@ -4,10 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Body,
+  Param,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -15,6 +15,7 @@ import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { CategoryService } from './entities/category-service.entity';
 
 @Controller('category-services')
 export class CategoryServicesController {
@@ -24,7 +25,7 @@ export class CategoryServicesController {
 
   @Roles('ADMIN')
   @Get()
-  async findAll() {
+  async findAll(): Promise<CategoryService[]> {
     const categoryServices_ = await this.categoryServicesService.findAll();
     if (!categoryServices_ || categoryServices_.length === 0) {
       throw new HttpException('No existen categorias', HttpStatus.NOT_FOUND);
@@ -34,7 +35,7 @@ export class CategoryServicesController {
 
   @Roles('ADMIN')
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<CategoryService> {
     const categoryService_ = await this.categoryServicesService.findOne(+id);
     if (!categoryService_) {
       throw new HttpException('No existe esa categoria', HttpStatus.NOT_FOUND);
@@ -44,7 +45,9 @@ export class CategoryServicesController {
 
   @Roles('ADMIN')
   @Post()
-  async create(@Body() createCategoryServiceDto: CreateCategoryServiceDto) {
+  async create(
+    @Body() createCategoryServiceDto: CreateCategoryServiceDto,
+  ): Promise<CategoryService> {
     try {
       return await this.categoryServicesService.create(
         createCategoryServiceDto,
@@ -55,11 +58,11 @@ export class CategoryServicesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateCategoryServiceDto: UpdateCategoryServiceDto,
-  ) {
+  ): Promise<CategoryService> {
     try {
       return await this.categoryServicesService.update(
         +id,
@@ -72,7 +75,7 @@ export class CategoryServicesController {
 
   @Roles('ADMIN')
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string): Promise<CategoryService> {
     try {
       return await this.categoryServicesService.remove(+id);
     } catch (error) {

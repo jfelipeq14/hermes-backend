@@ -10,7 +10,6 @@ import {
   Min,
   MaxLength,
   IsNumber,
-  Max,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsStringRegex } from 'src/utils/regex';
@@ -60,8 +59,6 @@ export class CreatePackageDto {
 
   @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
   @IsNumber()
-  @Max(5.0)
-  @IsNotEmpty()
   level: number;
 
   @ApiProperty({ required: true, description: 'Price of the package' })
