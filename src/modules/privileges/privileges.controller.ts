@@ -10,11 +10,13 @@ import {
 import { PrivilegesService } from './privileges.service';
 import { CreatePrivilegeDto } from './dto/create-privilege.dto';
 import { UpdatePrivilegeDto } from './dto/update-privilege.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('privileges')
 export class PrivilegesController {
   constructor(private readonly privilegesService: PrivilegesService) {}
 
+  @Roles('ADMIN')
   @Get()
   findAll() {
     try {
@@ -24,6 +26,7 @@ export class PrivilegesController {
     }
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   findOne(@Param('id') id: string) {
     try {
@@ -33,6 +36,7 @@ export class PrivilegesController {
     }
   }
 
+  @Roles('ADMIN')
   @Post()
   create(@Body() createPrivilegeDto: CreatePrivilegeDto) {
     try {
@@ -42,6 +46,7 @@ export class PrivilegesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -54,6 +59,7 @@ export class PrivilegesController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id') id: string) {
     try {

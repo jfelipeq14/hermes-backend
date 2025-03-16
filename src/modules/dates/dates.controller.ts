@@ -15,11 +15,13 @@ import {
 import { DatesService } from './dates.service';
 import { CreateDateDto } from './dto/create-date.dto';
 import { UpdateDateDto } from './dto/update-date.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('dates')
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
 
+  @Roles('ADMIN', 'GUIDE')
   @Get()
   async findAll() {
     const dates = await this.datesService.findAll();
@@ -31,6 +33,7 @@ export class DatesController {
     return dates;
   }
 
+  @Roles('ADMIN', 'GUIDE')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const date = await this.datesService.findOne(+id);
@@ -42,6 +45,7 @@ export class DatesController {
     return date;
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createDateDto: CreateDateDto) {
     try {
@@ -51,6 +55,7 @@ export class DatesController {
     }
   }
 
+  @Roles('ADMIN')
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateDateDto: UpdateDateDto) {
     try {
@@ -60,6 +65,7 @@ export class DatesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async changeStatus(@Param('id') id: string) {
     try {
@@ -69,6 +75,7 @@ export class DatesController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {

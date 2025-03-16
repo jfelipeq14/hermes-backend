@@ -36,6 +36,7 @@ export class UsersController {
     return users_;
   }
 
+  @Roles('ADMIN', 'CLIENT', 'GUIDE')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const users_ = await this.usersService.findOne(+id);
@@ -43,6 +44,7 @@ export class UsersController {
       throw new HttpException('No existe ese usuario', HttpStatus.NOT_FOUND);
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -52,6 +54,7 @@ export class UsersController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {

@@ -16,6 +16,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
+  @Roles('ADMIN')
   @Get()
   findAll() {
     try {
@@ -35,11 +36,13 @@ export class ReservationsController {
     }
   }
 
+  @Roles('ADMIN', 'CLIENT')
   @Post()
   create(@Body() createReservationDto: CreateReservationDto) {
     return this.reservationsService.create(createReservationDto);
   }
 
+  @Roles('ADMIN', 'CLIENT')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -52,6 +55,7 @@ export class ReservationsController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   remove(@Param('id') id: string) {
     try {
