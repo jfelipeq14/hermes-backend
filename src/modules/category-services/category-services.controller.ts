@@ -26,7 +26,7 @@ export class CategoryServicesController {
   @Get()
   async findAll() {
     const categoryServices_ = await this.categoryServicesService.findAll();
-    if (!categoryServices_) {
+    if (!categoryServices_ || categoryServices_.length === 0) {
       throw new HttpException('No existen categorias', HttpStatus.NOT_FOUND);
     }
     return categoryServices_;
@@ -56,12 +56,15 @@ export class CategoryServicesController {
 
   @Roles('ADMIN')
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCategoryServiceDto: UpdateCategoryServiceDto,
   ) {
     try {
-      return this.categoryServicesService.update(+id, updateCategoryServiceDto);
+      return await this.categoryServicesService.update(
+        +id,
+        updateCategoryServiceDto,
+      );
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -69,9 +72,9 @@ export class CategoryServicesController {
 
   @Roles('ADMIN')
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.categoryServicesService.remove(+id);
+      return await this.categoryServicesService.remove(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

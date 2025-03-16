@@ -23,15 +23,48 @@ export class ActivitiesService {
     });
   }
 
-  update(id: number, updateActivityDto: UpdateActivityDto) {
+  async update(id: number, updateActivityDto: UpdateActivityDto) {
+    const packagesAsociated = await this.prisma.activities.findUnique({
+      where: { id },
+      include: {
+        packages: true,
+      },
+    });
+
+    if (!packagesAsociated) {
+      throw new Error('No se encontro la actividad');
+    }
+
+    if (packagesAsociated.packages.length > 0) {
+      throw new Error(
+        'No se puede actualizar una actividad con paquetes asociados',
+      );
+    }
+
     return this.prisma.activities.update({
       where: { id },
       data: updateActivityDto,
     });
   }
 
-  remove(id: number) {
-    return this.prisma.activities.delete({
+  async remove(id: number) {
+    const packagesAsociated = await this.prisma.activities.findUnique({
+      where: { id },
+      include: {
+        packages: true,
+      },
+    });
+
+    if (!packagesAsociated) {
+      throw new Error('No se encontro la actividad');
+    }
+
+    if (packagesAsociated.packages.length > 0) {
+      throw new Error(
+        'No se puede eliminar una actividad con paquetes asociados',
+      );
+    }
+    return await this.prisma.activities.delete({
       where: { id },
     });
   }

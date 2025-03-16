@@ -25,6 +25,7 @@ export class ServicesController {
     const services_ = await this.servicesService.findAll();
     if (!services_ || services_.length === 0)
       throw new HttpException('No existen servicios', HttpStatus.NOT_FOUND);
+    return services_;
   }
 
   @Roles('ADMIN')
@@ -33,6 +34,7 @@ export class ServicesController {
     const service_ = await this.servicesService.findOne(+id);
     if (!service_)
       throw new HttpException('No existe el servicio', HttpStatus.NOT_FOUND);
+    return service_;
   }
 
   @Roles('ADMIN')

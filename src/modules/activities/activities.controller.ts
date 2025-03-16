@@ -25,7 +25,7 @@ export class ActivitiesController {
   @Get()
   async findAll(): Promise<Activity[]> {
     const activities_ = await this.activitiesService.findAll();
-    if (!activities_) {
+    if (!activities_ || activities_.length === 0) {
       throw new HttpException('No existen actividades', HttpStatus.NOT_FOUND);
     }
     return activities_;
