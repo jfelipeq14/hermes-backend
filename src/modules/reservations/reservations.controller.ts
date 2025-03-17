@@ -9,6 +9,7 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Delete,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -40,7 +41,6 @@ export class ReservationsController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-
   @Get('user/:idUser')
   async findAllByUser(@Param('idUser') idUser: string) {
     try {
@@ -53,26 +53,8 @@ export class ReservationsController {
   @Roles('ADMIN', 'CLIENT')
   @Post()
   async create(@Body() createReservationDto: CreateReservationDto) {
-
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
     return this.reservationsService.create(createReservationDto);
   }
-
-  @Roles('ADMIN', 'CLIENT')
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateReservationDto: UpdateReservationDto,
-  ) {
-
-    try {
-      return await this.reservationsService.create(createReservationDto);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-  }
-
 
   @Roles('ADMIN', 'CLIENT')
   @Patch(':id')
@@ -80,13 +62,18 @@ export class ReservationsController {
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
+    try {
+      return await this.reservationsService.update(+id, updateReservationDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
   @Roles('ADMIN')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-
+  async remove(@Param('id') id: string) {
     try {
-      return await this.reservationsService.update(+id, updateReservationDto);
+      return await this.reservationsService.remove(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
