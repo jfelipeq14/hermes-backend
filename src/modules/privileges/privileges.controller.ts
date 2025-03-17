@@ -18,54 +18,34 @@ export class PrivilegesController {
 
   @Roles('ADMIN')
   @Get()
-  findAll() {
-    try {
-      return this.privilegesService.findAll();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    return await this.privilegesService.findAll();
   }
 
   @Roles('ADMIN')
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.privilegesService.findOne(+id);
-    } catch (error) {
-      console.log(error);
-    }
+  async findOne(@Param('id') id: string) {
+    return await this.privilegesService.findOne(+id);
   }
 
   @Roles('ADMIN')
   @Post()
-  create(@Body() createPrivilegeDto: CreatePrivilegeDto) {
-    try {
-      return this.privilegesService.create(createPrivilegeDto);
-    } catch (error) {
-      console.log(error);
-    }
+  async create(@Body() createPrivilegeDto: CreatePrivilegeDto) {
+    return await this.privilegesService.create(createPrivilegeDto);
   }
 
   @Roles('ADMIN')
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updatePrivilegeDto: UpdatePrivilegeDto,
   ) {
-    try {
-      return this.privilegesService.update(+id, updatePrivilegeDto);
-    } catch (error) {
-      console.log(error);
-    }
+    return await this.privilegesService.update(+id, updatePrivilegeDto);
   }
 
   @Roles('ADMIN')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    try {
-      return this.privilegesService.remove(+id);
-    } catch (error) {
-      console.log(error);
-    }
+  async remove(@Param('id') id: string) {
+    return await this.privilegesService.remove(+id);
   }
 }
