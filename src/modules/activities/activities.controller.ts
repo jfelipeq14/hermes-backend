@@ -24,29 +24,29 @@ export class ActivitiesController {
   @Roles('ADMIN')
   @Get()
   async findAll(): Promise<Activity[]> {
-    const activities_: Activity[] = await this.activitiesService.findAll();
+    const activitiesFound = await this.activitiesService.findAll();
 
-    if (!activities_ || activities_.length === 0) {
+    if (!activitiesFound || activitiesFound.length === 0) {
       throw new HttpException('No existen actividades', HttpStatus.NOT_FOUND);
     }
 
-    return activities_;
+    return activitiesFound;
   }
 
   @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Activity> {
     try {
-      const activity_: Activity = await this.activitiesService.findOne(+id);
+      const activityFound = await this.activitiesService.findOne(+id);
 
-      if (!activity_) {
+      if (!activityFound) {
         throw new HttpException(
           'No existe esa actividad',
           HttpStatus.NOT_FOUND,
         );
       }
 
-      return activity_;
+      return activityFound;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -80,7 +80,19 @@ export class ActivitiesController {
     @Body() updateActivityDto: UpdateActivityDto,
   ): Promise<Activity> {
     try {
-      return await this.activitiesService.update(+id, updateActivityDto);
+      const updatedActivity = await this.activitiesService.update(
+        +id,
+        updateActivityDto,
+      );
+
+      if (!updatedActivity) {
+        throw new HttpException(
+          'No se pudo actualizar la actividad',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      return updatedActivity;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -90,6 +102,15 @@ export class ActivitiesController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Activity> {
     try {
+      const removedActivity = await this.activitiesService.remove(+id);
+
+      if (!removedActivity) {
+        throw new HttpException(
+          'No se pudo eliminar la actividad',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
       return await this.activitiesService.remove(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
