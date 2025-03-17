@@ -9,3 +9,9 @@ export enum ACCESS_LEVEL {
   GUIDE = 2,
   CLIENT = 4,
 }
+
+export class Roles {
+  admin: number = 1;
+  guide: number = 2;
+  client: number = 2;
+}

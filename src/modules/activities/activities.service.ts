@@ -7,18 +7,18 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class ActivitiesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.activities.findMany();
+  async findAll() {
+    return await this.prisma.activities.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.activities.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.activities.findUnique({
       where: { id },
     });
   }
 
-  create(createActivityDto: CreateActivityDto) {
-    return this.prisma.activities.create({
+  async create(createActivityDto: CreateActivityDto) {
+    return await this.prisma.activities.create({
       data: createActivityDto,
     });
   }
