@@ -40,6 +40,9 @@ export class RolesGuard implements CanActivate {
       throw new UnauthorizedException('No tiene permisos para acceder');
     }
 
+    if (user.idRole === 3) {
+      user.idRole = 2;
+    }
     const isAuth = roles.includes(roles[+user.idRole - 1]);
 
     if (!isAuth) {

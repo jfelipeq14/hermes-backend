@@ -8,58 +8,37 @@ export class PrivilegesService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    try {
-      return this.prisma.privileges.findMany();
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.privileges.findMany();
   }
 
   findOne(id: number) {
-    try {
-      return this.prisma.privileges.findUnique({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    return `This action returns a #${id} privilege`;
+    return this.prisma.privileges.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
   create(createPrivilegeDto: CreatePrivilegeDto) {
-    try {
-      return this.prisma.privileges.create({
-        data: createPrivilegeDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.privileges.create({
+      data: createPrivilegeDto,
+    });
   }
 
   update(id: number, updatePrivilegeDto: UpdatePrivilegeDto) {
-    try {
-      return this.prisma.privileges.update({
-        where: {
-          id,
-        },
-        data: updatePrivilegeDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.privileges.update({
+      where: {
+        id,
+      },
+      data: updatePrivilegeDto,
+    });
   }
 
   remove(id: number) {
-    try {
-      return this.prisma.privileges.delete({
-        where: {
-          id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.privileges.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
