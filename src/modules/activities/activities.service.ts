@@ -2,25 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
+import { Activity } from './entities/activity.entity';
 
 @Injectable()
 export class ActivitiesService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return await this.prisma.activities.findMany();
+  async findAll(): Promise<Activity[]> {
+    const activities = await this.prisma.activities.findMany();
+    return activities;
   }
 
-  async findOne(id: number) {
-    return await this.prisma.activities.findUnique({
+  async findOne(id: number): Promise<Activity> {
+    const activity = await this.prisma.activities.findUnique({
       where: { id },
     });
+
+    if (!activity) {
+      return new Activity();
+    }
+
+    return activity;
   }
 
-  async create(createActivityDto: CreateActivityDto) {
-    return await this.prisma.activities.create({
+  async create(createActivityDto: CreateActivityDto): Promise<Activity> {
+    const activityCreated = await this.prisma.activities.create({
       data: createActivityDto,
     });
+
+    return activityCreated;
   }
 
   async update(id: number, updateActivityDto: UpdateActivityDto) {

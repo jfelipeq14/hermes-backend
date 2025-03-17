@@ -24,21 +24,32 @@ export class ActivitiesController {
   @Roles('ADMIN')
   @Get()
   async findAll(): Promise<Activity[]> {
-    const activities_ = await this.activitiesService.findAll();
+    const activities_: Activity[] = await this.activitiesService.findAll();
+
     if (!activities_ || activities_.length === 0) {
       throw new HttpException('No existen actividades', HttpStatus.NOT_FOUND);
     }
+
     return activities_;
   }
 
   @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Activity> {
-    const activity_ = await this.activitiesService.findOne(+id);
-    if (!activity_) {
-      throw new HttpException('No existe esa actividad', HttpStatus.NOT_FOUND);
+    try {
+      const activity_: Activity = await this.activitiesService.findOne(+id);
+
+      if (!activity_) {
+        throw new HttpException(
+          'No existe esa actividad',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return activity_;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    return activity_;
   }
 
   @Roles('ADMIN')
@@ -47,7 +58,16 @@ export class ActivitiesController {
     @Body() createActivityDto: CreateActivityDto,
   ): Promise<Activity> {
     try {
-      return await this.activitiesService.create(createActivityDto);
+      const activity_ = await this.activitiesService.create(createActivityDto);
+
+      if (!activity_) {
+        throw new HttpException(
+          'No se pudo crear la actividad',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      return activity_;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
