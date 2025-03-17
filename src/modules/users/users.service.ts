@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
@@ -8,12 +8,12 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.users.findMany();
+  async findAll() {
+    return await this.prisma.users.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.users.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.users.findUnique({
       where: {
         id: id,
       },
@@ -29,8 +29,16 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.prisma.users.update({
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    if (!updateUserDto)
+      throw new HttpException('No se pudo actualizar', HttpStatus.FOUND);
+
+    if (updateUserDto.password) {
+      const newPassword = await bcrypt.hash(updateUserDto.password, 10);
+      updateUserDto.password = newPassword;
+    }
+
+    return await this.prisma.users.update({
       where: {
         id: id,
       },
