@@ -3,18 +3,16 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsInt,
   IsNotEmpty,
-  IsNumber,
   IsString,
-  Matches,
   ValidateNested,
 } from 'class-validator';
-import { IsStringRegex } from 'src/utils/regex';
 
 export class CreateRolePrivilegesDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
-  @IsNumber()
+  @IsInt()
   idPrivilege: number;
 }
 
@@ -22,7 +20,7 @@ export class CreateRoleDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @Matches(IsStringRegex)
+  // @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })

@@ -3,6 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { RolesGuard } from './modules/auth/guards/roles.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,8 +33,9 @@ async function bootstrap() {
   SwaggerModule.setup('', app, document);
 
   const jwtAuthGuard = app.get(JwtAuthGuard);
+  const rolesGuard = app.get(RolesGuard);
 
-  app.useGlobalGuards(jwtAuthGuard);
+  app.useGlobalGuards(jwtAuthGuard, rolesGuard);
 
   await app.listen(process.env.PORT ?? 3000);
 }

@@ -15,11 +15,13 @@ import { ResponsiblesService } from './responsibles.service';
 import { CreateResponsibleDto } from './dto/create-responsible.dto';
 import { UpdateResponsibleDto } from './dto/update-responsible.dto';
 import { Responsible } from './entities/responsible.entity';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('responsibles')
 export class ResponsiblesController {
   constructor(private readonly responsiblesService: ResponsiblesService) {}
 
+  @Roles('ADMIN')
   @Get()
   async findAll(): Promise<Responsible[]> {
     const responsibles_ = await this.responsiblesService.findAll();
@@ -28,6 +30,7 @@ export class ResponsiblesController {
     return responsibles_;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Responsible> {
     const responsible_ = await this.responsiblesService.findOne(+id);
@@ -36,6 +39,7 @@ export class ResponsiblesController {
     return responsible_;
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(
     @Body() createResponsibleDto: CreateResponsibleDto,
@@ -47,6 +51,7 @@ export class ResponsiblesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -59,6 +64,7 @@ export class ResponsiblesController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Responsible> {
     try {

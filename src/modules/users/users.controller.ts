@@ -9,23 +9,26 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   HttpException,
   HttpStatus,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Roles('ADMIN')
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll(@Req() req: AuthenticatedUserRequest) {
     const users_ = await this.usersService.findAll();
     if (!users_)
@@ -58,12 +61,12 @@ export class UsersController {
     }
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    try {
-      return await this.usersService.remove(+id);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-  }
+  // @Delete(':id')
+  // async remove(@Param('id') id: string) {
+  //   try {
+  //     return await this.usersService.remove(+id);
+  //   } catch (error) {
+  //     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+  //   }
+  // }
 }

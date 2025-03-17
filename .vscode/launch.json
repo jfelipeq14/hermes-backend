@@ -6,7 +6,7 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/${input:programPath}",
             "preLaunchTask": "npm: build",
-            "args": [],
+            "args": ["--debug --watch"],
             "runtimeArgs": [
                 "--nolazy"
             ],

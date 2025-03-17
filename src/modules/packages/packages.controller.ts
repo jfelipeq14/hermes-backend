@@ -13,11 +13,13 @@ import {
 import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
 
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const packages_ = await this.packagesService.findAll();
@@ -26,6 +28,7 @@ export class PackagesController {
     return packages_;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const package_ = await this.packagesService.findOne(+id);
@@ -33,6 +36,7 @@ export class PackagesController {
       throw new HttpException('No existe ese paquete', HttpStatus.NOT_FOUND);
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createPackageDto: CreatePackageDto) {
     try {
@@ -42,6 +46,7 @@ export class PackagesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -54,6 +59,7 @@ export class PackagesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id/status')
   async updateStatus(@Param('id') id: string) {
     try {

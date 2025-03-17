@@ -15,11 +15,13 @@ import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Activity } from './entities/activity.entity';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
 
+  @Roles('ADMIN')
   @Get()
   async findAll(): Promise<Activity[]> {
     const activities_ = await this.activitiesService.findAll();
@@ -29,6 +31,7 @@ export class ActivitiesController {
     return activities_;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Activity> {
     const activity_ = await this.activitiesService.findOne(+id);
@@ -38,6 +41,7 @@ export class ActivitiesController {
     return activity_;
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(
     @Body() createActivityDto: CreateActivityDto,
@@ -49,6 +53,7 @@ export class ActivitiesController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -61,6 +66,7 @@ export class ActivitiesController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Activity> {
     try {

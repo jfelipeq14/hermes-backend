@@ -14,7 +14,9 @@ import {
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
+@Roles('ADMIN')
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
