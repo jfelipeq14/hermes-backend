@@ -7,12 +7,12 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class PaymentsService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.payments.findMany();
+  async findAll() {
+    return await this.prisma.payments.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.payments.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.payments.findUnique({
       where: { id },
     });
   }
