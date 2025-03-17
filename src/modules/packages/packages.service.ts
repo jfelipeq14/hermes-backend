@@ -45,19 +45,33 @@ export class PackagesService {
 
   async update(id: number, updatePackageDto: UpdatePackageDto) {
     const { detailPackagesServices, ...packageData } = updatePackageDto;
-    return await this.prisma.packages.update({
-      where: {
-        id,
-      },
-      data: {
-        ...packageData,
-        detailPackagesServices: {
-          create: detailPackagesServices,
-        },
-      },
-      include: {
-        detailPackagesServices: true,
-      },
+    return this.prisma.$transaction(async (prisma) => {
+      if (detailPackagesServices && detailPackagesServices.length > 0) {
+        await prisma.packages.deleteMany({
+          where: { id },
+        });
+
+        return prisma.packages.update({
+          where: { id },
+          data: {
+            ...packageData,
+            detailPackagesServices: {
+              create: detailPackagesServices,
+            },
+          },
+          include: {
+            detailPackagesServices: true,
+          },
+        });
+      } else {
+        return prisma.packages.update({
+          where: { id },
+          data: packageData,
+          include: {
+            detailPackagesServices: true,
+          },
+        });
+      }
     });
   }
 
