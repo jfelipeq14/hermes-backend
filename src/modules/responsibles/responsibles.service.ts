@@ -11,6 +11,14 @@ export class ResponsiblesService {
     return await this.prisma.responsibles.findMany();
   }
 
+  async findAllByGuide(idUser: number) {
+    return await this.prisma.responsibles.findMany({
+      where: {
+        idUser,
+      },
+    });
+  }
+
   async findOne(id: number) {
     return await this.prisma.responsibles.findUnique({
       where: {
@@ -35,10 +43,25 @@ export class ResponsiblesService {
   }
 
   async remove(id: number) {
-    return await this.prisma.responsibles.delete({
+    const dataAsociated = await this.prisma.responsibles.findUnique({
       where: {
         id,
       },
+      include: {
+        meetings: true,
+      },
     });
+
+    if (!dataAsociated) {
+      throw new Error('No se encontro el responsable');
+    }
+
+    if (!dataAsociated.meetings) {
+      return await this.prisma.responsibles.delete({
+        where: {
+          id,
+        },
+      });
+    }
   }
 }

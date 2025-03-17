@@ -4,10 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
-  Param,
+  Put,
   Delete,
+  Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -25,7 +25,7 @@ export class ActivitiesController {
   @Get()
   async findAll(): Promise<Activity[]> {
     const activities_ = await this.activitiesService.findAll();
-    if (!activities_) {
+    if (!activities_ || activities_.length === 0) {
       throw new HttpException('No existen actividades', HttpStatus.NOT_FOUND);
     }
     return activities_;
@@ -54,7 +54,7 @@ export class ActivitiesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateActivityDto: UpdateActivityDto,

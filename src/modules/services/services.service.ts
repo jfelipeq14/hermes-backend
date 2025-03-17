@@ -26,6 +26,25 @@ export class ServicesService {
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
+    const packagesAsociated = await this.prisma.services.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        detailPackagesServices: true,
+      },
+    });
+
+    if (!packagesAsociated) {
+      throw new Error('No se encontro el servicio');
+    }
+
+    if (packagesAsociated.detailPackagesServices.length > 0) {
+      throw new Error(
+        'No se puede actualizar un servicio con paquetes asociados',
+      );
+    }
+
     return await this.prisma.services.update({
       where: {
         id,

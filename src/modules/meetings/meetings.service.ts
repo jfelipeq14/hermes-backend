@@ -7,20 +7,12 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class MeetingsService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.meetings.findMany();
+  async findAll() {
+    return await this.prisma.meetings.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.meetings.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
-  findAllByResponsible(id: number) {
-    return this.prisma.meetings.findMany({
+  async findAllByResponsible(id: number) {
+    return await this.prisma.meetings.findMany({
       where: {
         responsibles: {
           some: {
@@ -34,14 +26,22 @@ export class MeetingsService {
     });
   }
 
-  create(createMeetingDto: CreateMeetingDto) {
-    return this.prisma.meetings.create({
+  async findOne(id: number) {
+    return await this.prisma.meetings.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async create(createMeetingDto: CreateMeetingDto) {
+    return await this.prisma.meetings.create({
       data: createMeetingDto,
     });
   }
 
-  update(id: number, updateMeetingDto: UpdateMeetingDto) {
-    return this.prisma.meetings.update({
+  async update(id: number, updateMeetingDto: UpdateMeetingDto) {
+    return await this.prisma.meetings.update({
       where: {
         id,
       },
@@ -49,8 +49,8 @@ export class MeetingsService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.meetings.delete({
+  async remove(id: number) {
+    return await this.prisma.meetings.delete({
       where: {
         id,
       },

@@ -7,8 +7,8 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class PackagesService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.packages.findMany({
+  async findAll() {
+    return await this.prisma.packages.findMany({
       include: {
         detailPackagesServices: true,
         dates: true,
@@ -16,8 +16,8 @@ export class PackagesService {
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.packages.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.packages.findUnique({
       where: {
         id,
       },
@@ -45,26 +45,40 @@ export class PackagesService {
 
   async update(id: number, updatePackageDto: UpdatePackageDto) {
     const { detailPackagesServices, ...packageData } = updatePackageDto;
-    return await this.prisma.packages.update({
-      where: {
-        id,
-      },
-      data: {
-        ...packageData,
-        detailPackagesServices: {
-          create: detailPackagesServices,
-        },
-      },
-      include: {
-        detailPackagesServices: true,
-      },
+    return this.prisma.$transaction(async (prisma) => {
+      if (detailPackagesServices && detailPackagesServices.length > 0) {
+        await prisma.packages.deleteMany({
+          where: { id },
+        });
+
+        return prisma.packages.update({
+          where: { id },
+          data: {
+            ...packageData,
+            detailPackagesServices: {
+              create: detailPackagesServices,
+            },
+          },
+          include: {
+            detailPackagesServices: true,
+          },
+        });
+      } else {
+        return prisma.packages.update({
+          where: { id },
+          data: packageData,
+          include: {
+            detailPackagesServices: true,
+          },
+        });
+      }
     });
   }
 
   async changeStatus(id: number) {
     const packageData = await this.prisma.packages.findUnique({
       where: {
-        id: id,
+        id,
       },
     });
 
@@ -86,5 +100,6 @@ export class PackagesService {
         });
       }
     }
+    return packageData;
   }
 }

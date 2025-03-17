@@ -184,12 +184,13 @@ model meetings {
 }
 
 model responsibles {
-  id        Int @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   idUser    Int
   idMeeting Int
+  users     users?    @relation(fields: [idUser], references: [id])
+  meetings  meetings? @relation(fields: [idMeeting], references: [id])
 
-  users    users    @relation(fields: [idUser], references: [id], onDelete: Cascade)
-  meetings meetings @relation(fields: [idMeeting], references: [id], onDelete: Cascade)
+  @@index([idUser, idMeeting])
 }
 
 model reservations {

@@ -4,9 +4,10 @@ import {
   Controller,
   Get,
   Post,
-  Body,
+  Put,
   Patch,
   Param,
+  Body,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -23,7 +24,7 @@ export class PackagesController {
   @Get()
   async findAll() {
     const packages_ = await this.packagesService.findAll();
-    if (!packages_)
+    if (!packages_ || packages_.length === 0)
       throw new HttpException('No existen paquetes', HttpStatus.NOT_FOUND);
     return packages_;
   }
@@ -34,12 +35,20 @@ export class PackagesController {
     const package_ = await this.packagesService.findOne(+id);
     if (!package_)
       throw new HttpException('No existe ese paquete', HttpStatus.NOT_FOUND);
+    return package_;
   }
 
   @Roles('ADMIN')
   @Post()
   async create(@Body() createPackageDto: CreatePackageDto) {
     try {
+      if (createPackageDto.reserve > createPackageDto.price) {
+        throw new HttpException(
+          'El precio de reserva no puede ser mayor al precio del paquete',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
       return await this.packagesService.create(createPackageDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -47,7 +56,7 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updatePackageDto: UpdatePackageDto,
@@ -60,7 +69,7 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id/status')
+  @Patch(':id')
   async updateStatus(@Param('id') id: string) {
     try {
       return await this.packagesService.changeStatus(+id);

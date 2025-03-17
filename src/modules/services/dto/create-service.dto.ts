@@ -8,7 +8,7 @@ import {
   Min,
 } from 'class-validator';
 import { IsStringRegex } from 'src/utils/regex';
-import { NAMES_VALUE, PRICE_VALUE } from 'src/utils/values';
+import { NAMES_VALUE } from 'src/utils/values';
 
 export class CreateServiceDto {
   @ApiProperty({ required: true })
@@ -27,6 +27,5 @@ export class CreateServiceDto {
   @IsInt()
   @IsNotEmpty()
   @Min(1)
-  @MaxLength(PRICE_VALUE)
   price: number;
 }
