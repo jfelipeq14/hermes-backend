@@ -55,7 +55,7 @@ export class UsersController {
     }
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'CLIENT', 'GUIDE')
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {

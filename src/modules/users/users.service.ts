@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
@@ -30,6 +30,14 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    if (!updateUserDto)
+      throw new HttpException('No se pudo actualizar', HttpStatus.FOUND);
+
+    if (updateUserDto.password) {
+      const newPassword = await bcrypt.hash(updateUserDto.password, 10);
+      updateUserDto.password = newPassword;
+    }
+
     return await this.prisma.users.update({
       where: {
         id: id,
