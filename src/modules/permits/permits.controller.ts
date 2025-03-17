@@ -29,6 +29,7 @@ export class PermitsController {
     return permits_;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const permit_ = await this.permitsService.findOne(+id);
@@ -37,6 +38,7 @@ export class PermitsController {
     return permit_;
   }
 
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createPermitDto: CreatePermitDto) {
     try {
@@ -46,6 +48,7 @@ export class PermitsController {
     }
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -58,6 +61,7 @@ export class PermitsController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {

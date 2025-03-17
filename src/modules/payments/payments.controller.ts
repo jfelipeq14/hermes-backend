@@ -20,6 +20,9 @@ export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
   @Roles('ADMIN')
+
+  @Roles('ADMIN', 'CLIENT')
+
   @Get()
   async findAll() {
     const payments_ = await this.paymentsService.findAll();
@@ -28,7 +31,11 @@ export class PaymentsController {
     return payments_;
   }
 
+
   @Roles('ADMIN')
+
+  @Roles('ADMIN', 'CLIENT')
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const payment_ = await this.paymentsService.findOne(+id);
@@ -36,6 +43,7 @@ export class PaymentsController {
       throw new HttpException('No existe ese pago', HttpStatus.NOT_FOUND);
     return payment_;
   }
+
 
   async findAllByReservation(idReservation: string) {
     const payments_ =

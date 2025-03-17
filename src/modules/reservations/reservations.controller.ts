@@ -40,6 +40,7 @@ export class ReservationsController {
   }
 
   @Roles('ADMIN', 'CLIENT')
+
   @Get('user/:idUser')
   async findAllByUser(@Param('idUser') idUser: string) {
     try {
@@ -52,6 +53,19 @@ export class ReservationsController {
   @Roles('ADMIN', 'CLIENT')
   @Post()
   async create(@Body() createReservationDto: CreateReservationDto) {
+
+  @Post()
+  create(@Body() createReservationDto: CreateReservationDto) {
+    return this.reservationsService.create(createReservationDto);
+  }
+
+  @Roles('ADMIN', 'CLIENT')
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateReservationDto: UpdateReservationDto,
+  ) {
+
     try {
       return await this.reservationsService.create(createReservationDto);
     } catch (error) {
@@ -59,12 +73,18 @@ export class ReservationsController {
     }
   }
 
+
   @Roles('ADMIN', 'CLIENT')
   @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
+
+  @Roles('ADMIN')
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+
     try {
       return await this.reservationsService.update(+id, updateReservationDto);
     } catch (error) {
