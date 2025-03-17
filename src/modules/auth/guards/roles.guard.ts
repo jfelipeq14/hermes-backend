@@ -29,7 +29,6 @@ export class RolesGuard implements CanActivate {
     );
 
     const req = context.switchToHttp().getRequest<Request>();
-
     const user: User = req.user as User;
 
     if (!user || !user.idRole) {
@@ -40,12 +39,11 @@ export class RolesGuard implements CanActivate {
       throw new UnauthorizedException('No tiene permisos para acceder');
     }
 
-    if (user.idRole === 3) {
-      user.idRole = 2;
-    }
-    const isAuth = roles.includes(roles[+user.idRole - 1]);
+    const userRole = Object.keys(ROLES).find(
+      (key) => ROLES[key] === user.idRole,
+    );
 
-    if (!isAuth) {
+    if (!roles.includes(userRole as keyof typeof ROLES)) {
       throw new UnauthorizedException(
         'No tiene permisos para acceder a esta ruta',
       );
