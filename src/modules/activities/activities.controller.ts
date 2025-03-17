@@ -37,7 +37,7 @@ export class ActivitiesController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Activity> {
     try {
-      const activityFound = await this.activitiesService.findOne(+id);
+      const activityFound: Activity = await this.activitiesService.findOne(+id);
 
       if (!activityFound) {
         throw new HttpException(
@@ -58,16 +58,17 @@ export class ActivitiesController {
     @Body() createActivityDto: CreateActivityDto,
   ): Promise<Activity> {
     try {
-      const activity_ = await this.activitiesService.create(createActivityDto);
+      const createdActivity: Activity =
+        await this.activitiesService.create(createActivityDto);
 
-      if (!activity_) {
+      if (!createdActivity) {
         throw new HttpException(
           'No se pudo crear la actividad',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
-      return activity_;
+      return createdActivity;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -80,7 +81,7 @@ export class ActivitiesController {
     @Body() updateActivityDto: UpdateActivityDto,
   ): Promise<Activity> {
     try {
-      const updatedActivity = await this.activitiesService.update(
+      const updatedActivity: Activity = await this.activitiesService.update(
         +id,
         updateActivityDto,
       );
@@ -102,7 +103,8 @@ export class ActivitiesController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<Activity> {
     try {
-      const removedActivity = await this.activitiesService.remove(+id);
+      const removedActivity: Activity =
+        await this.activitiesService.remove(+id);
 
       if (!removedActivity) {
         throw new HttpException(
