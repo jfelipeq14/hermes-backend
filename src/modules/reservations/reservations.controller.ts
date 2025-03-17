@@ -53,9 +53,12 @@ export class ReservationsController {
   @Roles('ADMIN', 'CLIENT')
   @Post()
   async create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+    try {
+      return await this.reservationsService.create(createReservationDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
-
   @Roles('ADMIN', 'CLIENT')
   @Patch(':id')
   async update(
