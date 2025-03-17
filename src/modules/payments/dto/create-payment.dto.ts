@@ -4,7 +4,6 @@ import {
   IsInt,
   IsNotEmpty,
   IsString,
-  IsBoolean,
   Matches,
   Min,
 } from 'class-validator';
@@ -33,9 +32,4 @@ export class CreatePaymentDto {
   @Matches(ImageExtensionRegex)
   @IsNotEmpty()
   voucher: string;
-
-  @ApiProperty({ required: true, description: 'Status of the payment' })
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
 }

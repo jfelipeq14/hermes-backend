@@ -4,14 +4,13 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
-  IsString,
   IsBoolean,
   IsArray,
   ValidateNested,
   Matches,
   Min,
 } from 'class-validator';
-import { IsDateRegex, IsReservationStatusRegex } from 'src/utils/regex';
+import { IsDateRegex } from 'src/utils/regex';
 
 class CreateDetailReservationTravelersDto {
   @ApiProperty({ required: true, description: 'Traveler of the reservation' })
@@ -55,12 +54,6 @@ export class CreateReservationDto {
   @IsNotEmpty()
   @Min(1)
   price: number;
-
-  @ApiProperty({ required: true, description: 'Status of the reservation' })
-  @IsString()
-  @IsNotEmpty()
-  @Matches(IsReservationStatusRegex)
-  status: string;
 
   @ApiProperty({ type: [CreateDetailReservationTravelersDto], required: true })
   @IsArray()

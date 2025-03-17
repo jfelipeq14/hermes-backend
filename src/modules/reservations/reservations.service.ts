@@ -7,16 +7,25 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class ReservationsService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return this.prisma.reservations.findMany({
+  async findAll() {
+    return await this.prisma.reservations.findMany({
       include: { detailReservationTravelers: true },
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.reservations.findUnique({
+  async findOne(id: number) {
+    return await this.prisma.reservations.findUnique({
       where: {
         id,
+      },
+      include: { detailReservationTravelers: true },
+    });
+  }
+
+  async findAllByUser(idUser: number) {
+    return await this.prisma.reservations.findMany({
+      where: {
+        idUser,
       },
       include: { detailReservationTravelers: true },
     });
@@ -25,6 +34,15 @@ export class ReservationsService {
   async create(createReservationDto: CreateReservationDto) {
     const { detailReservationTravelers, ...reservationData } =
       createReservationDto;
+
+    // Verificar que detailReservationTravelers no sea undefined o null
+    if (
+      !detailReservationTravelers ||
+      detailReservationTravelers.length === 0
+    ) {
+      throw new Error('No se proporcionaron viajeros para la reserva');
+    }
+
     const dates = await this.prisma.dates.findUnique({
       where: {
         id: reservationData.idDate,
@@ -33,9 +51,19 @@ export class ReservationsService {
         packages: true,
       },
     });
-    if (!dates) throw new Error('No existe la fecha de reserva seleccionada');
+
+    if (!dates) {
+      throw new Error('No existe la fecha de reserva seleccionada');
+    }
+
+    // Verificar que el campo price exista en packages
+    if (!dates.packages || typeof dates.packages.price !== 'number') {
+      throw new Error('El paquete seleccionado no tiene un precio válido');
+    }
+
     const price = dates.packages.price;
     reservationData.price = +price * detailReservationTravelers.length;
+
     return await this.prisma.reservations.create({
       data: {
         ...reservationData,
@@ -52,37 +80,42 @@ export class ReservationsService {
   async update(id: number, updateReservationDto: UpdateReservationDto) {
     const { detailReservationTravelers, ...reservationData } =
       updateReservationDto;
-    const dates = await this.prisma.dates.findUnique({
-      where: {
-        id: reservationData.idDate,
-      },
-      include: {
-        packages: true,
-      },
-    });
-    if (!dates) throw new Error('No existe la fecha de reserva seleccionada');
-    const price = dates.packages.price;
-    if (!detailReservationTravelers)
-      throw new Error('No existe el detalle de los viajeros');
-    reservationData.price = +price * detailReservationTravelers.length;
-    return this.prisma.reservations.update({
-      where: {
-        id,
-      },
-      data: {
-        ...reservationData,
-        detailReservationTravelers: {
-          create: detailReservationTravelers,
-        },
-      },
-      include: {
-        detailReservationTravelers: true,
-      },
+    return this.prisma.$transaction(async (prisma) => {
+      // Si se proporcionan nuevos privilegios, eliminamos los antiguos primero
+      if (detailReservationTravelers && detailReservationTravelers.length > 0) {
+        // Eliminar privilegios existentes para este rol
+        await prisma.reservations.deleteMany({
+          where: { id },
+        });
+
+        // Luego actualizamos el rol y creamos los nuevos privilegios
+        return prisma.reservations.update({
+          where: { id },
+          data: {
+            ...reservationData,
+            detailReservationTravelers: {
+              create: detailReservationTravelers,
+            },
+          },
+          include: {
+            detailReservationTravelers: true,
+          },
+        });
+      } else {
+        // Si no hay privilegios nuevos, solo actualizamos los datos del rol
+        return prisma.reservations.update({
+          where: { id },
+          data: reservationData,
+          include: {
+            detailReservationTravelers: true,
+          },
+        });
+      }
     });
   }
 
-  remove(id: number) {
-    return this.prisma.reservations.delete({
+  async remove(id: number) {
+    return await this.prisma.reservations.delete({
       where: {
         id,
       },

@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
@@ -8,39 +19,56 @@ import { Roles } from '../auth/decorators/roles.decorator';
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
+  @Roles('ADMIN')
   @Get()
-  findAll() {
+  async findAll() {
     try {
-      return this.reservationsService.findAll();
+      return await this.reservationsService.findAll();
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Roles('ADMIN', 'CLIENT')
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      return this.reservationsService.findOne(+id);
+      return await this.reservationsService.findOne(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
-    return this.reservationsService.create(createReservationDto);
+  @Roles('ADMIN', 'CLIENT')
+  @Get('user/:idUser')
+  async findAllByUser(@Param('idUser') idUser: string) {
+    try {
+      return await this.reservationsService.findAllByUser(+idUser);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
+  @Roles('ADMIN', 'CLIENT')
+  @Post()
+  async create(@Body() createReservationDto: CreateReservationDto) {
+    try {
+      return await this.reservationsService.create(createReservationDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Roles('ADMIN', 'CLIENT')
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
     try {
-      return this.reservationsService.update(+id, updateReservationDto);
+      return await this.reservationsService.update(+id, updateReservationDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }

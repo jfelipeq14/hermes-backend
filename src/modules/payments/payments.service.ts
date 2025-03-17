@@ -16,6 +16,11 @@ export class PaymentsService {
       where: { id },
     });
   }
+  async findAllByReservation(idReservation: number) {
+    return await this.prisma.payments.findMany({
+      where: { idReservation },
+    });
+  }
 
   async create(createPaymentDto: CreatePaymentDto) {
     return await this.prisma.payments.create({
