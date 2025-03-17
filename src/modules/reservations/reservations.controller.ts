@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Get,
@@ -5,6 +7,8 @@ import {
   Body,
   Patch,
   Param,
+  HttpException,
+  HttpStatus,
   Delete,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
@@ -18,50 +22,60 @@ export class ReservationsController {
 
   @Roles('ADMIN')
   @Get()
-  findAll() {
+  async findAll() {
     try {
-      return this.reservationsService.findAll();
+      return await this.reservationsService.findAll();
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Roles('ADMIN', 'CLIENT')
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     try {
-      return this.reservationsService.findOne(+id);
+      return await this.reservationsService.findOne(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Roles('ADMIN', 'CLIENT')
+  @Get('user/:idUser')
+  async findAllByUser(@Param('idUser') idUser: string) {
+    try {
+      return await this.reservationsService.findAllByUser(+idUser);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Roles('ADMIN', 'CLIENT')
   @Post()
-  create(@Body() createReservationDto: CreateReservationDto) {
+  async create(@Body() createReservationDto: CreateReservationDto) {
     return this.reservationsService.create(createReservationDto);
   }
 
   @Roles('ADMIN', 'CLIENT')
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
     try {
-      return this.reservationsService.update(+id, updateReservationDto);
+      return await this.reservationsService.update(+id, updateReservationDto);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   @Roles('ADMIN')
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     try {
-      return this.reservationsService.remove(+id);
+      return await this.reservationsService.remove(+id);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 }
