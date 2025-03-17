@@ -39,9 +39,10 @@ export class UsersController {
   @Roles('ADMIN', 'CLIENT', 'GUIDE')
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const users_ = await this.usersService.findOne(+id);
-    if (!users_)
+    const user_ = await this.usersService.findOne(+id);
+    if (!user_)
       throw new HttpException('No existe ese usuario', HttpStatus.NOT_FOUND);
+    return user_;
   }
 
   @Roles('ADMIN')
