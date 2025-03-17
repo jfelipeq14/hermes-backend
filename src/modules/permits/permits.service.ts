@@ -16,49 +16,33 @@ export class PermitsService {
   }
 
   findOne(id: number) {
-    try {
-      return this.prisma.permits.findUnique({
-        where: {
-          id: id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.permits.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
   create(createPermitDto: CreatePermitDto) {
-    try {
-      return this.prisma.permits.create({
-        data: createPermitDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.permits.create({
+      data: createPermitDto,
+    });
   }
 
   update(id: number, updatePermitDto: UpdatePermitDto) {
-    try {
-      return this.prisma.permits.update({
-        where: {
-          id: id,
-        },
-        data: updatePermitDto,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.permits.update({
+      where: {
+        id: id,
+      },
+      data: updatePermitDto,
+    });
   }
 
   remove(id: number) {
-    try {
-      return this.prisma.permits.delete({
-        where: {
-          id: id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    return this.prisma.permits.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
