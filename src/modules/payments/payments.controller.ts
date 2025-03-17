@@ -19,7 +19,6 @@ import { Roles } from '../auth/decorators/roles.decorator';
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @Roles('ADMIN')
   @Roles('ADMIN', 'CLIENT')
   @Get()
   async findAll() {
@@ -29,7 +28,6 @@ export class PaymentsController {
     return payments_;
   }
 
-  @Roles('ADMIN')
   @Roles('ADMIN', 'CLIENT')
   @Get(':id')
   async findOne(@Param('id') id: string) {
@@ -39,7 +37,9 @@ export class PaymentsController {
     return payment_;
   }
 
-  async findAllByReservation(idReservation: string) {
+  @Roles('ADMIN')
+  @Get(':idReservation')
+  async findAllByReservation(@Param('idReservation') idReservation: string) {
     const payments_ =
       await this.paymentsService.findAllByReservation(+idReservation);
     if (!payments_)
