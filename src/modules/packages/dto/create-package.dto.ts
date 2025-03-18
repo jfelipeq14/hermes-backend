@@ -13,7 +13,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { IsStringRegex } from 'src/utils/regex';
-import { DESCRIPTION_VALUE, NAMES_VALUE } from 'src/utils/values';
+import { DESCRIPTION_MAXVALUE, NAMES_MAXVALUE } from 'src/utils/values';
 
 class CreateDetailPackageServiceDto {
   @ApiProperty({ required: true })
@@ -38,7 +38,7 @@ export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Name of the package' })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(NAMES_VALUE)
+  @MaxLength(NAMES_MAXVALUE)
   @Matches(IsStringRegex)
   activity: string;
 
@@ -75,7 +75,7 @@ export class CreatePackageDto {
 
   @ApiProperty({ required: true, description: 'Description of the package' })
   @IsString()
-  @MaxLength(DESCRIPTION_VALUE)
+  @MaxLength(DESCRIPTION_MAXVALUE)
   description: string;
 
   @ApiProperty({ type: [CreateDetailPackageServiceDto], required: true })

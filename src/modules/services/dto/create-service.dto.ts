@@ -8,7 +8,7 @@ import {
   Min,
 } from 'class-validator';
 import { IsStringRegex } from 'src/utils/regex';
-import { NAMES_VALUE } from 'src/utils/values';
+import { NAMES_MAXVALUE } from 'src/utils/values';
 
 export class CreateServiceDto {
   @ApiProperty({ required: true })
@@ -19,7 +19,7 @@ export class CreateServiceDto {
   @ApiProperty({ required: true })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(NAMES_VALUE)
+  @MaxLength(NAMES_MAXVALUE)
   @Matches(IsStringRegex)
   name: string;
 

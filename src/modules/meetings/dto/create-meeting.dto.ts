@@ -8,7 +8,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { IsZoneRegex } from 'src/utils/regex';
-import { CHARS_VALUE, DESCRIPTION_VALUE } from 'src/utils/values';
+import { CHARS_MAXVALUE, DESCRIPTION_MAXVALUE } from 'src/utils/values';
 
 export class CreateMeetingDto {
   @ApiProperty({ required: true, description: 'Meeting date' })
@@ -19,7 +19,7 @@ export class CreateMeetingDto {
   @ApiProperty({ required: true, description: 'Zone' })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(CHARS_VALUE)
+  @MaxLength(CHARS_MAXVALUE)
   @Matches(IsZoneRegex)
   zone: string;
 
@@ -30,6 +30,6 @@ export class CreateMeetingDto {
 
   @ApiProperty({ required: true, description: 'Description of the meeting' })
   @IsString()
-  @MaxLength(DESCRIPTION_VALUE)
+  @MaxLength(DESCRIPTION_MAXVALUE)
   description: string;
 }
