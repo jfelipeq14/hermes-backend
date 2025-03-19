@@ -23,12 +23,17 @@ export class PaymentsService {
   }
 
   async create(createPaymentDto: CreatePaymentDto) {
+    createPaymentDto.date = new Date(createPaymentDto.date);
     return await this.prisma.payments.create({
       data: createPaymentDto,
     });
   }
 
   async update(id: number, updatePaymentDto: UpdatePaymentDto) {
+    if (!updatePaymentDto.date) {
+      throw new Error('Date is required');
+    }
+    updatePaymentDto.date = new Date(updatePaymentDto.date);
     return await this.prisma.payments.update({
       where: { id },
       data: updatePaymentDto,

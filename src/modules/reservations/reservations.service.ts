@@ -1,152 +1,117 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.reservations.findMany({
-      include: { detailReservationTravelers: true },
-    });
+    return await this.prisma.reservations.findMany();
   }
 
   async findOne(id: number) {
-    return await this.prisma.reservations.findUnique({
-      where: {
-        id,
-      },
-      include: { detailReservationTravelers: true },
+    const reservation = await this.prisma.reservations.findUnique({
+      where: { id },
     });
+    if (!reservation) {
+      throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
+    }
+    return reservation;
   }
 
   async findAllByUser(idUser: number) {
     return await this.prisma.reservations.findMany({
-      where: {
-        idUser,
-      },
-      include: { detailReservationTravelers: true },
+      where: { idUser },
     });
   }
 
   async create(createReservationDto: CreateReservationDto) {
-    const { detailReservationTravelers, ...reservationData } =
-      createReservationDto;
-
-    // Verificar que detailReservationTravelers no sea undefined o null
-    if (
-      !detailReservationTravelers ||
-      detailReservationTravelers.length === 0
-    ) {
-      throw new Error('No se proporcionaron viajeros para la reserva');
-    }
-
     const dates = await this.prisma.dates.findUnique({
-      where: {
-        id: reservationData.idDate,
-      },
-      include: {
-        packages: true,
-      },
+      where: { id: createReservationDto.idDate },
+      include: { packages: true },
     });
 
     if (!dates) {
-      throw new Error('No existe la fecha de reserva seleccionada');
+      throw new HttpException(
+        'Selected reservation date does not exist',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    // Verificar que el campo price exista en packages
     if (!dates.packages.price) {
-      throw new Error('El paquete seleccionado no tiene un precio válido');
+      throw new HttpException(
+        'Selected package does not have a valid price',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    const price = dates.packages.price;
-    reservationData.price = +price * detailReservationTravelers.length;
-
-    // Convertir la fecha a formato ISO-8601 DateTime
-    reservationData.date = new Date(reservationData.date);
+    createReservationDto.price = +dates.packages.price;
+    createReservationDto.date = new Date(createReservationDto.date);
 
     return await this.prisma.reservations.create({
-      data: {
-        ...reservationData,
-        detailReservationTravelers: {
-          create: detailReservationTravelers,
-        },
-      },
-      include: {
-        detailReservationTravelers: true,
-      },
+      data: createReservationDto,
     });
   }
 
   async update(id: number, updateReservationDto: UpdateReservationDto) {
-    const { detailReservationTravelers, ...reservationData } = updateReservationDto;
-
-    if (!detailReservationTravelers || detailReservationTravelers.length === 0) {
-      throw new Error('No se proporcionaron viajeros para la reserva');
-    }
-
     const dates = await this.prisma.dates.findUnique({
-      where: {
-        id: reservationData.idDate,
-      },
-      include: {
-        packages: true,
-      },
+      where: { id: updateReservationDto.idDate },
+      include: { packages: true },
     });
 
     if (!dates) {
-      throw new Error('No existe la fecha de reserva seleccionada');
+      throw new HttpException(
+        'Selected reservation date does not exist',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    // Verificar que el campo price exista en packages
     if (!dates.packages.price) {
-      throw new Error('El paquete seleccionado no tiene un precio válido');
+      throw new HttpException(
+        'Selected package does not have a valid price',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    if (!reservationData.date) {
-      throw new Error('La fecha de la reserva es requerida');
+    if (!updateReservationDto.date) {
+      throw new HttpException(
+        'Reservation date is required',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    const price = dates.packages.price;
-    reservationData.price = +price * detailReservationTravelers.length;
+    updateReservationDto.price = +dates.packages.price;
+    updateReservationDto.date = new Date(updateReservationDto.date);
 
-    // Convertir la fecha a formato ISO-8601 DateTime
-    reservationData.date = new Date(reservationData.date);
-
-    return this.prisma.$transaction(async (prisma) => {
-      // Actualizar la reserva
-      const updatedReservation = await prisma.reservations.update({
-        where: { id },
-        data: reservationData,
-      });
-
-      // Eliminar los registros existentes de detailReservationTravelers
-      await prisma.detailReservationTravelers.deleteMany({
-        where: { idReservation: id },
-      });
-
-      await prisma.detailReservationTravelers.updateMany({
-        data: detailReservationTravelers
-      });
-
-      if (!updatedReservation) {
-        throw new Error('No se pudo actualizar la reserva');
-      }
-
-      return await prisma.reservations.findUnique({
-        where: { id },
-        include: { detailReservationTravelers: true },
-      });
+    const updatedReservation = await this.prisma.reservations.update({
+      where: { id },
+      data: updateReservationDto,
     });
+
+    if (!updatedReservation) {
+      throw new HttpException(
+        'Failed to update the reservation',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return updatedReservation;
   }
 
   async remove(id: number) {
-    return await this.prisma.reservations.delete({
-      where: {
-        id,
-      },
+    const reservation = await this.prisma.reservations.delete({
+      where: { id },
     });
+
+    if (!reservation) {
+      throw new HttpException(
+        'Failed to delete the reservation',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return reservation;
   }
 }
