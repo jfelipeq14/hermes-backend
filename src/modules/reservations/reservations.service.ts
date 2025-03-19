@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async findAll() {
     return await this.prisma.reservations.findMany({
@@ -57,12 +57,15 @@ export class ReservationsService {
     }
 
     // Verificar que el campo price exista en packages
-    if (!dates.packages || typeof dates.packages.price !== 'number') {
+    if (!dates.packages.price) {
       throw new Error('El paquete seleccionado no tiene un precio válido');
     }
 
     const price = dates.packages.price;
     reservationData.price = +price * detailReservationTravelers.length;
+
+    // Convertir la fecha a formato ISO-8601 DateTime
+    reservationData.date = new Date(reservationData.date);
 
     return await this.prisma.reservations.create({
       data: {
@@ -78,39 +81,64 @@ export class ReservationsService {
   }
 
   async update(id: number, updateReservationDto: UpdateReservationDto) {
-    const { detailReservationTravelers, ...reservationData } =
-      updateReservationDto;
-    return this.prisma.$transaction(async (prisma) => {
-      // Si se proporcionan nuevos privilegios, eliminamos los antiguos primero
-      if (detailReservationTravelers && detailReservationTravelers.length > 0) {
-        // Eliminar privilegios existentes para este rol
-        await prisma.reservations.deleteMany({
-          where: { id },
-        });
+    const { detailReservationTravelers, ...reservationData } = updateReservationDto;
 
-        // Luego actualizamos el rol y creamos los nuevos privilegios
-        return prisma.reservations.update({
-          where: { id },
-          data: {
-            ...reservationData,
-            detailReservationTravelers: {
-              create: detailReservationTravelers,
-            },
-          },
-          include: {
-            detailReservationTravelers: true,
-          },
-        });
-      } else {
-        // Si no hay privilegios nuevos, solo actualizamos los datos del rol
-        return prisma.reservations.update({
-          where: { id },
-          data: reservationData,
-          include: {
-            detailReservationTravelers: true,
-          },
-        });
+    if (!detailReservationTravelers || detailReservationTravelers.length === 0) {
+      throw new Error('No se proporcionaron viajeros para la reserva');
+    }
+
+    const dates = await this.prisma.dates.findUnique({
+      where: {
+        id: reservationData.idDate,
+      },
+      include: {
+        packages: true,
+      },
+    });
+
+    if (!dates) {
+      throw new Error('No existe la fecha de reserva seleccionada');
+    }
+
+    // Verificar que el campo price exista en packages
+    if (!dates.packages.price) {
+      throw new Error('El paquete seleccionado no tiene un precio válido');
+    }
+
+    if (!reservationData.date) {
+      throw new Error('La fecha de la reserva es requerida');
+    }
+
+    const price = dates.packages.price;
+    reservationData.price = +price * detailReservationTravelers.length;
+
+    // Convertir la fecha a formato ISO-8601 DateTime
+    reservationData.date = new Date(reservationData.date);
+
+    return this.prisma.$transaction(async (prisma) => {
+      // Actualizar la reserva
+      const updatedReservation = await prisma.reservations.update({
+        where: { id },
+        data: reservationData,
+      });
+
+      // Eliminar los registros existentes de detailReservationTravelers
+      await prisma.detailReservationTravelers.deleteMany({
+        where: { idReservation: id },
+      });
+
+      await prisma.detailReservationTravelers.updateMany({
+        data: detailReservationTravelers
+      });
+
+      if (!updatedReservation) {
+        throw new Error('No se pudo actualizar la reserva');
       }
+
+      return await prisma.reservations.findUnique({
+        where: { id },
+        include: { detailReservationTravelers: true },
+      });
     });
   }
 

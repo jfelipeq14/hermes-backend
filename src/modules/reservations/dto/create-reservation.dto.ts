@@ -8,7 +8,7 @@ import {
   IsArray,
   ValidateNested,
   Matches,
-  Min,
+  IsNumber,
 } from 'class-validator';
 import { IsDateRegex } from 'src/utils/regex';
 
@@ -50,9 +50,7 @@ export class CreateReservationDto {
   date: Date;
 
   @ApiProperty({ required: true, description: 'Price of the reservation' })
-  @IsInt()
-  @IsNotEmpty()
-  @Min(1)
+  @IsNumber()
   price: number;
 
   @ApiProperty({ type: [CreateDetailReservationTravelersDto], required: true })
