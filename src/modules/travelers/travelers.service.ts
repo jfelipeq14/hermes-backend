@@ -23,6 +23,12 @@ export class TravelersService {
     });
   }
 
+  async findByReservation(idReservation: number) {
+    return await this.prisma.detailReservationTravelers.findMany({
+      where: { idReservation },
+    });
+  }
+
   async update(id: number, updateTravelerDto: UpdateTravelerDto) {
     return await this.prisma.detailReservationTravelers.update({
       where: { id },

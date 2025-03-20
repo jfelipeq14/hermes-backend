@@ -18,7 +18,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) {}
+  constructor(private readonly reservationsService: ReservationsService) { }
 
   @Roles('ADMIN')
   @Get()
@@ -66,7 +66,16 @@ export class ReservationsController {
     @Body() updateReservationDto: UpdateReservationDto,
   ) {
     try {
-      return await this.reservationsService.update(+id, updateReservationDto);
+      const updatedReservation = await this.reservationsService.update(
+        +id,
+        updateReservationDto,
+      );
+
+      if (!updatedReservation) {
+        throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
+      }
+
+      return updatedReservation;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

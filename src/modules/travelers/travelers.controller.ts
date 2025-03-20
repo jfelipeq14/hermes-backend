@@ -18,7 +18,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 @ApiTags('travelers')
 @Controller('travelers')
 export class TravelersController {
-  constructor(private readonly travelersService: TravelersService) {}
+  constructor(private readonly travelersService: TravelersService) { }
 
   @Roles('ADMIN', 'CLIENT')
   @Post()
@@ -43,16 +43,17 @@ export class TravelersController {
     return await this.travelersService.findAll();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a traveler by ID' })
-  @ApiResponse({ status: 200, description: 'Return the traveler.' })
-  @ApiResponse({ status: 404, description: 'Traveler not found.' })
-  async findOne(@Param('id') id: number) {
-    const traveler = await this.travelersService.findOne(id);
-    if (!traveler) {
-      throw new HttpException('Traveler not found', HttpStatus.NOT_FOUND);
+  @Roles('ADMIN')
+  @Get('reservation/:idReservation')
+  @ApiOperation({ summary: 'Get travelers by reservation ID' })
+  @ApiResponse({ status: 200, description: 'Return the travelers.' })
+  @ApiResponse({ status: 404, description: 'Travelers not found.' })
+  async findByReservation(@Param('idReservation') idReservation: number) {
+    const travelers = await this.travelersService.findByReservation(idReservation);
+    if (!travelers || travelers.length === 0) {
+      throw new HttpException('Travelers not found', HttpStatus.NOT_FOUND);
     }
-    return traveler;
+    return travelers;
   }
 
   @Roles('ADMIN', 'CLIENT')
