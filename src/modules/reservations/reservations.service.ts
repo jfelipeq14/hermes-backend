@@ -27,6 +27,12 @@ export class ReservationsService {
     });
   }
 
+  // async findByReservation(idReservation: number) {
+  //     return await this.prisma.detailReservationTravelers.findMany({
+  //       where: { idReservation },
+  //     });
+  //   }
+
   async create(createReservationDto: CreateReservationDto) {
     const dates = await this.prisma.dates.findUnique({
       where: { id: createReservationDto.idDate },

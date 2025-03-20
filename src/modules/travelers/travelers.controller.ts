@@ -14,6 +14,7 @@ import { TravelersService } from './travelers.service';
 import { CreateTravelerDto } from './dto/create-traveler.dto';
 import { UpdateTravelerDto } from './dto/update-traveler.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { Traveler } from './entities/traveler.entity';
 
 @ApiTags('travelers')
 @Controller('travelers')
@@ -36,24 +37,12 @@ export class TravelersController {
     }
   }
 
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all travelers' })
   @ApiResponse({ status: 200, description: 'Return all travelers.' })
   async findAll() {
     return await this.travelersService.findAll();
-  }
-
-  @Roles('ADMIN')
-  @Get('reservation/:idReservation')
-  @ApiOperation({ summary: 'Get travelers by reservation ID' })
-  @ApiResponse({ status: 200, description: 'Return the travelers.' })
-  @ApiResponse({ status: 404, description: 'Travelers not found.' })
-  async findByReservation(@Param('idReservation') idReservation: number) {
-    const travelers = await this.travelersService.findByReservation(idReservation);
-    if (!travelers || travelers.length === 0) {
-      throw new HttpException('Travelers not found', HttpStatus.NOT_FOUND);
-    }
-    return travelers;
   }
 
   @Roles('ADMIN', 'CLIENT')
@@ -84,18 +73,27 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-  @Delete(':id')
+  @Patch('status/:id')
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({
     status: 200,
     description: 'The traveler has been successfully deleted.',
   })
   @ApiResponse({ status: 404, description: 'Traveler not found.' })
-  async remove(@Param('id') id: number) {
-    const traveler = await this.travelersService.remove(id);
-    if (!traveler) {
-      throw new HttpException('Traveler not found', HttpStatus.NOT_FOUND);
+  async changeStatus(@Param('id') id: string): Promise<Traveler> {
+    try {
+      const updatedTraveler = await this.travelersService.changeStatus(+id);
+
+      if (!updatedTraveler) {
+        throw new HttpException('traveler not found', HttpStatus.NOT_FOUND);
+      }
+
+      return updatedTraveler;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    return traveler;
   }
 }

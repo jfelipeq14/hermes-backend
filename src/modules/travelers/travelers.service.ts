@@ -23,12 +23,6 @@ export class TravelersService {
     });
   }
 
-  async findByReservation(idReservation: number) {
-    return await this.prisma.detailReservationTravelers.findMany({
-      where: { idReservation },
-    });
-  }
-
   async update(id: number, updateTravelerDto: UpdateTravelerDto) {
     return await this.prisma.detailReservationTravelers.update({
       where: { id },
@@ -36,9 +30,25 @@ export class TravelersService {
     });
   }
 
-  async remove(id: number) {
-    return await this.prisma.detailReservationTravelers.delete({
-      where: { id },
+  async changeStatus(id: number) {
+    const travelerData = await this.prisma.detailReservationTravelers.findUnique({
+      where: {
+        id: id,
+      },
     });
+
+    if (travelerData) {
+      return await this.prisma.detailReservationTravelers.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status: !travelerData.status,
+        },
+      });
+    }
+    
   }
+   
+  
 }

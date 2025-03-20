@@ -18,7 +18,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
-  constructor(private readonly reservationsService: ReservationsService) { }
+  constructor(private readonly reservationsService: ReservationsService) {}
 
   @Roles('ADMIN')
   @Get()
