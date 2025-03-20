@@ -11,76 +11,172 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MeetingsService } from './meetings.service';
 import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { UpdateMeetingDto } from './dto/update-meeting.dto';
 import { Meeting } from './entities/meeting.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 
+@ApiTags('meetings')
 @Controller('meetings')
 export class MeetingsController {
   constructor(private readonly meetingsService: MeetingsService) {}
 
   @Roles('ADMIN')
   @Get()
+  @ApiOperation({ summary: 'Get all meetings' })
+  @ApiResponse({ status: 200, description: 'Return all meetings.' })
+  @ApiResponse({ status: 404, description: 'No meetings found.' })
   async findAll(): Promise<Meeting[]> {
-    const meetings_ = await this.meetingsService.findAll();
-    if (!meetings_ || meetings_.length === 0)
-      throw new HttpException('No existen encuentros', HttpStatus.NOT_FOUND);
-    return meetings_;
+    const meetings = await this.meetingsService.findAll();
+
+    if (!meetings || meetings.length === 0) {
+      throw new HttpException('No meetings found', HttpStatus.NOT_FOUND);
+    }
+
+    return meetings;
   }
 
   @Roles('ADMIN', 'GUIDE')
   @Get('responsible/:id')
+  @ApiOperation({ summary: 'Get all meetings by responsible ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all meetings for the responsible.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No meetings found for this responsible.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async findAllByResponsible(@Param('id') id: string): Promise<Meeting[]> {
-    const meetings_ = await this.meetingsService.findAllByResponsible(+id);
-    if (!meetings_ || meetings_.length === 0)
+    try {
+      const meetings = await this.meetingsService.findAllByResponsible(+id);
+
+      if (!meetings || meetings.length === 0) {
+        throw new HttpException(
+          'No meetings found for this responsible',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return meetings;
+    } catch (error) {
       throw new HttpException(
-        'No existen encuentros para este responsable',
-        HttpStatus.NOT_FOUND,
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
       );
-    return meetings_;
+    }
   }
 
   @Roles('ADMIN')
   @Get(':id')
+  @ApiOperation({ summary: 'Get a meeting by ID' })
+  @ApiResponse({ status: 200, description: 'Return the meeting.' })
+  @ApiResponse({ status: 404, description: 'Meeting not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async findOne(@Param('id') id: string): Promise<Meeting> {
-    const meeting_ = await this.meetingsService.findOne(+id);
-    if (!meeting_)
-      throw new HttpException('No existe ese encuentro', HttpStatus.NOT_FOUND);
-    return meeting_;
+    try {
+      const meeting = await this.meetingsService.findOne(+id);
+
+      if (!meeting) {
+        throw new HttpException('Meeting not found', HttpStatus.NOT_FOUND);
+      }
+
+      return meeting;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   @Roles('ADMIN')
   @Post()
+  @ApiOperation({ summary: 'Create a new meeting' })
+  @ApiResponse({
+    status: 201,
+    description: 'The meeting has been successfully created.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async create(@Body() createMeetingDto: CreateMeetingDto): Promise<Meeting> {
     try {
-      return await this.meetingsService.create(createMeetingDto);
+      const createdMeeting =
+        await this.meetingsService.create(createMeetingDto);
+
+      if (!createdMeeting) {
+        throw new HttpException(
+          'Failed to create the meeting',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      return createdMeeting;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Put(':id')
+  @ApiOperation({ summary: 'Update a meeting by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The meeting has been successfully updated.',
+  })
+  @ApiResponse({ status: 404, description: 'Meeting not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async update(
     @Param('id') id: string,
     @Body() updateMeetingDto: UpdateMeetingDto,
   ): Promise<Meeting> {
     try {
-      return await this.meetingsService.update(+id, updateMeetingDto);
+      const updatedMeeting = await this.meetingsService.update(
+        +id,
+        updateMeetingDto,
+      );
+
+      if (!updatedMeeting) {
+        throw new HttpException('Meeting not found', HttpStatus.NOT_FOUND);
+      }
+
+      return updatedMeeting;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a meeting by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The meeting has been successfully deleted.',
+  })
+  @ApiResponse({ status: 404, description: 'Meeting not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async remove(@Param('id') id: string): Promise<Meeting> {
     try {
-      return await this.meetingsService.remove(+id);
+      const removedMeeting = await this.meetingsService.remove(+id);
+
+      if (!removedMeeting) {
+        throw new HttpException('Meeting not found', HttpStatus.NOT_FOUND);
+      }
+
+      return removedMeeting;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

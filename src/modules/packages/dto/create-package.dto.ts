@@ -1,44 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Decimal } from '@prisma/client/runtime/library';
 import {
   IsDateString,
   IsInt,
   IsNotEmpty,
   IsString,
-  IsArray,
-  ValidateNested,
   Matches,
-  Min,
   MaxLength,
+  Min,
   IsNumber,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 import { IsStringRegex } from 'src/utils/regex';
-import { DESCRIPTION_MAXVALUE, NAMES_MAXVALUE } from 'src/utils/values';
-
-class CreateDetailPackageServiceDto {
-  @ApiProperty({ required: true })
-  @IsInt()
-  @IsNotEmpty()
-  idService: number;
-
-  @ApiProperty({ required: true })
-  @IsInt()
-  @Min(1)
-  @IsNotEmpty()
-  quantity: number;
-
-  @ApiProperty({ required: true })
-  @IsInt()
-  @IsNotEmpty()
-  @Min(1)
-  price: number;
-}
 
 export class CreatePackageDto {
   @ApiProperty({ required: true, description: 'Name of the package' })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(NAMES_MAXVALUE)
+  @MaxLength(60)
   @Matches(IsStringRegex)
   activity: string;
 
@@ -52,14 +30,17 @@ export class CreatePackageDto {
   @IsNotEmpty()
   end: Date;
 
-  @ApiProperty({ required: true, description: 'Name of the activity' })
+  @ApiProperty({ required: true, description: 'ID of the activity' })
   @IsInt()
   @IsNotEmpty()
   idActivity: number;
 
-  @ApiProperty({ required: true, description: 'Activity level (hiking only)' })
+  @ApiProperty({
+    required: false,
+    description: 'Activity level (e.g., 1.0, 2.5)',
+  })
   @IsNumber()
-  level: number;
+  level: Decimal;
 
   @ApiProperty({ required: true, description: 'Price of the package' })
   @IsInt()
@@ -67,20 +48,17 @@ export class CreatePackageDto {
   @Min(1)
   price: number;
 
-  @ApiProperty({ required: true, description: 'Price of the reservation' })
+  @ApiProperty({
+    required: true,
+    description: 'Reservation price of the package',
+  })
   @IsInt()
   @IsNotEmpty()
-  @Min(1)
   reserve: number;
 
   @ApiProperty({ required: true, description: 'Description of the package' })
   @IsString()
-  @MaxLength(DESCRIPTION_MAXVALUE)
+  @IsNotEmpty()
+  @MaxLength(255)
   description: string;
-
-  @ApiProperty({ type: [CreateDetailPackageServiceDto], required: true })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => CreateDetailPackageServiceDto)
-  detailPackagesServices: CreateDetailPackageServiceDto[];
 }

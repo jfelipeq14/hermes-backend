@@ -11,23 +11,28 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Activity } from './entities/activity.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 
+@ApiTags('activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
 
   @Roles('ADMIN')
   @Get()
+  @ApiOperation({ summary: 'Get all activities' })
+  @ApiResponse({ status: 200, description: 'Return all activities.' })
+  @ApiResponse({ status: 404, description: 'No activities found.' })
   async findAll(): Promise<Activity[]> {
     const activitiesFound = await this.activitiesService.findAll();
 
     if (!activitiesFound || activitiesFound.length === 0) {
-      throw new HttpException('No existen actividades', HttpStatus.NOT_FOUND);
+      throw new HttpException('No activities found', HttpStatus.NOT_FOUND);
     }
 
     return activitiesFound;
@@ -35,25 +40,35 @@ export class ActivitiesController {
 
   @Roles('ADMIN')
   @Get(':id')
+  @ApiOperation({ summary: 'Get an activity by ID' })
+  @ApiResponse({ status: 200, description: 'Return the activity.' })
+  @ApiResponse({ status: 404, description: 'Activity not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async findOne(@Param('id') id: string): Promise<Activity> {
     try {
       const activityFound: Activity = await this.activitiesService.findOne(+id);
 
       if (!activityFound) {
-        throw new HttpException(
-          'No existe esa actividad',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
       }
 
       return activityFound;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Post()
+  @ApiOperation({ summary: 'Create a new activity' })
+  @ApiResponse({
+    status: 201,
+    description: 'The activity has been successfully created.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async create(
     @Body() createActivityDto: CreateActivityDto,
   ): Promise<Activity> {
@@ -63,19 +78,29 @@ export class ActivitiesController {
 
       if (!createdActivity) {
         throw new HttpException(
-          'No se pudo crear la actividad',
+          'Failed to create the activity',
           HttpStatus.INTERNAL_SERVER_ERROR,
         );
       }
 
       return createdActivity;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Put(':id')
+  @ApiOperation({ summary: 'Update an activity by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The activity has been successfully updated.',
+  })
+  @ApiResponse({ status: 404, description: 'Activity not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async update(
     @Param('id') id: string,
     @Body() updateActivityDto: UpdateActivityDto,
@@ -87,35 +112,42 @@ export class ActivitiesController {
       );
 
       if (!updatedActivity) {
-        throw new HttpException(
-          'No se pudo actualizar la actividad',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
       }
 
       return updatedActivity;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete an activity by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The activity has been successfully deleted.',
+  })
+  @ApiResponse({ status: 404, description: 'Activity not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async remove(@Param('id') id: string): Promise<Activity> {
     try {
       const removedActivity: Activity =
         await this.activitiesService.remove(+id);
 
       if (!removedActivity) {
-        throw new HttpException(
-          'No se pudo eliminar la actividad',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
       }
 
-      return await this.activitiesService.remove(+id);
+      return removedActivity;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

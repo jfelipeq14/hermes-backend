@@ -11,94 +11,136 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DatesService } from './dates.service';
 import { CreateDateDto } from './dto/create-date.dto';
 import { UpdateDateDto } from './dto/update-date.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Date } from './entities/date.entity';
 
+@ApiTags('dates')
 @Controller('dates')
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
 
   @Roles('ADMIN', 'GUIDE', 'CLIENT')
   @Get()
+  @ApiOperation({ summary: 'Get all dates' })
+  @ApiResponse({ status: 200, description: 'Return all dates.' })
+  @ApiResponse({ status: 404, description: 'No dates found.' })
   async findAll(): Promise<Date[]> {
-    const dates_ = await this.datesService.findAll();
-    if (!dates_ || dates_.length === 0)
-      throw new HttpException(
-        'No existen programaciones',
-        HttpStatus.NOT_FOUND,
-      );
-    return dates_;
+    const dates = await this.datesService.findAll();
+
+    if (!dates || dates.length === 0) {
+      throw new HttpException('No dates found', HttpStatus.NOT_FOUND);
+    }
+
+    return dates;
   }
 
   @Roles('ADMIN', 'GUIDE')
   @Get(':id')
+  @ApiOperation({ summary: 'Get a date by ID' })
+  @ApiResponse({ status: 200, description: 'Return the date.' })
+  @ApiResponse({ status: 404, description: 'Date not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async findOne(@Param('id') id: string): Promise<Date> {
-    const date_ = await this.datesService.findOne(+id);
-    if (!date_)
+    try {
+      const date = await this.datesService.findOne(+id);
+
+      if (!date) {
+        throw new HttpException('Date not found', HttpStatus.NOT_FOUND);
+      }
+
+      return date;
+    } catch (error) {
       throw new HttpException(
-        'No existe esa programación',
-        HttpStatus.NOT_FOUND,
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
       );
-    return date_;
+    }
   }
 
   @Roles('ADMIN')
   @Post()
+  @ApiOperation({ summary: 'Create a new date' })
+  @ApiResponse({
+    status: 201,
+    description: 'The date has been successfully created.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async create(@Body() createDateDto: CreateDateDto): Promise<Date> {
     try {
-      return await this.datesService.create(createDateDto);
+      const createdDate = await this.datesService.create(createDateDto);
+
+      if (!createdDate) {
+        throw new HttpException(
+          'Failed to create the date',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+
+      return createdDate;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Put(':id')
+  @ApiOperation({ summary: 'Update a date by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The date has been successfully updated.',
+  })
+  @ApiResponse({ status: 404, description: 'Date not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async update(
     @Param('id') id: string,
     @Body() updateDateDto: UpdateDateDto,
   ): Promise<Date> {
     try {
       const updatedDate = await this.datesService.update(+id, updateDateDto);
+
       if (!updatedDate) {
-        throw new HttpException(
-          'No se pudo actualizar la programación',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new HttpException('Date not found', HttpStatus.NOT_FOUND);
       }
+
       return updatedDate;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
   @Roles('ADMIN')
   @Patch(':id')
+  @ApiOperation({ summary: 'Change the status of a date by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The date status has been successfully updated.',
+  })
+  @ApiResponse({ status: 404, description: 'Date not found.' })
+  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async changeStatus(@Param('id') id: string): Promise<Date> {
     try {
       const updatedDate = await this.datesService.changeStatus(+id);
+
       if (!updatedDate) {
-        throw new HttpException(
-          'No se pudo cambiar el estado de la programación',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new HttpException('Date not found', HttpStatus.NOT_FOUND);
       }
+
       return updatedDate;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
-
-  // @Roles('ADMIN')
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   try {
-  //     return await this.datesService.remove(+id);
-  //   } catch (error) {
-  //     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  //   }
-  // }
 }

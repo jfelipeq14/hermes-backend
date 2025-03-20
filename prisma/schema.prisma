@@ -133,7 +133,7 @@ model packages {
   start       DateTime @db.Date
   end         DateTime @db.Date
   idActivity  Int
-  level       Decimal  @db.Decimal(2, 1)
+  level       Decimal? @db.Decimal(2, 1)
   price       Decimal  @db.Decimal(15, 2)
   reserve     Decimal  @db.Decimal(15, 2)
   description String   @db.VarChar(255)
