@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
@@ -8,117 +8,110 @@ export class ReservationsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.reservations.findMany({
-      include: { detailReservationTravelers: true },
-    });
+    return await this.prisma.reservations.findMany();
   }
 
   async findOne(id: number) {
-    return await this.prisma.reservations.findUnique({
-      where: {
-        id,
-      },
-      include: { detailReservationTravelers: true },
+    const reservation = await this.prisma.reservations.findUnique({
+      where: { id },
     });
+    if (!reservation) {
+      throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
+    }
+    return reservation;
   }
 
   async findAllByUser(idUser: number) {
     return await this.prisma.reservations.findMany({
-      where: {
-        idUser,
-      },
-      include: { detailReservationTravelers: true },
+      where: { idUser },
     });
   }
 
   async create(createReservationDto: CreateReservationDto) {
-    const { detailReservationTravelers, ...reservationData } =
-      createReservationDto;
-
-    // Verificar que detailReservationTravelers no sea undefined o null
-    if (
-      !detailReservationTravelers ||
-      detailReservationTravelers.length === 0
-    ) {
-      throw new Error('No se proporcionaron viajeros para la reserva');
-    }
-
     const dates = await this.prisma.dates.findUnique({
-      where: {
-        id: reservationData.idDate,
-      },
-      include: {
-        packages: true,
-      },
+      where: { id: createReservationDto.idDate },
+      include: { packages: true },
     });
 
     if (!dates) {
-      throw new Error('No existe la fecha de reserva seleccionada');
+      throw new HttpException(
+        'Selected reservation date does not exist',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    // Verificar que el campo price exista en packages
-    if (!dates.packages || typeof dates.packages.price !== 'number') {
-      throw new Error('El paquete seleccionado no tiene un precio válido');
+    if (!dates.packages.price) {
+      throw new HttpException(
+        'Selected package does not have a valid price',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    const price = dates.packages.price;
-    reservationData.price = +price * detailReservationTravelers.length;
+    createReservationDto.price = +dates.packages.price;
+    createReservationDto.date = new Date(createReservationDto.date);
 
     return await this.prisma.reservations.create({
-      data: {
-        ...reservationData,
-        detailReservationTravelers: {
-          create: detailReservationTravelers,
-        },
-      },
-      include: {
-        detailReservationTravelers: true,
-      },
+      data: createReservationDto,
     });
   }
 
   async update(id: number, updateReservationDto: UpdateReservationDto) {
-    const { detailReservationTravelers, ...reservationData } =
-      updateReservationDto;
-    return this.prisma.$transaction(async (prisma) => {
-      // Si se proporcionan nuevos privilegios, eliminamos los antiguos primero
-      if (detailReservationTravelers && detailReservationTravelers.length > 0) {
-        // Eliminar privilegios existentes para este rol
-        await prisma.reservations.deleteMany({
-          where: { id },
-        });
-
-        // Luego actualizamos el rol y creamos los nuevos privilegios
-        return prisma.reservations.update({
-          where: { id },
-          data: {
-            ...reservationData,
-            detailReservationTravelers: {
-              create: detailReservationTravelers,
-            },
-          },
-          include: {
-            detailReservationTravelers: true,
-          },
-        });
-      } else {
-        // Si no hay privilegios nuevos, solo actualizamos los datos del rol
-        return prisma.reservations.update({
-          where: { id },
-          data: reservationData,
-          include: {
-            detailReservationTravelers: true,
-          },
-        });
-      }
+    const dates = await this.prisma.dates.findUnique({
+      where: { id: updateReservationDto.idDate },
+      include: { packages: true },
     });
+
+    if (!dates) {
+      throw new HttpException(
+        'Selected reservation date does not exist',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!dates.packages.price) {
+      throw new HttpException(
+        'Selected package does not have a valid price',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    if (!updateReservationDto.date) {
+      throw new HttpException(
+        'Reservation date is required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    updateReservationDto.price = +dates.packages.price;
+    updateReservationDto.date = new Date(updateReservationDto.date);
+
+    const updatedReservation = await this.prisma.reservations.update({
+      where: { id },
+      data: updateReservationDto,
+    });
+
+    if (!updatedReservation) {
+      throw new HttpException(
+        'Failed to update the reservation',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return updatedReservation;
   }
 
   async remove(id: number) {
-    return await this.prisma.reservations.delete({
-      where: {
-        id,
-      },
+    const reservation = await this.prisma.reservations.delete({
+      where: { id },
     });
+
+    if (!reservation) {
+      throw new HttpException(
+        'Failed to delete the reservation',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    return reservation;
   }
 }

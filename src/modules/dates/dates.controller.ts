@@ -21,7 +21,7 @@ import { Date } from './entities/date.entity';
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
 
-  @Roles('ADMIN', 'GUIDE')
+  @Roles('ADMIN', 'GUIDE', 'CLIENT')
   @Get()
   async findAll(): Promise<Date[]> {
     const dates_ = await this.datesService.findAll();

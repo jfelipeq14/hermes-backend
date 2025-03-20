@@ -20,7 +20,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
 
-  @Roles('ADMIN', 'CLIENT')
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const packages_ = await this.packagesService.findAll();
@@ -29,7 +29,7 @@ export class PackagesController {
     return packages_;
   }
 
-  @Roles('ADMIN', 'CLIENT')
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const package_ = await this.packagesService.findOne(+id);
