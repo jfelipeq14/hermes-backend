@@ -18,6 +18,7 @@ import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { ResponsiblesModule } from './modules/responsibles/responsibles.module';
 import { TravelersModule } from './modules/travelers/travelers.module';
+import { PackageServiceModule } from './modules/package-service/package-service.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { TravelersModule } from './modules/travelers/travelers.module';
     ReservationsModule,
     PaymentsModule,
     TravelersModule,
+    PackageServiceModule,
   ],
   controllers: [],
   providers: [],
