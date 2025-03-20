@@ -1,26 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
 import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
+import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PackageServiceService {
-  create(createPackageServiceDto: CreatePackageServiceDto) {
-    return 'This action adds a new packageService';
+  constructor(private prisma: PrismaService) {}
+
+  async findAll() {
+    return await this.prisma.detailPackagesServices.findMany();
   }
 
-  findAll() {
-    return `This action returns all packageService`;
+  async findOne(id: number) {
+    return await this.prisma.detailPackagesServices.findUnique({
+      where: {
+        id,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} packageService`;
+  async create(createPackageServiceDto: CreatePackageServiceDto) {
+    return await this.prisma.detailPackagesServices.create({
+      data: createPackageServiceDto,
+    });
   }
 
-  update(id: number, updatePackageServiceDto: UpdatePackageServiceDto) {
-    return `This action updates a #${id} packageService`;
+  async update(id: number, updatePackageServiceDto: UpdatePackageServiceDto) {
+    return await this.prisma.detailPackagesServices.update({
+      where: { id },
+      data: updatePackageServiceDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} packageService`;
+  async remove(id: number) {
+    return await this.prisma.detailPackagesServices.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
