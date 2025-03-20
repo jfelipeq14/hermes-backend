@@ -36,6 +36,7 @@ async function bootstrap() {
   const rolesGuard = app.get(RolesGuard);
 
   app.useGlobalGuards(jwtAuthGuard, rolesGuard);
+  app.enableCors();
 
   await app.listen(process.env.PORT ?? 3000);
 }

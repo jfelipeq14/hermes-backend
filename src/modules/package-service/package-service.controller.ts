@@ -4,53 +4,25 @@ import {
   Controller,
   Get,
   Post,
-  Patch,
   Param,
   Body,
   Delete,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackageServiceService } from './package-service.service';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
 import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('package-services')
 @Controller('package-services')
 export class PackageServiceController {
   constructor(private readonly packageServiceService: PackageServiceService) {}
 
-  @Post()
-  @ApiOperation({ summary: 'Create a new package-service relationship' })
-  @ApiResponse({
-    status: 201,
-    description:
-      'The package-service relationship has been successfully created.',
-  })
-  @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  async create(@Body() createPackageServiceDto: CreatePackageServiceDto) {
-    try {
-      const createdPackageService = await this.packageServiceService.create(
-        createPackageServiceDto,
-      );
-
-      if (!createdPackageService) {
-        throw new HttpException(
-          'Failed to create the package-service relationship',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      return createdPackageService;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid input data',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all package-service relationships' })
   @ApiResponse({
@@ -74,6 +46,7 @@ export class PackageServiceController {
     return packageServices;
   }
 
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Get a package-service relationship by ID' })
   @ApiResponse({
@@ -105,7 +78,39 @@ export class PackageServiceController {
     }
   }
 
-  @Patch(':id')
+  @Roles('ADMIN')
+  @Post()
+  @ApiOperation({ summary: 'Create a new package-service relationship' })
+  @ApiResponse({
+    status: 201,
+    description:
+      'The package-service relationship has been successfully created.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  async create(@Body() createPackageServiceDto: CreatePackageServiceDto) {
+    try {
+      const createdPackageService = await this.packageServiceService.create(
+        createPackageServiceDto,
+      );
+
+      if (!createdPackageService) {
+        throw new HttpException(
+          'Failed to create the package-service relationship',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return createdPackageService;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Roles('ADMIN')
+  @Put(':id')
   @ApiOperation({ summary: 'Update a package-service relationship by ID' })
   @ApiResponse({
     status: 200,
@@ -143,6 +148,7 @@ export class PackageServiceController {
     }
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a package-service relationship by ID' })
   @ApiResponse({
