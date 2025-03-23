@@ -15,14 +15,15 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('services')
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all services' })
   @ApiResponse({ status: 200, description: 'Return all services.' })
@@ -37,7 +38,7 @@ export class ServicesController {
     return services;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a service by ID' })
   @ApiResponse({ status: 200, description: 'Return the service.' })
@@ -60,7 +61,7 @@ export class ServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new service' })
   @ApiResponse({
@@ -79,7 +80,7 @@ export class ServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a service by ID' })
   @ApiResponse({
@@ -111,7 +112,7 @@ export class ServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Patch(':id')
   @ApiOperation({ summary: 'Change the status of a service by ID' })
   @ApiResponse({

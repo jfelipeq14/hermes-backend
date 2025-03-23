@@ -16,14 +16,15 @@ import { MeetingsService } from './meetings.service';
 import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { UpdateMeetingDto } from './dto/update-meeting.dto';
 import { Meeting } from './entities/meeting.entity';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('meetings')
 @Controller('meetings')
 export class MeetingsController {
   constructor(private readonly meetingsService: MeetingsService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all meetings' })
   @ApiResponse({ status: 200, description: 'Return all meetings.' })
@@ -38,7 +39,7 @@ export class MeetingsController {
     return meetings;
   }
 
-  @Roles('ADMIN', 'GUIDE')
+  @IsPublic()
   @Get('responsible/:id')
   @ApiOperation({ summary: 'Get all meetings by responsible ID' })
   @ApiResponse({
@@ -70,7 +71,7 @@ export class MeetingsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a meeting by ID' })
   @ApiResponse({ status: 200, description: 'Return the meeting.' })
@@ -93,7 +94,7 @@ export class MeetingsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new meeting' })
   @ApiResponse({
@@ -122,7 +123,7 @@ export class MeetingsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a meeting by ID' })
   @ApiResponse({
@@ -154,7 +155,7 @@ export class MeetingsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a meeting by ID' })
   @ApiResponse({

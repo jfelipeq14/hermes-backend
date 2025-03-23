@@ -15,8 +15,9 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 import { CategoryService } from './entities/category-service.entity';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('category-services')
 @Controller('category-services')
@@ -25,7 +26,7 @@ export class CategoryServicesController {
     private readonly categoryServicesService: CategoryServicesService,
   ) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all category services' })
   @ApiResponse({ status: 200, description: 'Return all category services.' })
@@ -43,7 +44,7 @@ export class CategoryServicesController {
     return categoryServices;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a category service by ID' })
   @ApiResponse({ status: 200, description: 'Return the category service.' })
@@ -69,7 +70,7 @@ export class CategoryServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new category service' })
   @ApiResponse({
@@ -101,7 +102,7 @@ export class CategoryServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a category service by ID' })
   @ApiResponse({
@@ -136,7 +137,7 @@ export class CategoryServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a category service by ID' })
   @ApiResponse({
