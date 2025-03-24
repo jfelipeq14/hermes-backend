@@ -11,6 +11,18 @@ export class ServicesService {
     return await this.prisma.services.findMany();
   }
 
+  async findByPackage(idPackage: number) {
+    return await this.prisma.services.findMany({
+      where: {
+        detailPackagesServices: {
+          some: {
+            idPackage,
+          },
+        },
+      },
+    });
+  }
+
   async findOne(id: number) {
     return await this.prisma.services.findUnique({
       where: {
