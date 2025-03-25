@@ -7,18 +7,21 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class PermitsService {
   constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    try {
-      return this.prisma.permits.findMany();
-    } catch (error) {
-      console.log(error);
-    }
+  async findAll() {
+    return await this.prisma.permits.findMany({
+      include: {
+        privileges: true,
+      },
+    });
   }
 
   findOne(id: number) {
     return this.prisma.permits.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        privileges: true,
       },
     });
   }

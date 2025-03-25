@@ -40,7 +40,7 @@ model municipalities {
 
 model permits {
   id     Int     @id @default(autoincrement())
-  name   String  @unique @db.VarChar(60)
+  name   String  @db.VarChar(60)
   status Boolean @default(true)
 
   privileges privileges[]
@@ -48,7 +48,7 @@ model permits {
 
 model privileges {
   id       Int    @id @default(autoincrement())
-  name     String @unique @db.VarChar(60)
+  name     String @db.VarChar(60)
   idPermit Int
 
   permits permits @relation(fields: [idPermit], references: [id], onDelete: Cascade)
