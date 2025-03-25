@@ -7,8 +7,12 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class PackageServiceService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return await this.prisma.detailPackagesServices.findMany();
+  async findByPackage(idPackage: number) {
+    return await this.prisma.detailPackagesServices.findMany({
+      where: {
+        idPackage,
+      },
+    });
   }
 
   async findOne(id: number) {

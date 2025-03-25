@@ -38,21 +38,21 @@ export class ServicesController {
     return services;
   }
 
-  @IsPublic()
-  @Get('package/:id')
-  @ApiOperation({ summary: 'Get all services' })
-  @ApiResponse({ status: 200, description: 'Return all services.' })
-  @ApiResponse({ status: 404, description: 'No services found.' })
-  async findByPackage(@Param('id') idPackage: string) {
-    const servicesByPackage =
-      await this.servicesService.findByPackage(+idPackage);
+  // @IsPublic()
+  // @Get('package/:id')
+  // @ApiOperation({ summary: 'Get all services' })
+  // @ApiResponse({ status: 200, description: 'Return all services.' })
+  // @ApiResponse({ status: 404, description: 'No services found.' })
+  // async findByPackage(@Param('id') idPackage: string) {
+  //   const servicesByPackage =
+  //     await this.servicesService.findByPackage(+idPackage);
 
-    if (!servicesByPackage || servicesByPackage.length === 0) {
-      throw new HttpException('No services found', HttpStatus.NOT_FOUND);
-    }
+  //   if (!servicesByPackage || servicesByPackage.length === 0) {
+  //     throw new HttpException('No services found', HttpStatus.NOT_FOUND);
+  //   }
 
-    return servicesByPackage;
-  }
+  //   return servicesByPackage;
+  // }
 
   @IsPublic()
   @Get(':id')

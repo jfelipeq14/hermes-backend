@@ -24,7 +24,7 @@ export class PackageServiceController {
   constructor(private readonly packageServiceService: PackageServiceService) {}
 
   @IsPublic()
-  @Get()
+  @Get('/package/:idPackage')
   @ApiOperation({ summary: 'Get all package-service relationships' })
   @ApiResponse({
     status: 200,
@@ -34,8 +34,9 @@ export class PackageServiceController {
     status: 404,
     description: 'No package-service relationships found.',
   })
-  async findAll() {
-    const packageServices = await this.packageServiceService.findAll();
+  async findByPackage(@Param('idPackage') idPackage: string) {
+    const packageServices =
+      await this.packageServiceService.findByPackage(+idPackage);
 
     if (!packageServices || packageServices.length === 0) {
       throw new HttpException(
