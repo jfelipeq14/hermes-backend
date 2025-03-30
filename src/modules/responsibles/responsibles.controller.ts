@@ -5,11 +5,11 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Param,
   Body,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResponsiblesService } from './responsibles.service';
@@ -153,7 +153,7 @@ export class ResponsiblesController {
   }
 
   @IsPublic()
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a responsible by ID' })
   @ApiResponse({
     status: 200,
@@ -163,7 +163,8 @@ export class ResponsiblesController {
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async remove(@Param('id') id: string): Promise<Responsible> {
     try {
-      const removedResponsible = await this.responsiblesService.remove(+id);
+      const removedResponsible =
+        await this.responsiblesService.changeStatus(+id);
 
       if (!removedResponsible)
         throw new HttpException('Responsible not found', HttpStatus.NOT_FOUND);

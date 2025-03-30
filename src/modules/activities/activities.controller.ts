@@ -5,11 +5,11 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Param,
   Body,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
@@ -126,7 +126,7 @@ export class ActivitiesController {
   }
 
   @IsPublic()
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete an activity by ID' })
   @ApiResponse({
     status: 200,
@@ -134,10 +134,10 @@ export class ActivitiesController {
   })
   @ApiResponse({ status: 404, description: 'Activity not found.' })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string): Promise<Activity> {
+  async changeStatus(@Param('id') id: string): Promise<Activity> {
     try {
       const removedActivity: Activity =
-        await this.activitiesService.remove(+id);
+        await this.activitiesService.changeStatus(+id);
 
       if (!removedActivity) {
         throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);

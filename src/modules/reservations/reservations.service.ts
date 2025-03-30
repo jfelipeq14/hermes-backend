@@ -114,4 +114,25 @@ export class ReservationsService {
 
     return reservation;
   }
+
+  async changeStatus(id: number, status: string) {
+    const reservation = await this.prisma.reservations.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!reservation) {
+      throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.prisma.reservations.update({
+      where: {
+        id,
+      },
+      data: {
+        status: status,
+      },
+    });
+  }
 }

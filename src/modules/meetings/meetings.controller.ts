@@ -5,11 +5,11 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Param,
   Body,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MeetingsService } from './meetings.service';
@@ -156,7 +156,7 @@ export class MeetingsController {
   }
 
   @IsPublic()
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a meeting by ID' })
   @ApiResponse({
     status: 200,
@@ -164,9 +164,9 @@ export class MeetingsController {
   })
   @ApiResponse({ status: 404, description: 'Meeting not found.' })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string): Promise<Meeting> {
+  async changeStatus(@Param('id') id: string): Promise<Meeting> {
     try {
-      const removedMeeting = await this.meetingsService.remove(+id);
+      const removedMeeting = await this.meetingsService.changeStatus(+id);
 
       if (!removedMeeting) {
         throw new HttpException('Meeting not found', HttpStatus.NOT_FOUND);

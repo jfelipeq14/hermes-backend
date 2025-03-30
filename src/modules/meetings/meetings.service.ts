@@ -68,10 +68,23 @@ export class MeetingsService {
     });
   }
 
-  async remove(id: number) {
-    return await this.prisma.meetings.delete({
+  async changeStatus(id: number) {
+    const meeting = await this.prisma.meetings.findUnique({
       where: {
         id,
+      },
+    });
+
+    if (!meeting) {
+      throw new Error('Meeting not found');
+    }
+
+    return this.prisma.meetings.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !meeting.status, // Toggle the status
       },
     });
   }

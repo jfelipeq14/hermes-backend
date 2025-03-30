@@ -4,12 +4,12 @@ import {
   Controller,
   Get,
   Post,
-  Body,
+  Put,
   Patch,
   Param,
-  HttpException,
+  Body,
   HttpStatus,
-  Delete,
+  HttpException,
 } from '@nestjs/common';
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
@@ -60,7 +60,7 @@ export class ReservationsController {
     }
   }
   @Roles('ADMIN', 'CLIENT')
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,
@@ -73,10 +73,10 @@ export class ReservationsController {
   }
 
   @Roles('ADMIN')
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Patch(':id')
+  async remove(@Param('id') id: string, @Body() status: string) {
     try {
-      return await this.reservationsService.remove(+id);
+      return await this.reservationsService.changeStatus(+id, status);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

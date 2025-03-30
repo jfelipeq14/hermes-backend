@@ -5,11 +5,11 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Body,
   Param,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CategoryServicesService } from './category-services.service';
@@ -138,7 +138,7 @@ export class CategoryServicesController {
   }
 
   @IsPublic()
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a category service by ID' })
   @ApiResponse({
     status: 200,
@@ -146,10 +146,10 @@ export class CategoryServicesController {
   })
   @ApiResponse({ status: 404, description: 'Category service not found.' })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string): Promise<CategoryService> {
+  async changeStatus(@Param('id') id: string): Promise<CategoryService> {
     try {
       const removedCategoryService =
-        await this.categoryServicesService.remove(+id);
+        await this.categoryServicesService.changeStatus(+id);
 
       if (!removedCategoryService) {
         throw new HttpException(

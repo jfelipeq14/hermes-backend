@@ -57,25 +57,24 @@ export class ActivitiesService {
     });
   }
 
-  async remove(id: number) {
-    const packagesAsociated = await this.prisma.activities.findUnique({
-      where: { id },
-      include: {
-        packages: true,
+  async changeStatus(id: number) {
+    const activity = await this.prisma.activities.findUnique({
+      where: {
+        id,
       },
     });
 
-    if (!packagesAsociated) {
-      throw new Error('No se encontro la actividad');
+    if (!activity) {
+      throw new Error('Activity not found');
     }
 
-    if (packagesAsociated.packages.length > 0) {
-      throw new Error(
-        'No se puede eliminar una actividad con paquetes asociados',
-      );
-    }
-    return await this.prisma.activities.delete({
-      where: { id },
+    return this.prisma.activities.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !activity.status, // Toggle the status
+      },
     });
   }
 }

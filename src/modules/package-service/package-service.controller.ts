@@ -6,10 +6,10 @@ import {
   Post,
   Param,
   Body,
-  Delete,
   HttpException,
   HttpStatus,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackageServiceService } from './package-service.service';
@@ -151,7 +151,7 @@ export class PackageServiceController {
   }
 
   @IsPublic()
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a package-service relationship by ID' })
   @ApiResponse({
     status: 200,
@@ -163,10 +163,10 @@ export class PackageServiceController {
     description: 'Package-service relationship not found.',
   })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string) {
+  async changeStatus(@Param('id') id: string) {
     try {
       const deletedPackageService =
-        await this.packageServiceService.remove(+id);
+        await this.packageServiceService.changeStatus(+id);
 
       if (!deletedPackageService) {
         throw new HttpException(

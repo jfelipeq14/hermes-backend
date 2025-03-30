@@ -36,10 +36,23 @@ export class PackageServiceService {
     });
   }
 
-  async remove(id: number) {
-    return await this.prisma.detailPackagesServices.delete({
+  async changeStatus(id: number) {
+    const packageService = await this.prisma.detailPackagesServices.findUnique({
       where: {
         id,
+      },
+    });
+
+    if (!packageService) {
+      throw new Error('Package-service relationship not found');
+    }
+
+    return this.prisma.detailPackagesServices.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !packageService.status, // Toggle the status
       },
     });
   }
