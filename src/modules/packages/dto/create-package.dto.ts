@@ -1,62 +1,84 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Decimal } from '@prisma/client/runtime/library';
 import {
-  IsDateString,
   IsInt,
   IsNotEmpty,
   IsString,
   Matches,
   MaxLength,
   Min,
-  IsNumber,
 } from 'class-validator';
 import { IsStringRegex } from 'src/utils/regex';
 
 export class CreatePackageDto {
-  @ApiProperty({ required: true, description: 'Name of the package' })
+  @ApiProperty({
+    type: 'string',
+    required: true,
+    description: 'Name of the package',
+    example: 'Cerro Bravo',
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(60)
   @Matches(IsStringRegex)
-  activity: string;
+  name: string;
 
-  @ApiProperty({ required: true, description: 'Start date of the package' })
-  @IsDateString()
-  @IsNotEmpty()
-  start: Date;
-
-  @ApiProperty({ required: true, description: 'End date of the package' })
-  @IsDateString()
-  @IsNotEmpty()
-  end: Date;
-
-  @ApiProperty({ required: true, description: 'ID of the activity' })
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'ID of the activity',
+    example: 1,
+  })
   @IsInt()
   @IsNotEmpty()
   idActivity: number;
 
   @ApiProperty({
-    required: false,
-    description: 'Activity level (e.g., 1.0, 2.5)',
+    type: 'integer',
+    required: true,
+    description: 'Municipality where the package is located',
+    example: 2,
   })
-  @IsNumber()
-  level: Decimal;
+  @IsInt()
+  @IsNotEmpty()
+  idMunicipality: number;
 
-  @ApiProperty({ required: true, description: 'Price of the package' })
+  @ApiProperty({
+    type: 'number',
+    required: false,
+    description: 'Activity level',
+    example: 2,
+  })
+  @IsInt()
+  level: number;
+
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'Price of the package',
+    example: 180000,
+  })
   @IsInt()
   @IsNotEmpty()
   @Min(1)
   price: number;
 
   @ApiProperty({
+    type: 'integer',
     required: true,
     description: 'Reservation price of the package',
+    example: 90000,
   })
   @IsInt()
   @IsNotEmpty()
   reserve: number;
 
-  @ApiProperty({ required: true, description: 'Description of the package' })
+  @ApiProperty({
+    type: 'string',
+    required: true,
+    description: 'Description of the package',
+    example:
+      'Cerro Bravo es un lugar turístico en el que se puede disfrutar de la naturaleza y la tranquilidad.',
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(255)
