@@ -48,7 +48,6 @@ export class ReservationsService {
     }
 
     createReservationDto.price = +dates.packages.price;
-    createReservationDto.date = new Date(createReservationDto.date);
 
     return await this.prisma.reservations.create({
       data: createReservationDto,
@@ -75,15 +74,7 @@ export class ReservationsService {
       );
     }
 
-    if (!updateReservationDto.date) {
-      throw new HttpException(
-        'Reservation date is required',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     updateReservationDto.price = +dates.packages.price;
-    updateReservationDto.date = new Date(updateReservationDto.date);
 
     const updatedReservation = await this.prisma.reservations.update({
       where: { id },
