@@ -6,7 +6,7 @@ import { Activity } from './entities/activity.entity';
 
 @Injectable()
 export class ActivitiesService {
-  constructor( private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<Activity[]> {
     const activities = await this.prisma.activities.findMany();
