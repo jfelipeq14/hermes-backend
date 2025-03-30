@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PackageServiceService {
-  constructor(private prisma: PrismaService) {}
+  constructor( private readonly prisma: PrismaService) {}
 
   async findByPackage(idPackage: number) {
     return await this.prisma.detailPackagesServices.findMany({

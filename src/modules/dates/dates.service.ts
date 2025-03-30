@@ -5,16 +5,23 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class DatesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.dates.findMany();
+    return await this.prisma.dates.findMany({
+      include: {
+        meetings: true,
+      },
+    });
   }
 
   async findOne(id: number) {
     return await this.prisma.dates.findUnique({
       where: {
         id,
+      },
+      include: {
+        meetings: true,
       },
     });
   }
