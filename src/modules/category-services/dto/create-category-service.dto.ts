@@ -1,13 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, Matches, MaxLength } from 'class-validator';
-import { IsStringRegex } from 'src/utils/regex';
+import { IsString, IsNotEmpty, MaxLength, IsBoolean } from 'class-validator';
 import { NAMES_MAXVALUE } from 'src/utils/values';
 
 export class CreateCategoryServiceDto {
-  @ApiProperty({ required: true, description: 'Name of the category' })
+  @ApiProperty({
+    type: 'string',
+    required: true,
+    description: 'Name of the category',
+    example: 'Transporte',
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(NAMES_MAXVALUE)
-  @Matches(IsStringRegex)
   name: string;
+
+  @ApiProperty({
+    type: 'boolean',
+    required: true,
+    description: 'Status of the category',
+    example: true,
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  status: boolean;
 }

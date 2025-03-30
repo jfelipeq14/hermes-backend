@@ -3,6 +3,7 @@ import { IsInt, IsNotEmpty, Min } from 'class-validator';
 
 export class CreatePackageServiceDto {
   @ApiProperty({
+    type: 'integer',
     required: true,
     description: 'ID of the package',
     example: 1,
@@ -12,6 +13,7 @@ export class CreatePackageServiceDto {
   idPackage: number;
 
   @ApiProperty({
+    type: 'integer',
     required: true,
     description: 'ID of the service',
     example: 1,
@@ -21,6 +23,7 @@ export class CreatePackageServiceDto {
   idService: number;
 
   @ApiProperty({
+    type: 'integer',
     required: true,
     description: 'Quantity of the service',
     example: 2,
@@ -31,9 +34,10 @@ export class CreatePackageServiceDto {
   quantity: number;
 
   @ApiProperty({
+    type: 'integer',
     required: true,
     description: 'Price of the service',
-    example: 80000,
+    example: 43000,
   })
   @IsInt()
   @IsNotEmpty()

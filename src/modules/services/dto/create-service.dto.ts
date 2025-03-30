@@ -11,19 +11,34 @@ import { IsStringRegex } from 'src/utils/regex';
 import { NAMES_MAXVALUE } from 'src/utils/values';
 
 export class CreateServiceDto {
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'Id of the category service',
+    example: 1,
+  })
   @IsInt()
   @IsNotEmpty()
   idCategoryServices: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    type: 'string',
+    required: true,
+    description: 'Name of the service',
+    example: 'Transporte',
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(NAMES_MAXVALUE)
   @Matches(IsStringRegex)
   name: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'Price of the service',
+    example: 520000,
+  })
   @IsInt()
   @IsNotEmpty()
   @Min(1)
