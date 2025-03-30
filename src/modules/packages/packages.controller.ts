@@ -15,15 +15,16 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackagesService } from './packages.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 import { Package } from './entities/package.entity';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('packages')
 @Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all packages' })
   @ApiResponse({ status: 200, description: 'Return all packages.' })
@@ -38,7 +39,7 @@ export class PackagesController {
     return packagesFound;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a package by ID' })
   @ApiResponse({ status: 200, description: 'Return the package.' })
@@ -61,7 +62,7 @@ export class PackagesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new package' })
   @ApiResponse({
@@ -90,7 +91,7 @@ export class PackagesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a package by ID' })
   @ApiResponse({
@@ -122,7 +123,7 @@ export class PackagesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Patch(':id')
   @ApiOperation({ summary: 'Change the status of a package by ID' })
   @ApiResponse({

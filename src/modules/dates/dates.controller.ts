@@ -15,15 +15,16 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { DatesService } from './dates.service';
 import { CreateDateDto } from './dto/create-date.dto';
 import { UpdateDateDto } from './dto/update-date.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 import { Date } from './entities/date.entity';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('dates')
 @Controller('dates')
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
 
-  @Roles('ADMIN', 'GUIDE', 'CLIENT')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all dates' })
   @ApiResponse({ status: 200, description: 'Return all dates.' })
@@ -38,7 +39,7 @@ export class DatesController {
     return dates;
   }
 
-  @Roles('ADMIN', 'GUIDE')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a date by ID' })
   @ApiResponse({ status: 200, description: 'Return the date.' })
@@ -61,7 +62,7 @@ export class DatesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new date' })
   @ApiResponse({
@@ -89,7 +90,7 @@ export class DatesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a date by ID' })
   @ApiResponse({
@@ -118,7 +119,7 @@ export class DatesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Patch(':id')
   @ApiOperation({ summary: 'Change the status of a date by ID' })
   @ApiResponse({

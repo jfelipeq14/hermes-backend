@@ -5,16 +5,23 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PackagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.packages.findMany();
+    return await this.prisma.packages.findMany({
+      include: {
+        detailPackagesServices: true,
+      },
+    });
   }
 
   async findOne(id: number) {
     return await this.prisma.packages.findUnique({
       where: {
         id,
+      },
+      include: {
+        detailPackagesServices: true,
       },
     });
   }
@@ -39,24 +46,17 @@ export class PackagesService {
       },
     });
 
-    if (packageData) {
-      const dates = await this.prisma.dates.findMany({
-        where: {
-          idPackage: packageData.id,
-        },
-      });
-
-      if (!dates) {
-        return await this.prisma.packages.update({
-          where: {
-            id: id,
-          },
-          data: {
-            status: !packageData.status,
-          },
-        });
-      }
+    if (!packageData) {
+      throw new Error('Package not found');
     }
-    return packageData;
+
+    return await this.prisma.packages.update({
+      where: {
+        id: id,
+      },
+      data: {
+        status: !packageData.status,
+      },
+    });
   }
 }

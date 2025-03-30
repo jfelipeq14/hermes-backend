@@ -6,24 +6,25 @@ import {
   Post,
   Param,
   Body,
-  Delete,
   HttpException,
   HttpStatus,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackageServiceService } from './package-service.service';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
 import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('package-services')
 @Controller('package-services')
 export class PackageServiceController {
   constructor(private readonly packageServiceService: PackageServiceService) {}
 
-  @Roles('ADMIN')
-  @Get()
+  @IsPublic()
+  @Get('/package/:idPackage')
   @ApiOperation({ summary: 'Get all package-service relationships' })
   @ApiResponse({
     status: 200,
@@ -33,8 +34,9 @@ export class PackageServiceController {
     status: 404,
     description: 'No package-service relationships found.',
   })
-  async findAll() {
-    const packageServices = await this.packageServiceService.findAll();
+  async findByPackage(@Param('idPackage') idPackage: string) {
+    const packageServices =
+      await this.packageServiceService.findByPackage(+idPackage);
 
     if (!packageServices || packageServices.length === 0) {
       throw new HttpException(
@@ -46,7 +48,7 @@ export class PackageServiceController {
     return packageServices;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a package-service relationship by ID' })
   @ApiResponse({
@@ -78,7 +80,7 @@ export class PackageServiceController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new package-service relationship' })
   @ApiResponse({
@@ -109,7 +111,7 @@ export class PackageServiceController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a package-service relationship by ID' })
   @ApiResponse({
@@ -148,8 +150,8 @@ export class PackageServiceController {
     }
   }
 
-  @Roles('ADMIN')
-  @Delete(':id')
+  @IsPublic()
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a package-service relationship by ID' })
   @ApiResponse({
     status: 200,
@@ -161,10 +163,10 @@ export class PackageServiceController {
     description: 'Package-service relationship not found.',
   })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string) {
+  async changeStatus(@Param('id') id: string) {
     try {
       const deletedPackageService =
-        await this.packageServiceService.remove(+id);
+        await this.packageServiceService.changeStatus(+id);
 
       if (!deletedPackageService) {
         throw new HttpException(

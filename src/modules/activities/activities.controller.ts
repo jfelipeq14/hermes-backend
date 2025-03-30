@@ -5,25 +5,26 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Param,
   Body,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Activity } from './entities/activity.entity';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all activities' })
   @ApiResponse({ status: 200, description: 'Return all activities.' })
@@ -38,7 +39,7 @@ export class ActivitiesController {
     return activitiesFound;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get an activity by ID' })
   @ApiResponse({ status: 200, description: 'Return the activity.' })
@@ -61,7 +62,7 @@ export class ActivitiesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new activity' })
   @ApiResponse({
@@ -92,7 +93,7 @@ export class ActivitiesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update an activity by ID' })
   @ApiResponse({
@@ -124,8 +125,8 @@ export class ActivitiesController {
     }
   }
 
-  @Roles('ADMIN')
-  @Delete(':id')
+  @IsPublic()
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete an activity by ID' })
   @ApiResponse({
     status: 200,
@@ -133,10 +134,10 @@ export class ActivitiesController {
   })
   @ApiResponse({ status: 404, description: 'Activity not found.' })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string): Promise<Activity> {
+  async changeStatus(@Param('id') id: string): Promise<Activity> {
     try {
       const removedActivity: Activity =
-        await this.activitiesService.remove(+id);
+        await this.activitiesService.changeStatus(+id);
 
       if (!removedActivity) {
         throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);

@@ -1,46 +1,36 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MaxLength,
-} from 'class-validator';
-import { IsZoneRegex } from 'src/utils/regex';
-import { CHARS_MAXVALUE, DESCRIPTION_MAXVALUE } from 'src/utils/values';
+import { IsNotEmpty, Matches, IsString, MaxLength } from 'class-validator';
+import { DESCRIPTION_MAXVALUE } from 'src/utils/values';
 
 export class CreateMeetingDto {
   @ApiProperty({
     type: 'integer',
     required: true,
-    description: 'Meeting date',
+    description: 'ID of the date associated with the meeting',
     example: 1,
   })
-  @IsInt()
   @IsNotEmpty()
   idDate: number;
 
   @ApiProperty({
     type: 'string',
     required: true,
-    description: 'Zone',
-    example: 'S',
+    description: 'Zone of the meeting',
+    example: 'N',
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(CHARS_MAXVALUE)
-  @Matches(IsZoneRegex)
   zone: string;
 
   @ApiProperty({
     type: 'string',
     required: true,
-    description: 'Hour',
-    example: '05:00:00',
+    description: 'Hour of the meeting in HH:mm format',
+    example: '05:00',
   })
   @IsNotEmpty()
-  @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, {
-    message: 'Hour must be in the format HH:mm:ss',
+  @Matches(/^([01]\d|2[0-3]):([0-5]\d)$/, {
+    message: 'Hour must be in the format HH:mm',
   })
   hour: string;
 
@@ -48,8 +38,7 @@ export class CreateMeetingDto {
     type: 'string',
     required: true,
     description: 'Description of the meeting',
-    example:
-      'Los encuentros de la zona sur se hacen en: Estacion Parque Berrio, Estacion Poblado y Estacion Envigado',
+    example: 'Los encuentros se realizarán en: ...',
   })
   @IsString()
   @IsNotEmpty()

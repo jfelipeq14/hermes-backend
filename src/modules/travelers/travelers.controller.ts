@@ -5,9 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TravelersService } from './travelers.service';
@@ -56,7 +56,7 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
   @ApiResponse({
     status: 200,
@@ -83,15 +83,15 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({
     status: 200,
-    description: 'The traveler has been successfully deleted.',
+    description: 'The traveler has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Traveler not found.' })
-  async remove(@Param('id') id: number) {
-    const traveler = await this.travelersService.remove(id);
+  async changeStatus(@Param('id') id: number) {
+    const traveler = await this.travelersService.changeStatus(id);
     if (!traveler) {
       throw new HttpException('Traveler not found', HttpStatus.NOT_FOUND);
     }

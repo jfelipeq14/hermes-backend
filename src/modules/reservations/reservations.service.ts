@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ReservationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     return await this.prisma.reservations.findMany();
@@ -48,7 +48,6 @@ export class ReservationsService {
     }
 
     createReservationDto.price = +dates.packages.price;
-    createReservationDto.date = new Date(createReservationDto.date);
 
     return await this.prisma.reservations.create({
       data: createReservationDto,
@@ -75,15 +74,7 @@ export class ReservationsService {
       );
     }
 
-    if (!updateReservationDto.date) {
-      throw new HttpException(
-        'Reservation date is required',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     updateReservationDto.price = +dates.packages.price;
-    updateReservationDto.date = new Date(updateReservationDto.date);
 
     const updatedReservation = await this.prisma.reservations.update({
       where: { id },
@@ -113,5 +104,26 @@ export class ReservationsService {
     }
 
     return reservation;
+  }
+
+  async changeStatus(id: number, status: string) {
+    const reservation = await this.prisma.reservations.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!reservation) {
+      throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.prisma.reservations.update({
+      where: {
+        id,
+      },
+      data: {
+        status: status,
+      },
+    });
   }
 }

@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class ResponsiblesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     return await this.prisma.responsibles.findMany();
@@ -42,26 +42,24 @@ export class ResponsiblesService {
     });
   }
 
-  async remove(id: number) {
-    const dataAsociated = await this.prisma.responsibles.findUnique({
+  async changeStatus(id: number) {
+    const responsible = await this.prisma.responsibles.findUnique({
       where: {
         id,
       },
-      include: {
-        meetings: true,
-      },
     });
 
-    if (!dataAsociated) {
-      throw new Error('No se encontro el responsable');
+    if (!responsible) {
+      throw new Error('Responsible not found');
     }
 
-    if (!dataAsociated.meetings) {
-      return await this.prisma.responsibles.delete({
-        where: {
-          id,
-        },
-      });
-    }
+    return this.prisma.responsibles.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !responsible.status, // Toggle the status
+      },
+    });
   }
 }

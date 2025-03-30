@@ -5,18 +5,19 @@ import {
   Get,
   Post,
   Put,
-  Delete,
   Body,
   Param,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+// import { Roles } from '../auth/decorators/roles.decorator';
 import { CategoryService } from './entities/category-service.entity';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('category-services')
 @Controller('category-services')
@@ -25,7 +26,7 @@ export class CategoryServicesController {
     private readonly categoryServicesService: CategoryServicesService,
   ) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all category services' })
   @ApiResponse({ status: 200, description: 'Return all category services.' })
@@ -43,7 +44,7 @@ export class CategoryServicesController {
     return categoryServices;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get(':id')
   @ApiOperation({ summary: 'Get a category service by ID' })
   @ApiResponse({ status: 200, description: 'Return the category service.' })
@@ -69,7 +70,7 @@ export class CategoryServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new category service' })
   @ApiResponse({
@@ -101,7 +102,7 @@ export class CategoryServicesController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a category service by ID' })
   @ApiResponse({
@@ -136,8 +137,8 @@ export class CategoryServicesController {
     }
   }
 
-  @Roles('ADMIN')
-  @Delete(':id')
+  @IsPublic()
+  @Patch(':id')
   @ApiOperation({ summary: 'Delete a category service by ID' })
   @ApiResponse({
     status: 200,
@@ -145,10 +146,10 @@ export class CategoryServicesController {
   })
   @ApiResponse({ status: 404, description: 'Category service not found.' })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async remove(@Param('id') id: string): Promise<CategoryService> {
+  async changeStatus(@Param('id') id: string): Promise<CategoryService> {
     try {
       const removedCategoryService =
-        await this.categoryServicesService.remove(+id);
+        await this.categoryServicesService.changeStatus(+id);
 
       if (!removedCategoryService) {
         throw new HttpException(

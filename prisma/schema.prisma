@@ -34,9 +34,8 @@ model municipalities {
 
   departments departments @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
 
-  reservations reservations[]
-  users        users[]
-  packages     packages[]
+  users    users[]
+  packages packages[]
 }
 
 model permits {
@@ -154,6 +153,7 @@ model detailPackagesServices {
   idService Int
   quantity  Int
   price     Decimal @db.Decimal(15, 2)
+  status    Boolean @default(true)
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
   services services @relation(fields: [idService], references: [id], onDelete: Cascade)
@@ -181,6 +181,7 @@ model meetings {
   zone        String   @db.Char(1)
   hour        DateTime @db.Time
   description String   @db.VarChar(255)
+  status      Boolean  @default(true)
 
   dates dates @relation(fields: [idDate], references: [id], onDelete: Cascade)
 
@@ -188,9 +189,10 @@ model meetings {
 }
 
 model responsibles {
-  id        Int @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   idUser    Int
   idMeeting Int
+  status    Boolean @default(true)
 
   users    users?    @relation(fields: [idUser], references: [id])
   meetings meetings? @relation(fields: [idMeeting], references: [id])
@@ -211,8 +213,6 @@ model reservations {
 
   detailReservationTravelers detailReservationTravelers[]
   payments                   payments[]
-  municipalities             municipalities?              @relation(fields: [municipalitiesId], references: [id])
-  municipalitiesId           Int?
 }
 
 model detailReservationTravelers {
