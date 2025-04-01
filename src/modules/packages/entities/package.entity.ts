@@ -9,5 +9,6 @@ export class Package {
   price: Decimal;
   reserve: Decimal;
   description: string;
+  image: string | null;
   status: boolean;
 }

@@ -138,6 +138,7 @@ model packages {
   price          Decimal  @db.Decimal(15, 2)
   reserve        Decimal  @db.Decimal(15, 2)
   description    String   @db.VarChar(255)
+  image          String?  @db.VarChar(255)
   status         Boolean  @default(true)
 
   activities     activities     @relation(fields: [idActivity], references: [id], onDelete: Cascade)
@@ -230,7 +231,7 @@ model payments {
   idReservation Int
   date          DateTime @default(now())
   price         Decimal  @db.Decimal(15, 2)
-  voucher       String   @db.VarChar(255)
+  voucher       String?  @db.VarChar(255)
   status        String   @default("R") @db.Char(1)
 
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
