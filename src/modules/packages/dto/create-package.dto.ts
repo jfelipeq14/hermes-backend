@@ -83,4 +83,13 @@ export class CreatePackageDto {
   @IsNotEmpty()
   @MaxLength(255)
   description: string;
+
+  @ApiProperty({
+    type: 'string',
+    required: true,
+    description: 'Image of the package',
+    example: 'cerro-bravo.jpg',
+  })
+  @IsString()
+  image: string;
 }
