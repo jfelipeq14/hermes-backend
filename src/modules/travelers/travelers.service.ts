@@ -31,6 +31,7 @@ export class TravelersService {
   }
 
   async changeStatus(id: number) {
+
     const traveler = await this.prisma.detailReservationTravelers.findUnique({
       where: {
         id,
@@ -47,7 +48,22 @@ export class TravelersService {
       },
       data: {
         status: !traveler.status, // Toggle the status
+
       },
     });
+
+    if (travelerData) {
+      return await this.prisma.detailReservationTravelers.update({
+        where: {
+          id: id,
+        },
+        data: {
+          status: !travelerData.status,
+        },
+      });
+    }
+    
   }
+   
+  
 }

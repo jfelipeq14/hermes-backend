@@ -14,11 +14,12 @@ import { TravelersService } from './travelers.service';
 import { CreateTravelerDto } from './dto/create-traveler.dto';
 import { UpdateTravelerDto } from './dto/update-traveler.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { Traveler } from './entities/traveler.entity';
 
 @ApiTags('travelers')
 @Controller('travelers')
 export class TravelersController {
-  constructor(private readonly travelersService: TravelersService) {}
+  constructor(private readonly travelersService: TravelersService) { }
 
   @Roles('ADMIN', 'CLIENT')
   @Post()
@@ -36,23 +37,12 @@ export class TravelersController {
     }
   }
 
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all travelers' })
   @ApiResponse({ status: 200, description: 'Return all travelers.' })
   async findAll() {
     return await this.travelersService.findAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a traveler by ID' })
-  @ApiResponse({ status: 200, description: 'Return the traveler.' })
-  @ApiResponse({ status: 404, description: 'Traveler not found.' })
-  async findOne(@Param('id') id: number) {
-    const traveler = await this.travelersService.findOne(id);
-    if (!traveler) {
-      throw new HttpException('Traveler not found', HttpStatus.NOT_FOUND);
-    }
-    return traveler;
   }
 
   @Roles('ADMIN', 'CLIENT')
@@ -83,18 +73,31 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-  @Patch(':id')
+
+  @Patch('status/:id')
+
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({
     status: 200,
     description: 'The traveler has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Traveler not found.' })
-  async changeStatus(@Param('id') id: number) {
-    const traveler = await this.travelersService.changeStatus(id);
-    if (!traveler) {
-      throw new HttpException('Traveler not found', HttpStatus.NOT_FOUND);
+
+  async changeStatus(@Param('id') id: string): Promise<Traveler> {
+    try {
+      const updatedTraveler = await this.travelersService.changeStatus(+id);
+
+      if (!updatedTraveler) {
+        throw new HttpException('traveler not found', HttpStatus.NOT_FOUND);
+      }
+
+      return updatedTraveler;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Invalid ID format',
+        HttpStatus.BAD_REQUEST,
+      );
+
     }
-    return traveler;
   }
 }
