@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsBoolean, IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class CreateTravelerDto {
   @ApiProperty({ required: true, description: 'Id of the reservation' })
@@ -12,8 +12,8 @@ export class CreateTravelerDto {
   @IsNotEmpty()
   idTraveler: number;
 
-  @ApiProperty({ required: true, description: 'Status of the traveler' })
-  @IsBoolean()
-  @IsNotEmpty()
-  status: boolean;
+  // @ApiProperty({ required: true, description: 'Status of the traveler' })
+  // @IsBoolean()
+  // @IsNotEmpty()
+  // status: boolean;
 }
