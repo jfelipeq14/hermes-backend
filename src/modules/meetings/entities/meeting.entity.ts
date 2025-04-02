@@ -3,5 +3,5 @@ export class Meeting {
   idDate: number;
   zone: string;
   hour: Date;
-  description: string | null;
+  description: string;
 }

@@ -5,10 +5,14 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class MeetingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.meetings.findMany();
+    return await this.prisma.meetings.findMany({
+      include: {
+        responsibles: true,
+      },
+    });
   }
 
   async findAllByResponsible(id: number) {
@@ -31,12 +35,27 @@ export class MeetingsService {
       where: {
         id,
       },
+      include: {
+        responsibles: true,
+      },
     });
   }
 
   async create(createMeetingDto: CreateMeetingDto) {
+    const { hour, ...rest } = createMeetingDto;
+
+    // Convert the hour string (HH:mm) to a valid Date object
+    const hourAsDate = new Date(`1970-01-01T${hour}:00Z`);
+
+    if (isNaN(hourAsDate.getTime())) {
+      throw new Error('Invalid hour format. Expected HH:mm.');
+    }
+
     return await this.prisma.meetings.create({
-      data: createMeetingDto,
+      data: {
+        ...rest,
+        hour: hourAsDate,
+      },
     });
   }
 
@@ -49,10 +68,23 @@ export class MeetingsService {
     });
   }
 
-  async remove(id: number) {
-    return await this.prisma.meetings.delete({
+  async changeStatus(id: number) {
+    const meeting = await this.prisma.meetings.findUnique({
       where: {
         id,
+      },
+    });
+
+    if (!meeting) {
+      throw new Error('Meeting not found');
+    }
+
+    return this.prisma.meetings.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !meeting.status, // Toggle the status
       },
     });
   }

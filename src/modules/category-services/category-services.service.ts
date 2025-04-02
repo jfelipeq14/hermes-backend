@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class CategoryServicesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     return await this.prisma.categoryServices.findMany();
@@ -53,29 +53,23 @@ export class CategoryServicesService {
     });
   }
 
-  async remove(id: number) {
-    const serviceAsociated = await this.prisma.categoryServices.findUnique({
+  async changeStatus(id: number) {
+    const category = await this.prisma.categoryServices.findUnique({
       where: {
         id,
-      },
-      include: {
-        services: true,
       },
     });
 
-    if (!serviceAsociated) {
-      throw new Error('No se encontro la categoria');
+    if (!category) {
+      throw new Error('Category not found');
     }
 
-    if (serviceAsociated.services.length > 0) {
-      throw new Error(
-        'No se puede eliminar una categoria con servicios asociados',
-      );
-    }
-
-    return await this.prisma.categoryServices.delete({
+    return this.prisma.categoryServices.update({
       where: {
         id,
+      },
+      data: {
+        status: !category.status, // Toggle the status
       },
     });
   }

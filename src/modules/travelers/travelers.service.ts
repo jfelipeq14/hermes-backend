@@ -5,7 +5,7 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class TravelersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createTravelerDto: CreateTravelerDto) {
     return await this.prisma.detailReservationTravelers.create({
@@ -31,9 +31,24 @@ export class TravelersService {
   }
 
   async changeStatus(id: number) {
-    const travelerData = await this.prisma.detailReservationTravelers.findUnique({
+
+    const traveler = await this.prisma.detailReservationTravelers.findUnique({
       where: {
-        id: id,
+        id,
+      },
+    });
+
+    if (!traveler) {
+      throw new Error('Traveler not found');
+    }
+
+    return this.prisma.detailReservationTravelers.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !traveler.status, // Toggle the status
+
       },
     });
 

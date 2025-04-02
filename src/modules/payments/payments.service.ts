@@ -5,7 +5,8 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
 export class PaymentsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
+
 
   async findAll() {
     return await this.prisma.payments.findMany();

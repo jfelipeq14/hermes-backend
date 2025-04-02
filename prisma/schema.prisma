@@ -34,13 +34,13 @@ model municipalities {
 
   departments departments @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
 
-  reservations reservations[]
-  users        users[]
+  users    users[]
+  packages packages[]
 }
 
 model permits {
   id     Int     @id @default(autoincrement())
-  name   String  @unique @db.VarChar(60)
+  name   String  @db.VarChar(60)
   status Boolean @default(true)
 
   privileges privileges[]
@@ -48,7 +48,7 @@ model permits {
 
 model privileges {
   id       Int    @id @default(autoincrement())
-  name     String @unique @db.VarChar(60)
+  name     String @db.VarChar(60)
   idPermit Int
 
   permits permits @relation(fields: [idPermit], references: [id], onDelete: Cascade)
@@ -102,15 +102,17 @@ model users {
 }
 
 model activities {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(60)
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(60)
+  status Boolean @default(true)
 
   packages packages[]
 }
 
 model categoryServices {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(60)
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(60)
+  status Boolean @default(true)
 
   services services[]
 }
@@ -128,18 +130,19 @@ model services {
 }
 
 model packages {
-  id          Int      @id @default(autoincrement())
-  activity    String   @db.VarChar(60)
-  start       DateTime @db.Date
-  end         DateTime @db.Date
-  idActivity  Int
-  level       Decimal? @db.Decimal(2, 1)
-  price       Decimal  @db.Decimal(15, 2)
-  reserve     Decimal  @db.Decimal(15, 2)
-  description String   @db.VarChar(255)
-  status      Boolean  @default(true)
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(60)
+  idActivity     Int
+  idMunicipality Int
+  level          Decimal? @db.Decimal(2, 1)
+  price          Decimal  @db.Decimal(15, 2)
+  reserve        Decimal  @db.Decimal(15, 2)
+  description    String   @db.VarChar(255)
+  image          String?  @db.VarChar(255)
+  status         Boolean  @default(true)
 
-  activities activities @relation(fields: [idActivity], references: [id], onDelete: Cascade)
+  activities     activities     @relation(fields: [idActivity], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
 
   dates                  dates[]
   detailPackagesServices detailPackagesServices[]
@@ -151,6 +154,7 @@ model detailPackagesServices {
   idService Int
   quantity  Int
   price     Decimal @db.Decimal(15, 2)
+  status    Boolean @default(true)
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
   services services @relation(fields: [idService], references: [id], onDelete: Cascade)
@@ -158,12 +162,12 @@ model detailPackagesServices {
 
 model dates {
   id                Int      @id @default(autoincrement())
+  idPackage         Int
+  amount            Int
   start             DateTime @db.Date
   end               DateTime @db.Date
   startRegistration DateTime @db.Date
   endRegistration   DateTime @db.Date
-  idPackage         Int
-  amount            Int
   status            Boolean  @default(true)
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
@@ -177,34 +181,36 @@ model meetings {
   idDate      Int
   zone        String   @db.Char(1)
   hour        DateTime @db.Time
-  description String?  @db.VarChar(255)
+  description String   @db.VarChar(255)
+  status      Boolean  @default(true)
 
-  dates        dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  dates dates @relation(fields: [idDate], references: [id], onDelete: Cascade)
+
   responsibles responsibles[]
 }
 
 model responsibles {
-  id        Int       @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   idUser    Int
   idMeeting Int
-  users     users?    @relation(fields: [idUser], references: [id])
-  meetings  meetings? @relation(fields: [idMeeting], references: [id])
+  status    Boolean @default(true)
+
+  users    users?    @relation(fields: [idUser], references: [id])
+  meetings meetings? @relation(fields: [idMeeting], references: [id])
 
   @@index([idUser, idMeeting])
 }
 
 model reservations {
-  id             Int      @id @default(autoincrement())
-  idDate         Int
-  idMunicipality Int
-  idUser         Int
-  date           DateTime @db.Date
-  price          Decimal  @db.Decimal(15, 2)
-  status         String   @default("N") @db.Char(1)
+  id     Int      @id @default(autoincrement())
+  idDate Int
+  idUser Int
+  date   DateTime @default(now()) @db.Timestamp(0)
+  price  Decimal  @db.Decimal(15, 2)
+  status String   @default("N") @db.Char(1)
 
-  dates          dates          @relation(fields: [idDate], references: [id], onDelete: Cascade)
-  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
-  users          users          @relation(fields: [idUser], references: [id], onDelete: Cascade)
+  dates dates @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  users users @relation(fields: [idUser], references: [id], onDelete: Cascade)
 
   detailReservationTravelers detailReservationTravelers[]
   payments                   payments[]
@@ -223,9 +229,9 @@ model detailReservationTravelers {
 model payments {
   id            Int      @id @default(autoincrement())
   idReservation Int
-  date          DateTime @db.Date
+  date          DateTime @default(now())
   price         Decimal  @db.Decimal(15, 2)
-  voucher       String   @db.VarChar(60)
+  voucher       String?  @db.VarChar(255)
   status        String   @default("R") @db.Char(1)
 
   reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)

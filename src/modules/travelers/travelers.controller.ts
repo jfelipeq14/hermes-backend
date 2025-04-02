@@ -5,9 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TravelersService } from './travelers.service';
@@ -46,7 +46,7 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
   @ApiResponse({
     status: 200,
@@ -73,13 +73,16 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
+
   @Patch('status/:id')
+
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({
     status: 200,
-    description: 'The traveler has been successfully deleted.',
+    description: 'The traveler has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Traveler not found.' })
+
   async changeStatus(@Param('id') id: string): Promise<Traveler> {
     try {
       const updatedTraveler = await this.travelersService.changeStatus(+id);
@@ -94,6 +97,7 @@ export class TravelersController {
         error.message || 'Invalid ID format',
         HttpStatus.BAD_REQUEST,
       );
+
     }
   }
 }

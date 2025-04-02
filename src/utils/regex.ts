@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 
 export const IsStringRegex = new RegExp(
-  '^[A-Z][a-zñÁÉÍÓÚáéíóúüÜ]{3,}[^\\d\\W_]*(\\s[A-Za-zñÁÉÍÓÚáéíóúüÜ][a-zñÁÉÍÓÚáéíóúüÜ]{2,}[^\\d\\W_]*)*$',
+  '^[A-Z][a-zñÁÉÍÓÚáéíóúüÜ]+(\\s[A-Z][a-zñÁÉÍÓÚáéíóúüÜ]+)*$',
 );
 export const IsEmailRegex = new RegExp(
   '^\[a\-z0\-9\.\!\#</span>%&*+/=?^_`{|}~-]+@[a-z0-9-]+\.[a-z0-9.]{2,}$',
