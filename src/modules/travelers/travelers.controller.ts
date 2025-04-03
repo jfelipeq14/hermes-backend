@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Controller,
   Get,
@@ -19,7 +21,7 @@ import { Traveler } from './entities/traveler.entity';
 @ApiTags('travelers')
 @Controller('travelers')
 export class TravelersController {
-  constructor(private readonly travelersService: TravelersService) { }
+  constructor(private readonly travelersService: TravelersService) {}
 
   @Roles('ADMIN', 'CLIENT')
   @Post()
@@ -73,16 +75,13 @@ export class TravelersController {
   }
 
   @Roles('ADMIN', 'CLIENT')
-
   @Patch('status/:id')
-
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({
     status: 200,
     description: 'The traveler has been successfully updated.',
   })
   @ApiResponse({ status: 404, description: 'Traveler not found.' })
-
   async changeStatus(@Param('id') id: string): Promise<Traveler> {
     try {
       const updatedTraveler = await this.travelersService.changeStatus(+id);
@@ -97,7 +96,6 @@ export class TravelersController {
         error.message || 'Invalid ID format',
         HttpStatus.BAD_REQUEST,
       );
-
     }
   }
 }
