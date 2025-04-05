@@ -74,7 +74,6 @@ export class TravelersController {
     }
   }
 
-
   @IsPublic()
   @Patch('status/:id')
   @ApiOperation({ summary: 'Delete a traveler by ID' })
