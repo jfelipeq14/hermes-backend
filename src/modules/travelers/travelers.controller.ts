@@ -15,7 +15,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TravelersService } from './travelers.service';
 import { CreateTravelerDto } from './dto/create-traveler.dto';
 import { UpdateTravelerDto } from './dto/update-traveler.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 import { Traveler } from './entities/traveler.entity';
 
 @ApiTags('travelers')
@@ -23,7 +23,16 @@ import { Traveler } from './entities/traveler.entity';
 export class TravelersController {
   constructor(private readonly travelersService: TravelersService) {}
 
-  @Roles('ADMIN', 'CLIENT')
+  
+  @IsPublic()
+  @Get()
+  @ApiOperation({ summary: 'Get all travelers' })
+  @ApiResponse({ status: 200, description: 'Return all travelers.' })
+  async findAll() {
+    return await this.travelersService.findAll();
+  }
+  
+  @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new traveler' })
   @ApiResponse({
@@ -38,16 +47,8 @@ export class TravelersController {
       throw new HttpException('Invalid input data', HttpStatus.BAD_REQUEST);
     }
   }
-
-  @Roles('ADMIN')
-  @Get()
-  @ApiOperation({ summary: 'Get all travelers' })
-  @ApiResponse({ status: 200, description: 'Return all travelers.' })
-  async findAll() {
-    return await this.travelersService.findAll();
-  }
-
-  @Roles('ADMIN', 'CLIENT')
+  
+  @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
   @ApiResponse({
@@ -74,7 +75,7 @@ export class TravelersController {
     }
   }
 
-  @Roles('ADMIN', 'CLIENT')
+  @IsPublic()
   @Patch('status/:id')
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({
