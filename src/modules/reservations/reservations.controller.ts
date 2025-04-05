@@ -14,13 +14,13 @@ import {
 import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   async findAll() {
     try {
@@ -30,7 +30,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN', 'CLIENT')
+  @IsPublic()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -40,7 +40,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN', 'CLIENT')
+  @IsPublic()
   @Get('user/:idUser')
   async findAllByUser(@Param('idUser') idUser: string) {
     try {
@@ -50,7 +50,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN', 'CLIENT')
+  @IsPublic()
   @Post()
   async create(@Body() createReservationDto: CreateReservationDto) {
     try {
@@ -59,7 +59,7 @@ export class ReservationsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  @Roles('ADMIN', 'CLIENT')
+  @IsPublic()
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -81,7 +81,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Patch(':id')
   async remove(@Param('id') id: string, @Body() status: string) {
     try {
