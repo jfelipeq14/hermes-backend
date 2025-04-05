@@ -20,6 +20,7 @@ import { ResponsiblesModule } from './modules/responsibles/responsibles.module';
 import { TravelersModule } from './modules/travelers/travelers.module';
 import { PackageServiceModule } from './modules/package-service/package-service.module';
 import { ImagesModule } from './providers/images/images.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { ImagesModule } from './providers/images/images.module';
     TravelersModule,
     PaymentsModule,
     ImagesModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [],
