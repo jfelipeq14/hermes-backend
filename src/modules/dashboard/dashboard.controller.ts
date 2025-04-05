@@ -40,7 +40,7 @@ export class DashboardController {
     try {
       const packageSales = await this.dashboardService.packageSales();
 
-      if (!packageSales) {
+      if (!packageSales || packageSales.length === 0) {
         throw new HttpException(
           'Package sales not found',
           HttpStatus.NOT_FOUND,
@@ -65,7 +65,7 @@ export class DashboardController {
     try {
       const topClients = await this.dashboardService.topClients();
 
-      if (!topClients) {
+      if (!topClients || topClients.length === 0) {
         throw new HttpException('Top clients not found', HttpStatus.NOT_FOUND);
       }
 
