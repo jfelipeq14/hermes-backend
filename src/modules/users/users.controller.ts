@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import {
   Controller,
   Get,
@@ -8,18 +8,15 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpException,
   HttpStatus,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthenticatedUserRequest } from '../auth/interfaces/authenticated-user.interface';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
 
 @Controller('users')
@@ -27,16 +24,16 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
-  async findAll(@Req() req: AuthenticatedUserRequest) {
+  async findAll() {
     const users_ = await this.usersService.findAll();
     if (!users_)
       throw new HttpException('No existen usuarios', HttpStatus.NOT_FOUND);
     return users_;
   }
 
-  @Roles('ADMIN', 'CLIENT', 'GUIDE')
+  @IsPublic()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user_ = await this.usersService.findOne(+id);
@@ -45,7 +42,7 @@ export class UsersController {
     return user_;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -55,7 +52,7 @@ export class UsersController {
     }
   }
 
-  @Roles('ADMIN', 'CLIENT', 'GUIDE')
+  @IsPublic()
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {

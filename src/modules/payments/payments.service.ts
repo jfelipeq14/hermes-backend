@@ -7,7 +7,6 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class PaymentsService {
   constructor(private readonly prisma: PrismaService) {}
 
-
   async findAll() {
     return await this.prisma.payments.findMany();
   }
