@@ -16,15 +16,14 @@ import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Activity } from './entities/activity.entity';
-import { IsPublic } from '../auth/decorators/public.decorator';
-// import { Roles } from '../auth/decorators/roles.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all activities' })
   @ApiResponse({ status: 200, description: 'Return all activities.' })
@@ -39,7 +38,7 @@ export class ActivitiesController {
     return activitiesFound;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Get an activity by ID' })
   @ApiResponse({ status: 200, description: 'Return the activity.' })
@@ -62,7 +61,7 @@ export class ActivitiesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new activity' })
   @ApiResponse({
@@ -93,7 +92,7 @@ export class ActivitiesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Put(':id')
   @ApiOperation({ summary: 'Update an activity by ID' })
   @ApiResponse({
@@ -125,7 +124,7 @@ export class ActivitiesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Delete an activity by ID' })
   @ApiResponse({

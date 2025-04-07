@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { DepartmentsService } from './departments.service';
-import { IsPublic } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('departments')
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   findAll() {
     try {
