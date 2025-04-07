@@ -15,15 +15,14 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackageServiceService } from './package-service.service';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
 import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
-import { IsPublic } from '../auth/decorators/public.decorator';
-// import { Roles } from '../auth/decorators/roles.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('package-services')
 @Controller('package-services')
 export class PackageServiceController {
   constructor(private readonly packageServiceService: PackageServiceService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get('/package/:idPackage')
   @ApiOperation({ summary: 'Get all package-service relationships' })
   @ApiResponse({
@@ -48,7 +47,7 @@ export class PackageServiceController {
     return packageServices;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Get a package-service relationship by ID' })
   @ApiResponse({
@@ -80,7 +79,7 @@ export class PackageServiceController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new package-service relationship' })
   @ApiResponse({
@@ -111,7 +110,7 @@ export class PackageServiceController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Put(':id')
   @ApiOperation({ summary: 'Update a package-service relationship by ID' })
   @ApiResponse({
@@ -150,7 +149,7 @@ export class PackageServiceController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Delete a package-service relationship by ID' })
   @ApiResponse({

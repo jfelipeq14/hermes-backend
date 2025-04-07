@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { IsPublic } from '../auth/decorators/public.decorator';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('dashboard')
 export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get('sales')
   @ApiOperation({ summary: 'Get sales data' })
   @ApiResponse({ status: 200, description: 'Return sales data.' })
@@ -31,7 +31,7 @@ export class DashboardController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get('package-sales')
   @ApiOperation({ summary: 'Get package sales data' })
   @ApiResponse({ status: 200, description: 'Return package sales data.' })
@@ -56,7 +56,7 @@ export class DashboardController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get('top-clients')
   @ApiOperation({ summary: 'Get top clients data' })
   @ApiResponse({ status: 200, description: 'Return top clients data.' })

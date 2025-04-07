@@ -1,12 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { CountriesService } from './countries.service';
-import { IsPublic } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('countries')
 export class CountriesController {
   constructor(private readonly countriesService: CountriesService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   findAll() {
     try {

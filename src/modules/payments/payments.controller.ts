@@ -13,13 +13,13 @@ import {
 import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
-import { IsPublic } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const payments_ = await this.paymentsService.findAll();
@@ -28,7 +28,7 @@ export class PaymentsController {
     return payments_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const payment_ = await this.paymentsService.findOne(+id);
@@ -37,7 +37,7 @@ export class PaymentsController {
     return payment_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':idReservation')
   async findAllByReservation(@Param('idReservation') idReservation: string) {
     const payments_ =
@@ -47,7 +47,7 @@ export class PaymentsController {
     return payments_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createPaymentDto: CreatePaymentDto) {
     try {
@@ -57,7 +57,7 @@ export class PaymentsController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,

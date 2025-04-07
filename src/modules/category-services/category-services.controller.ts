@@ -18,6 +18,7 @@ import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 // import { Roles } from '../auth/decorators/roles.decorator';
 import { CategoryService } from './entities/category-service.entity';
 import { IsPublic } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('category-services')
 @Controller('category-services')
@@ -26,7 +27,7 @@ export class CategoryServicesController {
     private readonly categoryServicesService: CategoryServicesService,
   ) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all category services' })
   @ApiResponse({ status: 200, description: 'Return all category services.' })
