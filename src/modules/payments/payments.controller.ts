@@ -28,7 +28,7 @@ export class PaymentsController {
     return payments_;
   }
 
-  @ IsPublic()
+  @IsPublic()
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const payment_ = await this.paymentsService.findOne(+id);

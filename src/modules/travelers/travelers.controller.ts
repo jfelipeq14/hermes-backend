@@ -23,15 +23,6 @@ import { Traveler } from './entities/traveler.entity';
 export class TravelersController {
   constructor(private readonly travelersService: TravelersService) {}
 
-  
-  @IsPublic()
-  @Get()
-  @ApiOperation({ summary: 'Get all travelers' })
-  @ApiResponse({ status: 200, description: 'Return all travelers.' })
-  async findAll() {
-    return await this.travelersService.findAll();
-  }
-  
   @IsPublic()
   @Post()
   @ApiOperation({ summary: 'Create a new traveler' })
@@ -47,7 +38,15 @@ export class TravelersController {
       throw new HttpException('Invalid input data', HttpStatus.BAD_REQUEST);
     }
   }
-  
+
+  @IsPublic()
+  @Get()
+  @ApiOperation({ summary: 'Get all travelers' })
+  @ApiResponse({ status: 200, description: 'Return all travelers.' })
+  async findAll() {
+    return await this.travelersService.findAll();
+  }
+
   @IsPublic()
   @Put(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
@@ -74,6 +73,7 @@ export class TravelersController {
       throw new HttpException('Invalid input data', HttpStatus.BAD_REQUEST);
     }
   }
+
 
   @IsPublic()
   @Patch('status/:id')
