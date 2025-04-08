@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MaxLength,
-  Min,
-} from 'class-validator';
-import { IsStringRegex } from 'src/utils/regex';
+import { IsInt, IsNotEmpty, IsString, MaxLength, Min } from 'class-validator';
 
 export class CreatePackageDto {
   @ApiProperty({
@@ -19,7 +11,6 @@ export class CreatePackageDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(60)
-  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({

@@ -1,12 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString, Matches } from 'class-validator';
-import { IsStringRegex } from 'src/utils/regex';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePrivilegeDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })
