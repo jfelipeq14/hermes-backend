@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Matches,
-  MaxLength,
-  Min,
-} from 'class-validator';
-import { IsStringRegex } from 'src/utils/regex';
+import { IsInt, IsNotEmpty, IsString, MaxLength, Min } from 'class-validator';
 import { NAMES_MAXVALUE } from 'src/utils/values';
 
 export class CreateServiceDto {
@@ -30,7 +22,6 @@ export class CreateServiceDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(NAMES_MAXVALUE)
-  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({

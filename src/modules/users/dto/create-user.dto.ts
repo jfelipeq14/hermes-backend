@@ -13,7 +13,6 @@ import {
   IsPassword,
   IsPhoneRegex,
   IsSexRegex,
-  IsStringRegex,
 } from 'src/utils/regex';
 
 export class CreateUserDto {
@@ -36,13 +35,11 @@ export class CreateUserDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  @Matches(IsStringRegex)
   surName: string;
 
   @ApiProperty({ required: true })
