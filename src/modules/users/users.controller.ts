@@ -16,15 +16,15 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { IsPublic } from '../auth/decorators/public.decorator';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const users_ = await this.usersService.findAll();
@@ -33,7 +33,7 @@ export class UsersController {
     return users_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user_ = await this.usersService.findOne(+id);
@@ -42,7 +42,7 @@ export class UsersController {
     return user_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
@@ -52,7 +52,7 @@ export class UsersController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {

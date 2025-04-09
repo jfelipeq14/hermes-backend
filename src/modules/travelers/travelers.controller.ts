@@ -15,15 +15,15 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TravelersService } from './travelers.service';
 import { CreateTravelerDto } from './dto/create-traveler.dto';
 import { UpdateTravelerDto } from './dto/update-traveler.dto';
-import { IsPublic } from '../auth/decorators/public.decorator';
 import { Traveler } from './entities/traveler.entity';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('travelers')
 @Controller('travelers')
 export class TravelersController {
   constructor(private readonly travelersService: TravelersService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new traveler' })
   @ApiResponse({
@@ -39,7 +39,7 @@ export class TravelersController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all travelers' })
   @ApiResponse({ status: 200, description: 'Return all travelers.' })
@@ -47,7 +47,7 @@ export class TravelersController {
     return await this.travelersService.findAll();
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Put(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
   @ApiResponse({
@@ -74,8 +74,7 @@ export class TravelersController {
     }
   }
 
-
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch('status/:id')
   @ApiOperation({ summary: 'Delete a traveler by ID' })
   @ApiResponse({

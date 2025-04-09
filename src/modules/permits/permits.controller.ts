@@ -14,13 +14,13 @@ import {
 import { PermitsService } from './permits.service';
 import { CreatePermitDto } from './dto/create-permit.dto';
 import { UpdatePermitDto } from './dto/update-permit.dto';
-import { IsPublic } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Controller('permits')
 export class PermitsController {
   constructor(private readonly permitsService: PermitsService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   async findAll() {
     const permits_ = await this.permitsService.findAll();
@@ -29,7 +29,7 @@ export class PermitsController {
     return permits_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const permit_ = await this.permitsService.findOne(+id);
@@ -38,7 +38,7 @@ export class PermitsController {
     return permit_;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   async create(@Body() createPermitDto: CreatePermitDto) {
     try {
@@ -48,7 +48,7 @@ export class PermitsController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -61,7 +61,8 @@ export class PermitsController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
+  @Roles('ADMIN')
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {

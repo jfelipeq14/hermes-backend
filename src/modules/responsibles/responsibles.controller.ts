@@ -16,15 +16,14 @@ import { ResponsiblesService } from './responsibles.service';
 import { CreateResponsibleDto } from './dto/create-responsible.dto';
 import { UpdateResponsibleDto } from './dto/update-responsible.dto';
 import { Responsible } from './entities/responsible.entity';
-// import { Roles } from '../auth/decorators/roles.decorator';
-import { IsPublic } from '../auth/decorators/public.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @ApiTags('responsibles')
 @Controller('responsibles')
 export class ResponsiblesController {
   constructor(private readonly responsiblesService: ResponsiblesService) {}
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get()
   @ApiOperation({ summary: 'Get all responsibles' })
   @ApiResponse({ status: 200, description: 'Return all responsibles.' })
@@ -38,7 +37,7 @@ export class ResponsiblesController {
     return responsiblesFound;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get('guide/:idUser')
   @ApiOperation({ summary: 'Get all responsibles by guide ID' })
   @ApiResponse({
@@ -72,7 +71,7 @@ export class ResponsiblesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Get(':id')
   @ApiOperation({ summary: 'Get a responsible by ID' })
   @ApiResponse({ status: 200, description: 'Return the responsible.' })
@@ -94,7 +93,7 @@ export class ResponsiblesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new responsible' })
   @ApiResponse({
@@ -121,7 +120,7 @@ export class ResponsiblesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Put(':id')
   @ApiOperation({ summary: 'Update a responsible by ID' })
   @ApiResponse({
@@ -152,7 +151,7 @@ export class ResponsiblesController {
     }
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Delete a responsible by ID' })
   @ApiResponse({
