@@ -9,7 +9,6 @@ import {
   Param,
   HttpException,
   HttpStatus,
-  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TravelersService } from './travelers.service';
