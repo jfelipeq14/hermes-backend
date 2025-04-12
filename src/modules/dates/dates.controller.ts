@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Patch,
   Body,
   Param,
@@ -17,6 +16,7 @@ import { CreateDateDto } from './dto/create-date.dto';
 import { UpdateDateDto } from './dto/update-date.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Date } from './entities/date.entity';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('dates')
 @Controller('dates')
@@ -38,27 +38,19 @@ export class DatesController {
     return dates;
   }
 
-  @Roles('ADMIN')
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a date by ID' })
-  @ApiResponse({ status: 200, description: 'Return the date.' })
-  @ApiResponse({ status: 404, description: 'Date not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string): Promise<Date> {
-    try {
-      const date = await this.datesService.findOne(+id);
+  @IsPublic()
+  @Get()
+  @ApiOperation({ summary: 'Get all dates' })
+  @ApiResponse({ status: 200, description: 'Return all dates.' })
+  @ApiResponse({ status: 404, description: 'No dates found.' })
+  async findAllActive(): Promise<Date[]> {
+    const dates = await this.datesService.findAllActive();
 
-      if (!date) {
-        throw new HttpException('Date not found', HttpStatus.NOT_FOUND);
-      }
-
-      return date;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!dates || dates.length === 0) {
+      throw new HttpException('No dates found', HttpStatus.NOT_FOUND);
     }
+
+    return dates;
   }
 
   @Roles('ADMIN')
@@ -90,7 +82,7 @@ export class DatesController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a date by ID' })
   @ApiResponse({
     status: 200,

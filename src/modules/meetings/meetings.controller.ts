@@ -4,7 +4,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Param,
   Body,
   HttpException,
@@ -123,7 +123,7 @@ export class MeetingsController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a meeting by ID' })
   @ApiResponse({
     status: 200,

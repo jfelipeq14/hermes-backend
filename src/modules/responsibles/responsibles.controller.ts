@@ -4,7 +4,7 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Param,
   Body,
   HttpException,
@@ -121,7 +121,7 @@ export class ResponsiblesController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a responsible by ID' })
   @ApiResponse({
     status: 200,
