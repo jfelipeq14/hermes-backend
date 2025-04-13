@@ -17,7 +17,7 @@ import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
 import { CategoryService } from './entities/category-service.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-@ApiTags('Ctargories')
+@ApiTags('Categories')
 @Controller('category-services')
 export class CategoryServicesController {
   constructor(
