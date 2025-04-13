@@ -9,7 +9,6 @@ import {
   Param,
   HttpException,
   HttpStatus,
-  Put,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TravelersService } from './travelers.service';
@@ -48,7 +47,7 @@ export class TravelersController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
   @ApiResponse({
     status: 200,

@@ -15,13 +15,10 @@ export class PackagesService {
     });
   }
 
-  async findOne(id: number) {
-    return await this.prisma.packages.findUnique({
+  async findAllActive() {
+    return await this.prisma.packages.findMany({
       where: {
-        id,
-      },
-      include: {
-        detailPackagesServices: true,
+        status: true,
       },
     });
   }

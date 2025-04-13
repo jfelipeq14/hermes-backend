@@ -4,12 +4,11 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Param,
   Body,
   HttpException,
   HttpStatus,
-  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
@@ -18,7 +17,7 @@ import { UpdateActivityDto } from './dto/update-activity.dto';
 import { Activity } from './entities/activity.entity';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-@ApiTags('activities')
+@ApiTags('Activities')
 @Controller('activities')
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
@@ -39,26 +38,21 @@ export class ActivitiesController {
   }
 
   @Roles('ADMIN')
-  @Get(':id')
-  @ApiOperation({ summary: 'Get an activity by ID' })
-  @ApiResponse({ status: 200, description: 'Return the activity.' })
-  @ApiResponse({ status: 404, description: 'Activity not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string): Promise<Activity> {
-    try {
-      const activityFound: Activity = await this.activitiesService.findOne(+id);
+  @Get('active')
+  @ApiOperation({ summary: 'Get all activities with status true' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all activities with status true.',
+  })
+  @ApiResponse({ status: 404, description: 'No activities found.' })
+  async findAllActive(): Promise<Activity[]> {
+    const activitiesFound = await this.activitiesService.findAllActive();
 
-      if (!activityFound) {
-        throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
-      }
-
-      return activityFound;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!activitiesFound || activitiesFound.length === 0) {
+      throw new HttpException('No activities found', HttpStatus.NOT_FOUND);
     }
+
+    return activitiesFound;
   }
 
   @Roles('ADMIN')
@@ -93,7 +87,7 @@ export class ActivitiesController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update an activity by ID' })
   @ApiResponse({
     status: 200,
@@ -125,27 +119,27 @@ export class ActivitiesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
-  @ApiOperation({ summary: 'Delete an activity by ID' })
+  @Patch(':id/change-status')
+  @ApiOperation({ summary: 'Change the status of an activity by ID' })
   @ApiResponse({
     status: 200,
-    description: 'The activity has been successfully deleted.',
+    description: 'The status of the activity has been successfully changed.',
   })
   @ApiResponse({ status: 404, description: 'Activity not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async changeStatus(@Param('id') id: string): Promise<Activity> {
     try {
-      const removedActivity: Activity =
+      const updatedActivity: Activity =
         await this.activitiesService.changeStatus(+id);
 
-      if (!removedActivity) {
+      if (!updatedActivity) {
         throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
       }
 
-      return removedActivity;
+      return updatedActivity;
     } catch (error) {
       throw new HttpException(
-        error.message || 'Invalid ID format',
+        error.message || 'Invalid input data',
         HttpStatus.BAD_REQUEST,
       );
     }

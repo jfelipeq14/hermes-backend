@@ -11,10 +11,10 @@ export class CategoryServicesService {
     return await this.prisma.categoryServices.findMany();
   }
 
-  async findOne(id: number) {
-    return await this.prisma.categoryServices.findUnique({
+  async findAllActive() {
+    return await this.prisma.categoryServices.findMany({
       where: {
-        id,
+        status: true,
       },
     });
   }
