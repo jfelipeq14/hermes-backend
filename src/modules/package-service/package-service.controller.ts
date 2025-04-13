@@ -9,11 +9,13 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackageServiceService } from './package-service.service';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
 
 @ApiTags('Package-Service')
 @Controller('package-services')
@@ -63,6 +65,37 @@ export class PackageServiceController {
       if (!createdPackageService) {
         throw new HttpException(
           'Failed to create the package-service relationship',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return createdPackageService;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Invalid input data',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  @Roles('ADMIN')
+  @Patch()
+  @ApiOperation({ summary: 'Update package-service relationship' })
+  @ApiResponse({
+    status: 201,
+    description:
+      'The package-service relationship has been successfully updated.',
+  })
+  @ApiResponse({ status: 400, description: 'Invalid input data.' })
+  async update(@Body() updatePackageServiceDto: UpdatePackageServiceDto[]) {
+    try {
+      const createdPackageService = await this.packageServiceService.update(
+        updatePackageServiceDto,
+      );
+
+      if (!createdPackageService) {
+        throw new HttpException(
+          'Failed to update the package-service relationship',
           HttpStatus.BAD_REQUEST,
         );
       }
