@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Patch,
   Param,
   Body,
@@ -37,43 +36,22 @@ export class ServicesController {
     return services;
   }
 
-  // @Roles('ADMIN')
-  // @Get('package/:id')
-  // @ApiOperation({ summary: 'Get all services' })
-  // @ApiResponse({ status: 200, description: 'Return all services.' })
-  // @ApiResponse({ status: 404, description: 'No services found.' })
-  // async findByPackage(@Param('id') idPackage: string) {
-  //   const servicesByPackage =
-  //     await this.servicesService.findByPackage(+idPackage);
-
-  //   if (!servicesByPackage || servicesByPackage.length === 0) {
-  //     throw new HttpException('No services found', HttpStatus.NOT_FOUND);
-  //   }
-
-  //   return servicesByPackage;
-  // }
-
   @Roles('ADMIN')
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a service by ID' })
-  @ApiResponse({ status: 200, description: 'Return the service.' })
-  @ApiResponse({ status: 404, description: 'Service not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string) {
-    try {
-      const service = await this.servicesService.findOne(+id);
+  @Get()
+  @ApiOperation({ summary: 'Get all services with status true' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all services with status true.',
+  })
+  @ApiResponse({ status: 404, description: 'No services found.' })
+  async findAllActive() {
+    const services = await this.servicesService.findAllActive();
 
-      if (!service) {
-        throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
-      }
-
-      return service;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!services || services.length === 0) {
+      throw new HttpException('No services found', HttpStatus.NOT_FOUND);
     }
+
+    return services;
   }
 
   @Roles('ADMIN')
@@ -96,7 +74,7 @@ export class ServicesController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a service by ID' })
   @ApiResponse({
     status: 200,
@@ -128,7 +106,7 @@ export class ServicesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Patch(':id/change-status')
   @ApiOperation({ summary: 'Change the status of a service by ID' })
   @ApiResponse({
     status: 200,

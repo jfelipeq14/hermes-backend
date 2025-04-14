@@ -9,47 +9,38 @@ export class ActivitiesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<Activity[]> {
-    const activities = await this.prisma.activities.findMany();
-    return activities;
+    return await this.prisma.activities.findMany();
   }
 
-  async findOne(id: number): Promise<Activity> {
-    const activity = await this.prisma.activities.findUnique({
-      where: { id },
+  async findAllActive(): Promise<Activity[]> {
+    return await this.prisma.activities.findMany({
+      where: { status: true },
     });
-
-    if (!activity) {
-      return new Activity();
-    }
-
-    return activity;
   }
 
   async create(createActivityDto: CreateActivityDto): Promise<Activity> {
-    const activityCreated = await this.prisma.activities.create({
+    return await this.prisma.activities.create({
       data: createActivityDto,
     });
-
-    return activityCreated;
   }
 
   async update(id: number, updateActivityDto: UpdateActivityDto) {
-    const packagesAsociated = await this.prisma.activities.findUnique({
-      where: { id },
-      include: {
-        packages: true,
-      },
-    });
+    // const packagesAsociated = await this.prisma.activities.findUnique({
+    //   where: { id },
+    //   include: {
+    //     packages: true,
+    //   },
+    // });
 
-    if (!packagesAsociated) {
-      throw new Error('No se encontro la actividad');
-    }
+    // if (!packagesAsociated) {
+    //   throw new Error('No se encontro la actividad');
+    // }
 
-    if (packagesAsociated.packages.length > 0) {
-      throw new Error(
-        'No se puede actualizar una actividad con paquetes asociados',
-      );
-    }
+    // if (packagesAsociated.packages.length > 0) {
+    //   throw new Error(
+    //     'No se puede actualizar una actividad con paquetes asociados',
+    //   );
+    // }
 
     return this.prisma.activities.update({
       where: { id },
@@ -58,14 +49,29 @@ export class ActivitiesService {
   }
 
   async changeStatus(id: number) {
+    // const packagesAsociated = await this.prisma.activities.findUnique({
+    //   where: { id },
+    //   include: {
+    //     packages: true,
+    //   },
+    // });
+
+    // if (!packagesAsociated) {
+    //   throw new Error('No se encontro la actividad');
+    // }
+
+    // if (packagesAsociated.packages.length > 0) {
+    //   throw new Error(
+    //     'No se puede actualizar una actividad con paquetes asociados',
+    //   );
+    // }
+
     const activity = await this.prisma.activities.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
     });
 
     if (!activity) {
-      throw new Error('Activity not found');
+      throw new Error('No se encontro la actividad');
     }
 
     return this.prisma.activities.update({
