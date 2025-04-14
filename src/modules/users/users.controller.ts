@@ -62,12 +62,13 @@ export class UsersController {
     }
   }
 
-  // @Delete(':id')
-  // async remove(@Param('id') id: string) {
-  //   try {
-  //     return await this.usersService.remove(+id);
-  //   } catch (error) {
-  //     throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-  //   }
-  // }
+  @Roles('ADMIN')
+  @Patch('changeStatus/:id')
+  async changeStatus(@Param('id') id: string) {
+    try {
+      return await this.usersService.changeStatus(+id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
