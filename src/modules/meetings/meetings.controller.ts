@@ -4,12 +4,11 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Param,
   Body,
   HttpException,
   HttpStatus,
-  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { MeetingsService } from './meetings.service';
@@ -123,7 +122,7 @@ export class MeetingsController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a meeting by ID' })
   @ApiResponse({
     status: 200,

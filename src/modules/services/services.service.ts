@@ -11,22 +11,10 @@ export class ServicesService {
     return await this.prisma.services.findMany();
   }
 
-  // async findByPackage(idPackage: number) {
-  //   return await this.prisma.services.findMany({
-  //     where: {
-  //       detailPackagesServices: {
-  //         some: {
-  //           idPackage,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
-
-  async findOne(id: number) {
-    return await this.prisma.services.findUnique({
+  async findAllActive() {
+    return await this.prisma.services.findMany({
       where: {
-        id,
+        status: true,
       },
     });
   }

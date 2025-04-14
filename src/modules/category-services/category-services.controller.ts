@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Body,
   Param,
   HttpException,
@@ -15,12 +14,10 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CategoryServicesService } from './category-services.service';
 import { CreateCategoryServiceDto } from './dto/create-category-service.dto';
 import { UpdateCategoryServiceDto } from './dto/update-category-service.dto';
-// import { Roles } from '../auth/decorators/roles.decorator';
 import { CategoryService } from './entities/category-service.entity';
-import { IsPublic } from '../auth/decorators/public.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-@ApiTags('category-services')
+@ApiTags('Categories')
 @Controller('category-services')
 export class CategoryServicesController {
   constructor(
@@ -45,33 +42,28 @@ export class CategoryServicesController {
     return categoryServices;
   }
 
-  @IsPublic()
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a category service by ID' })
-  @ApiResponse({ status: 200, description: 'Return the category service.' })
-  @ApiResponse({ status: 404, description: 'Category service not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string): Promise<CategoryService> {
-    try {
-      const categoryService = await this.categoryServicesService.findOne(+id);
+  @Roles('ADMIN')
+  @Get('active')
+  @ApiOperation({ summary: 'Get all category services with status active' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all category services with status true.',
+  })
+  @ApiResponse({ status: 404, description: 'No category services found.' })
+  async findAllActive(): Promise<CategoryService[]> {
+    const categoryServices = await this.categoryServicesService.findAllActive();
 
-      if (!categoryService) {
-        throw new HttpException(
-          'Category service not found',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return categoryService;
-    } catch (error) {
+    if (!categoryServices || categoryServices.length === 0) {
       throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
+        'No category services found',
+        HttpStatus.NOT_FOUND,
       );
     }
+
+    return categoryServices;
   }
 
-  @IsPublic()
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new category service' })
   @ApiResponse({
@@ -103,8 +95,8 @@ export class CategoryServicesController {
     }
   }
 
-  @IsPublic()
-  @Put(':id')
+  @Roles('ADMIN')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a category service by ID' })
   @ApiResponse({
     status: 200,
@@ -138,8 +130,8 @@ export class CategoryServicesController {
     }
   }
 
-  @IsPublic()
-  @Patch(':id')
+  @Roles('ADMIN')
+  @Patch(':id/change-status')
   @ApiOperation({ summary: 'Delete a category service by ID' })
   @ApiResponse({
     status: 200,
@@ -149,17 +141,17 @@ export class CategoryServicesController {
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async changeStatus(@Param('id') id: string): Promise<CategoryService> {
     try {
-      const removedCategoryService =
+      const updatedCategory: CategoryService =
         await this.categoryServicesService.changeStatus(+id);
 
-      if (!removedCategoryService) {
+      if (!updatedCategory) {
         throw new HttpException(
           'Category service not found',
           HttpStatus.NOT_FOUND,
         );
       }
 
-      return removedCategoryService;
+      return updatedCategory;
     } catch (error) {
       throw new HttpException(
         error.message || 'Invalid ID format',

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
-import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 
 @Injectable()
@@ -15,44 +14,16 @@ export class PackageServiceService {
     });
   }
 
-  async findOne(id: number) {
-    return await this.prisma.detailPackagesServices.findUnique({
-      where: {
-        id,
-      },
-    });
-  }
-
-  async create(createPackageServiceDto: CreatePackageServiceDto) {
-    return await this.prisma.detailPackagesServices.create({
+  async create(createPackageServiceDto: CreatePackageServiceDto[]) {
+    return await this.prisma.detailPackagesServices.createMany({
       data: createPackageServiceDto,
     });
   }
 
-  async update(id: number, updatePackageServiceDto: UpdatePackageServiceDto) {
-    return await this.prisma.detailPackagesServices.update({
-      where: { id },
-      data: updatePackageServiceDto,
-    });
-  }
-
-  async changeStatus(id: number) {
-    const packageService = await this.prisma.detailPackagesServices.findUnique({
+  async delete(id: number) {
+    return this.prisma.detailPackagesServices.delete({
       where: {
         id,
-      },
-    });
-
-    if (!packageService) {
-      throw new Error('Package-service relationship not found');
-    }
-
-    return this.prisma.detailPackagesServices.update({
-      where: {
-        id,
-      },
-      data: {
-        status: !packageService.status, // Toggle the status
       },
     });
   }

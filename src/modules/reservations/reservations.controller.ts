@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Patch,
   Param,
   Body,
@@ -60,7 +59,7 @@ export class ReservationsController {
     }
   }
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updateReservationDto: UpdateReservationDto,

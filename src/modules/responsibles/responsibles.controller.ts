@@ -4,12 +4,11 @@ import {
   Controller,
   Get,
   Post,
-  Put,
+  Patch,
   Param,
   Body,
   HttpException,
   HttpStatus,
-  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResponsiblesService } from './responsibles.service';
@@ -121,7 +120,7 @@ export class ResponsiblesController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a responsible by ID' })
   @ApiResponse({
     status: 200,

@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Patch,
   Param,
   Body,
@@ -18,7 +17,7 @@ import { UpdatePackageDto } from './dto/update-package.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Package } from './entities/package.entity';
 
-@ApiTags('packages')
+@ApiTags('Packages')
 @Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
@@ -39,26 +38,21 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a package by ID' })
-  @ApiResponse({ status: 200, description: 'Return the package.' })
-  @ApiResponse({ status: 404, description: 'Package not found.' })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string): Promise<Package> {
-    try {
-      const packageFound = await this.packagesService.findOne(+id);
+  @Get('active')
+  @ApiOperation({ summary: 'Get all packages with status true' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all packages with status true.',
+  })
+  @ApiResponse({ status: 404, description: 'No packages found.' })
+  async findAllActive(): Promise<Package[]> {
+    const packagesFound = await this.packagesService.findAllActive();
 
-      if (!packageFound) {
-        throw new HttpException('Package not found', HttpStatus.NOT_FOUND);
-      }
-
-      return packageFound;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!packagesFound || packagesFound.length === 0) {
+      throw new HttpException('No packages found', HttpStatus.NOT_FOUND);
     }
+
+    return packagesFound;
   }
 
   @Roles('ADMIN')
@@ -91,7 +85,7 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update a package by ID' })
   @ApiResponse({
     status: 200,
@@ -123,7 +117,7 @@ export class PackagesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Patch(':id/change-status')
   @ApiOperation({ summary: 'Change the status of a package by ID' })
   @ApiResponse({
     status: 200,

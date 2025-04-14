@@ -4,26 +4,24 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
   Param,
   Body,
   HttpException,
   HttpStatus,
-  Put,
-  Patch,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PackageServiceService } from './package-service.service';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
-import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 
-@ApiTags('package-services')
+@ApiTags('Package-Service')
 @Controller('package-services')
 export class PackageServiceController {
   constructor(private readonly packageServiceService: PackageServiceService) {}
 
   @Roles('ADMIN')
-  @Get('/package/:idPackage')
+  @Get(':idPackage')
   @ApiOperation({ summary: 'Get all package-service relationships' })
   @ApiResponse({
     status: 200,
@@ -48,38 +46,6 @@ export class PackageServiceController {
   }
 
   @Roles('ADMIN')
-  @Get(':id')
-  @ApiOperation({ summary: 'Get a package-service relationship by ID' })
-  @ApiResponse({
-    status: 200,
-    description: 'Return the package-service relationship.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Package-service relationship not found.',
-  })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string) {
-    try {
-      const packageService = await this.packageServiceService.findOne(+id);
-
-      if (!packageService) {
-        throw new HttpException(
-          'Package-service relationship not found',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return packageService;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Create a new package-service relationship' })
   @ApiResponse({
@@ -88,7 +54,7 @@ export class PackageServiceController {
       'The package-service relationship has been successfully created.',
   })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  async create(@Body() createPackageServiceDto: CreatePackageServiceDto) {
+  async create(@Body() createPackageServiceDto: CreatePackageServiceDto[]) {
     try {
       const createdPackageService = await this.packageServiceService.create(
         createPackageServiceDto,
@@ -111,47 +77,10 @@ export class PackageServiceController {
   }
 
   @Roles('ADMIN')
-  @Put(':id')
-  @ApiOperation({ summary: 'Update a package-service relationship by ID' })
-  @ApiResponse({
-    status: 200,
-    description:
-      'The package-service relationship has been successfully updated.',
+  @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete of a package-service relationship',
   })
-  @ApiResponse({
-    status: 404,
-    description: 'Package-service relationship not found.',
-  })
-  @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  async update(
-    @Param('id') id: string,
-    @Body() updatePackageServiceDto: UpdatePackageServiceDto,
-  ) {
-    try {
-      const updatedPackageService = await this.packageServiceService.update(
-        +id,
-        updatePackageServiceDto,
-      );
-
-      if (!updatedPackageService) {
-        throw new HttpException(
-          'Package-service relationship not found',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return updatedPackageService;
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Invalid input data',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
-
-  @Roles('ADMIN')
-  @Patch(':id')
-  @ApiOperation({ summary: 'Delete a package-service relationship by ID' })
   @ApiResponse({
     status: 200,
     description:
@@ -161,25 +90,16 @@ export class PackageServiceController {
     status: 404,
     description: 'Package-service relationship not found.',
   })
-  @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async changeStatus(@Param('id') id: string) {
-    try {
-      const deletedPackageService =
-        await this.packageServiceService.changeStatus(+id);
+    const packageService = await this.packageServiceService.delete(+id);
 
-      if (!deletedPackageService) {
-        throw new HttpException(
-          'Package-service relationship not found',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return deletedPackageService;
-    } catch (error) {
+    if (!packageService) {
       throw new HttpException(
-        error.message || 'Invalid ID format',
-        HttpStatus.BAD_REQUEST,
+        'Package-service relationship not found',
+        HttpStatus.NOT_FOUND,
       );
     }
+
+    return packageService;
   }
 }
