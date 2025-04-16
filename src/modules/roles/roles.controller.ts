@@ -7,7 +7,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -58,10 +57,10 @@ export class RolesController {
   }
 
   @Roles('ADMIN')
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Patch(':id/change-status')
+  async changeStatus(@Param('id') id: string) {
     try {
-      return await this.rolesService.remove(+id);
+      return await this.rolesService.changeStatus(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

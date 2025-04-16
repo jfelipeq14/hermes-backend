@@ -79,10 +79,26 @@ export class RolesService {
     });
   }
 
-  async remove(id: number) {
-    return await this.prisma.roles.delete({
+  async changeStatus(id: number) {
+    const role = await this.prisma.roles.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!role) {
+      throw new Error('Role not found');
+    }
+
+    return await this.prisma.roles.update({
       where: {
         id: id,
+      },
+      data: {
+        status: !role.status,
+      },
+      include: {
+        rolePrivileges: true,
       },
     });
   }

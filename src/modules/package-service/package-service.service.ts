@@ -20,10 +20,19 @@ export class PackageServiceService {
     });
   }
 
-  async delete(id: number) {
-    return this.prisma.detailPackagesServices.delete({
-      where: {
-        id,
+  async changeStatus(id: number) {
+    const packageService = await this.prisma.detailPackagesServices.findUnique({
+      where: { id },
+    });
+
+    if (!packageService) {
+      throw new Error('Package service not found');
+    }
+
+    return await this.prisma.detailPackagesServices.update({
+      where: { id },
+      data: {
+        status: !packageService.status,
       },
     });
   }

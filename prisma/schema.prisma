@@ -158,6 +158,8 @@ model detailPackagesServices {
 
   packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
   services services @relation(fields: [idService], references: [id], onDelete: Cascade)
+
+  @@index([idPackage, idService])
 }
 
 model dates {

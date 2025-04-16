@@ -4,7 +4,7 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
+  Patch,
   Param,
   Body,
   HttpException,
@@ -77,7 +77,7 @@ export class PackageServiceController {
   }
 
   @Roles('ADMIN')
-  @Delete(':id')
+  @Patch(':id')
   @ApiOperation({
     summary: 'Delete of a package-service relationship',
   })
@@ -91,7 +91,7 @@ export class PackageServiceController {
     description: 'Package-service relationship not found.',
   })
   async changeStatus(@Param('id') id: string) {
-    const packageService = await this.packageServiceService.delete(+id);
+    const packageService = await this.packageServiceService.changeStatus(+id);
 
     if (!packageService) {
       throw new HttpException(
