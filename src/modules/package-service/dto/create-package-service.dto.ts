@@ -41,5 +41,5 @@ export class CreatePackageServiceDto {
   })
   @IsInt()
   @IsNotEmpty()
-  price: number; // Usamos string para manejar el formato decimal correctamente
+  price: number;
 }

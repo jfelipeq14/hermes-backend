@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePackageServiceDto } from './dto/create-package-service.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
-import { UpdatePackageServiceDto } from './dto/update-package-service.dto';
 
 @Injectable()
 export class PackageServiceService {
@@ -21,25 +20,19 @@ export class PackageServiceService {
     });
   }
 
-  async update(updatePackageServiceDto: UpdatePackageServiceDto[]) {
-    const updatedPackageService = await Promise.all(
-      updatePackageServiceDto.map(async (packageService) => {
-        return this.prisma.detailPackagesServices.update({
-          where: {
-            id: packageService.id,
-          },
-          data: packageService,
-        });
-      }),
-    );
+  async changeStatus(id: number) {
+    const packageService = await this.prisma.detailPackagesServices.findUnique({
+      where: { id },
+    });
 
-    return updatedPackageService;
-  }
+    if (!packageService) {
+      throw new Error('Package service not found');
+    }
 
-  async delete(id: number) {
-    return this.prisma.detailPackagesServices.delete({
-      where: {
-        id,
+    return await this.prisma.detailPackagesServices.update({
+      where: { id },
+      data: {
+        status: !packageService.status,
       },
     });
   }
