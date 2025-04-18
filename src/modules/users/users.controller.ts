@@ -28,9 +28,18 @@ export class UsersController {
   @Get()
   async findAll() {
     const users_ = await this.usersService.findAll();
-    if (!users_)
+    if (!users_ || users_.length === 0)
       throw new HttpException('No existen usuarios', HttpStatus.NOT_FOUND);
     return users_;
+  }
+
+  @Roles('ADMIN')
+  @Get('clients')
+  async findAllClients() {
+    const clients_ = await this.usersService.findAllClients();
+    if (!clients_ || clients_.length === 0)
+      throw new HttpException('No existen clientes', HttpStatus.NOT_FOUND);
+    return clients_;
   }
 
   @Roles('ADMIN')

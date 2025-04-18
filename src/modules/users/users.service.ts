@@ -12,6 +12,14 @@ export class UsersService {
     return await this.prisma.users.findMany();
   }
 
+  async findAllClients() {
+    return await this.prisma.users.findMany({
+      where: {
+        idRole: 3,
+      },
+    });
+  }
+
   async findOne(id: number) {
     return await this.prisma.users.findUnique({
       where: {
