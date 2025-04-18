@@ -26,24 +26,24 @@ export class ServicesService {
   }
 
   async update(id: number, updateServiceDto: UpdateServiceDto) {
-    const packagesAsociated = await this.prisma.services.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        detailPackagesServices: true,
-      },
-    });
+    // const packagesAsociated = await this.prisma.services.findUnique({
+    //   where: {
+    //     id,
+    //   },
+    //   include: {
+    //     detailPackagesServices: true,
+    //   },
+    // });
 
-    if (!packagesAsociated) {
-      throw new Error('No se encontro el servicio');
-    }
+    // if (!packagesAsociated) {
+    //   throw new Error('No se encontro el servicio');
+    // }
 
-    if (packagesAsociated.detailPackagesServices.length > 0) {
-      throw new Error(
-        'No se puede actualizar un servicio con paquetes asociados',
-      );
-    }
+    // if (packagesAsociated.detailPackagesServices.length > 0) {
+    //   throw new Error(
+    //     'No se puede actualizar un servicio con paquetes asociados',
+    //   );
+    // }
 
     return await this.prisma.services.update({
       where: {
@@ -60,14 +60,17 @@ export class ServicesService {
       },
     });
 
-    if (service)
-      return this.prisma.services.update({
-        where: {
-          id,
-        },
-        data: {
-          status: !service.status,
-        },
-      });
+    if (!service) {
+      throw new Error('No se encontro el servicio');
+    }
+
+    return this.prisma.services.update({
+      where: {
+        id,
+      },
+      data: {
+        status: !service.status,
+      },
+    });
   }
 }

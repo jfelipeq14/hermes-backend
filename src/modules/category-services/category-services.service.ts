@@ -26,24 +26,24 @@ export class CategoryServicesService {
   }
 
   async update(id: number, updateCategoryServiceDto: UpdateCategoryServiceDto) {
-    const serviceAsociated = await this.prisma.categoryServices.findUnique({
-      where: {
-        id,
-      },
-      include: {
-        services: true,
-      },
-    });
+    // const serviceAsociated = await this.prisma.categoryServices.findUnique({
+    //   where: {
+    //     id,
+    //   },
+    //   include: {
+    //     services: true,
+    //   },
+    // });
 
-    if (!serviceAsociated) {
-      throw new Error('No se encontro la categoria');
-    }
+    // if (!serviceAsociated) {
+    //   throw new Error('No se encontro la categoria');
+    // }
 
-    if (serviceAsociated.services.length > 0) {
-      throw new Error(
-        'No se puede actualizar una categoria con servicios asociados',
-      );
-    }
+    // if (serviceAsociated.services.length > 0) {
+    //   throw new Error(
+    //     'No se puede actualizar una categoria con servicios asociados',
+    //   );
+    // }
 
     return await this.prisma.categoryServices.update({
       where: {
