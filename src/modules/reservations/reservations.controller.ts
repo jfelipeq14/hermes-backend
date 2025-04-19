@@ -39,7 +39,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN')
+  @Roles('CLIENT')
   @Get('user/:idUser')
   async findAllByUser(@Param('idUser') idUser: string) {
     try {
