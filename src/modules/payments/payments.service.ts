@@ -50,4 +50,18 @@ export class PaymentsService {
       data: updatePaymentDto,
     });
   }
+  async changeStatus(id: number, status: string) {
+    const existingPayment = await this.prisma.payments.findUnique({
+      where: { id },
+    });
+
+    if (!existingPayment) {
+      throw new HttpException('Payment not found', HttpStatus.NOT_FOUND);
+    }
+
+    return await this.prisma.payments.update({
+      where: { id },
+      data: { status },
+    });
+  }
 }
