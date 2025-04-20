@@ -30,7 +30,7 @@ export class TravelersController {
     description: 'The traveler has been successfully created.',
   })
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
-  async create(@Body() createTravelerDto: CreateTravelerDto) {
+  async create(@Body() createTravelerDto: CreateTravelerDto[]) {
     try {
       return await this.travelersService.create(createTravelerDto);
     } catch {

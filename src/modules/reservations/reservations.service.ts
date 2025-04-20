@@ -27,11 +27,11 @@ export class ReservationsService {
     });
   }
 
-  // async findByReservation(idReservation: number) {
-  //     return await this.prisma.detailReservationTravelers.findMany({
-  //       where: { idReservation },
-  //     });
-  //   }
+  async findByReservation(idReservation: number) {
+    return await this.prisma.detailReservationTravelers.findMany({
+      where: { idReservation },
+    });
+  }
 
   async create(createReservationDto: CreateReservationDto) {
     const dates = await this.prisma.dates.findUnique({
@@ -45,15 +45,6 @@ export class ReservationsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    if (!dates.packages.price) {
-      throw new HttpException(
-        'Selected package does not have a valid price',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    createReservationDto.price = +dates.packages.price;
 
     return await this.prisma.reservations.create({
       data: createReservationDto,
@@ -72,15 +63,6 @@ export class ReservationsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    if (!dates.packages.price) {
-      throw new HttpException(
-        'Selected package does not have a valid price',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    updateReservationDto.price = +dates.packages.price;
 
     const updatedReservation = await this.prisma.reservations.update({
       where: { id },
