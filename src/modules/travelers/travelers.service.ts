@@ -17,6 +17,12 @@ export class TravelersService {
     return await this.prisma.detailReservationTravelers.findMany();
   }
 
+  async findAllByReservation(idReservation: number) {
+    return await this.prisma.detailReservationTravelers.findMany({
+      where: { idReservation },
+    });
+  }
+
   async findOne(id: number) {
     return await this.prisma.detailReservationTravelers.findUnique({
       where: { id },

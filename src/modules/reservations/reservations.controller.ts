@@ -28,6 +28,20 @@ export class ReservationsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+  @Roles('ADMIN')
+  @Get('reservations-with-payments')
+  async findAllReservationWithPayments() {
+    try {
+      const reservation =
+        await this.reservationsService.findAllReservationWithPayments();
+      if (!reservation || reservation.length === 0) {
+        throw new HttpException('No reservations found', HttpStatus.NOT_FOUND);
+      }
+      return reservation;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 
   @Roles('ADMIN')
   @Get(':id')
