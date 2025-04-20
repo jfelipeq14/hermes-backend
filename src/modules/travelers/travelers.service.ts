@@ -7,8 +7,8 @@ import { PrismaService } from 'src/config/prisma/prisma.service';
 export class TravelersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createTravelerDto: CreateTravelerDto) {
-    return await this.prisma.detailReservationTravelers.create({
+  async create(createTravelerDto: CreateTravelerDto[]) {
+    return await this.prisma.detailReservationTravelers.createMany({
       data: createTravelerDto,
     });
   }
