@@ -69,4 +69,13 @@ export class PaymentsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+  @Roles('ADMIN')
+  @Patch('changeStatus/:id')
+  async changeStatus(@Param('id') id: string, @Body('status') status: string) {
+    try {
+      return await this.paymentsService.changeStatus(+id, status);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
