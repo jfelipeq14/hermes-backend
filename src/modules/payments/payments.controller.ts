@@ -38,7 +38,7 @@ export class PaymentsController {
   }
 
   @Roles('ADMIN')
-  @Get(':idReservation')
+  @Get('reservation/:idReservation')
   async findAllByReservation(@Param('idReservation') idReservation: string) {
     const payments_ =
       await this.paymentsService.findAllByReservation(+idReservation);

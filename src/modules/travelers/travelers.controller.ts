@@ -47,7 +47,7 @@ export class TravelersController {
   }
 
   @Roles('ADMIN')
-  @Get('reservation/:id')
+  @Get('reservation/:idReservation')
   @ApiOperation({ summary: 'Get all travelers' })
   @ApiResponse({ status: 200, description: 'Return all travelers.' })
   async findAllByReservation(@Param('idReservation') idReservation: string) {
