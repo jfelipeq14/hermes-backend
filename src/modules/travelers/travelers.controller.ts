@@ -47,6 +47,18 @@ export class TravelersController {
   }
 
   @Roles('ADMIN')
+  @Get('reservation/:id')
+  @ApiOperation({ summary: 'Get all travelers' })
+  @ApiResponse({ status: 200, description: 'Return all travelers.' })
+  async findAllByReservation(@Param('idReservation') idReservation: string) {
+    try {
+      return await this.travelersService.findAllByReservation(+idReservation);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a traveler by ID' })
   @ApiResponse({

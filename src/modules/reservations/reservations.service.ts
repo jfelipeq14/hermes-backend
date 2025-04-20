@@ -33,6 +33,14 @@ export class ReservationsService {
     });
   }
 
+  async findAllReservationWithPayments() {
+    return await this.prisma.reservations.findMany({
+      include: {
+        payments: true,
+      },
+    });
+  }
+
   async create(createReservationDto: CreateReservationDto) {
     const dates = await this.prisma.dates.findUnique({
       where: { id: createReservationDto.idDate },
