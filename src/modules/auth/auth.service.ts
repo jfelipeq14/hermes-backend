@@ -5,6 +5,8 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignUpDto } from './dto/sign-up';
 import { JwtService } from '@nestjs/jwt';
 import { LogInDto } from './dto/log-in';
+import { ResetPasswordDto } from './dto/request-reset-password.dto';
+import { SubmitEmailTokenDto } from './dto/submit-email-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -57,5 +59,55 @@ export class AuthService {
     const accessToken = await this.jwtService.signAsync(payload);
 
     return { accessToken };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const userFound = await this.prisma.users.findUnique({
+      where: {
+        resetPasswordToken: resetPasswordDto.resetPasswordToken,
+      },
+    });
+
+    if (!userFound) throw new BadRequestException('Invalid reset token');
+
+    const hashedPassword = await encrypt(resetPasswordDto.newPassword);
+
+    await this.prisma.users.update({
+      where: {
+        resetPasswordToken: resetPasswordDto.resetPasswordToken,
+      },
+      data: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+      },
+    });
+
+    return { message: 'Password reset successfully' };
+  }
+
+  async submitEmailToken(submitEmailTokenDto: SubmitEmailTokenDto) {
+    const user = await this.prisma.users.findUnique({
+      where: {
+        email: submitEmailTokenDto.email,
+      },
+    });
+    
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+    
+    const resetToken = await encrypt(submitEmailTokenDto.email + Date.now().toString());
+    
+    await this.prisma.users.update({
+      where: { email: submitEmailTokenDto.email },
+      data: {
+        resetPasswordToken: resetToken,
+      },
+    });
+
+    return { 
+      message: 'Reset password token has been generated',
+      token: resetToken
+    };
   }
 }

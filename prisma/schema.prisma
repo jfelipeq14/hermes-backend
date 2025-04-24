@@ -75,23 +75,24 @@ model rolePrivileges {
 }
 
 model users {
-  id             Int       @id @unique @default(autoincrement())
-  idRole         Int
-  typeDocument   String    @db.VarChar(5)
-  document       String    @unique @db.VarChar(60)
-  name           String    @db.VarChar(60)
-  surName        String    @db.VarChar(60)
-  dateBirth      DateTime? @db.Date
-  email          String    @unique @db.VarChar(255)
-  password       String
-  idMunicipality Int
-  address        String?   @db.VarChar(40)
-  phone          String    @unique @db.VarChar(15)
-  emergency      String?   @unique @db.VarChar(15)
-  sex            String?   @db.Char(1)
-  bloodType      String?   @db.VarChar(3)
-  eps            String?   @db.VarChar(60)
-  status         Boolean   @default(true)
+  id                 Int       @id @unique @default(autoincrement())
+  idRole             Int
+  typeDocument       String    @db.VarChar(5)
+  document           String    @unique @db.VarChar(60)
+  name               String    @db.VarChar(60)
+  surName            String    @db.VarChar(60)
+  dateBirth          DateTime? @db.Date
+  email              String    @unique @db.VarChar(255)
+  password           String
+  idMunicipality     Int
+  address            String?   @db.VarChar(40)
+  phone              String    @unique @db.VarChar(15)
+  emergency          String?   @unique @db.VarChar(15)
+  sex                String?   @db.Char(1)
+  bloodType          String?   @db.VarChar(3)
+  eps                String?   @db.VarChar(60)
+  status             Boolean   @default(true)
+  resetPasswordToken String?   @unique @db.VarChar(255)
 
   role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)

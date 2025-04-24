@@ -76,16 +76,4 @@ export class UsersService {
 
     return updatedUser;
   }
-
-  // remove(id: number) {
-  //   try {
-  //     return this.prisma.users.delete({
-  //       where: {
-  //         id: id,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 }
