@@ -3,6 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
+import { encrypt } from 'src/providers/bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -29,17 +31,38 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const newPassword = await bcrypt.hash(createUserDto.password, 10);
-    createUserDto.password = newPassword;
+    try {
+      const newPassword = await encrypt(createUserDto.password);
 
-    return this.prisma.users.create({
-      data: createUserDto,
-    });
+      // Generate activation token
+      const activationToken = crypto.randomBytes(32).toString('hex');
+
+      const user = await this.prisma.users.create({
+        data: {
+          ...createUserDto,
+          password: newPassword,
+          activate: false,
+          activationToken,
+        },
+      });
+
+      return {
+        ...user,
+        message: 'User created successfully. Please activate your account.',
+        activationToken, // Return token so it can be used for activation
+      };
+    } catch (error) {
+      throw new HttpException(
+        'Error creating user. Please try again later.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    if (!updateUserDto)
-      throw new HttpException('No se pudo actualizar', HttpStatus.FOUND);
+    if (!updateUserDto) {
+      throw new HttpException('No se pudo actualizar', HttpStatus.BAD_REQUEST);
+    }
 
     if (updateUserDto.password) {
       const newPassword = await bcrypt.hash(updateUserDto.password, 10);
@@ -75,5 +98,46 @@ export class UsersService {
     });
 
     return updatedUser;
+  }
+
+  async generateActivationToken(userId: number) {
+    try {
+      const token = crypto.randomBytes(32).toString('hex');
+      await this.prisma.users.update({
+        where: { id: userId },
+        data: { activationToken: token },
+      });
+      return token;
+    } catch (error) {
+      throw new HttpException(
+        'Error generating activation token',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async activateUser(userId: number, token: string) {
+    const user = await this.prisma.users.findFirst({
+      where: {
+        id: userId,
+        activationToken: token,
+        activate: false,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException(
+        'Invalid activation token or account already activated',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return await this.prisma.users.update({
+      where: { id: userId },
+      data: {
+        activate: true,
+        activationToken: null,
+      },
+    });
   }
 }

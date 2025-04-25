@@ -16,5 +16,8 @@ export class User {
   bloodType: string;
   eps: string;
   status: boolean;
+  //auth
+  activate: boolean;
+  activationToken: string;
   resetPasswordToken: string;
 }

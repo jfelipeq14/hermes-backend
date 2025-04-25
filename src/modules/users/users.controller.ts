@@ -11,6 +11,8 @@ import {
   HttpException,
   HttpStatus,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -54,6 +56,7 @@ export class UsersController {
 
   @Roles('ADMIN')
   @Post()
+  @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       return await this.usersService.create(createUserDto);
