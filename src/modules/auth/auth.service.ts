@@ -91,13 +91,15 @@ export class AuthService {
         email: submitEmailTokenDto.email,
       },
     });
-    
+
     if (!user) {
       throw new BadRequestException('User not found');
     }
-    
-    const resetToken = await encrypt(submitEmailTokenDto.email + Date.now().toString());
-    
+
+    const resetToken = await encrypt(
+      submitEmailTokenDto.email + Date.now().toString(),
+    );
+
     await this.prisma.users.update({
       where: { email: submitEmailTokenDto.email },
       data: {
@@ -105,9 +107,9 @@ export class AuthService {
       },
     });
 
-    return { 
+    return {
       message: 'Reset password token has been generated',
-      token: resetToken
+      token: resetToken,
     };
   }
 }

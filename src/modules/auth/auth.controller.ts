@@ -43,7 +43,6 @@ export class AuthController {
     }
   }
 
-
   @IsPublic()
   @Patch('reset-password')
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
@@ -53,7 +52,6 @@ export class AuthController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-
 
   @IsPublic()
   @Post('submit-token')
