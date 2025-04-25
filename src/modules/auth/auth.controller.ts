@@ -5,12 +5,15 @@ import {
   Controller,
   HttpException,
   HttpStatus,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up';
 import { LogInDto } from './dto/log-in';
 import { IsPublic } from './decorators/public.decorator';
+import { ResetPasswordDto } from './dto/request-reset-password.dto';
+import { SubmitEmailTokenDto } from './dto/submit-email-token.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -38,5 +41,23 @@ export class AuthController {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+
+  @IsPublic()
+  @Patch('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    try {
+      return await this.authService.resetPassword(resetPasswordDto);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
+  @IsPublic()
+  @Post('submit-token')
+  async submitEmailToken(@Body() submitEmailTokenDto: SubmitEmailTokenDto) {
+    return this.authService.submitEmailToken(submitEmailTokenDto);
   }
 }
