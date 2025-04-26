@@ -1,12 +1,4 @@
-import {
-  IsDateString,
-  IsNotEmpty,
-  Matches,
-  IsInt,
-  Min,
-  Max,
-} from 'class-validator';
-import { IsDateRegex } from 'src/utils/regex';
+import { IsDateString, IsNotEmpty, IsInt, Min, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateDateDto {
@@ -36,43 +28,39 @@ export class CreateDateDto {
     type: 'string',
     required: true,
     description: 'The date of the start of the event',
-    example: '2021-12-31',
+    example: '2021-12-31T00:00:00.000Z',
   })
   @IsDateString()
   @IsNotEmpty()
-  @Matches(IsDateRegex)
-  start: Date;
+  start: string;
 
   @ApiProperty({
     type: 'string',
     required: true,
     description: 'The date of the end of the event',
-    example: '2021-12-31',
+    example: '2021-12-31T00:00:00.000Z',
   })
   @IsDateString()
   @IsNotEmpty()
-  @Matches(IsDateRegex)
-  end: Date;
+  end: string;
 
   @ApiProperty({
     type: 'string',
     required: true,
     description: 'The start registration date',
-    example: '2021-12-31',
+    example: '2021-12-31T00:00:00.000Z',
   })
   @IsDateString()
   @IsNotEmpty()
-  @Matches(IsDateRegex)
-  startRegistration: Date;
+  startRegistration: string;
 
   @ApiProperty({
     type: 'string',
     required: true,
     description: 'The end registration date',
-    example: '2021-12-31',
+    example: '2021-12-31T00:00:00.000Z',
   })
   @IsDateString()
   @IsNotEmpty()
-  @Matches(IsDateRegex)
-  endRegistration: Date;
+  endRegistration: string;
 }

@@ -63,6 +63,7 @@ export class DatesController {
   @ApiResponse({ status: 400, description: 'Invalid input data.' })
   async create(@Body() createDateDto: CreateDateDto): Promise<Date> {
     try {
+      // No need to transform dates as they are already validated in DTO
       const createdDate = await this.datesService.create(createDateDto);
 
       if (!createdDate) {
@@ -95,6 +96,7 @@ export class DatesController {
     @Body() updateDateDto: UpdateDateDto,
   ): Promise<Date> {
     try {
+      // No need to transform dates as they are already validated in DTO
       const updatedDate = await this.datesService.update(+id, updateDateDto);
 
       if (!updatedDate) {
