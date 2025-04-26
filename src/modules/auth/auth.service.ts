@@ -8,7 +8,11 @@ import { LogInDto } from './dto/log-in';
 import { ResetPasswordDto } from './dto/request-reset-password.dto';
 import { ActivateUserDto } from './dto/activate-user.dto';
 import { SubmitEmailTokenDto } from './dto/submit-email-token.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import * as crypto from 'crypto';
+import { User } from '../users/entities/user.entity';
+
+
 
 @Injectable()
 export class AuthService {
@@ -88,7 +92,7 @@ export class AuthService {
   }
 
   // Reset password
-
+  
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
     const userFound = await this.prisma.users.findUnique({
       where: {
@@ -200,5 +204,40 @@ export class AuthService {
     });
 
     return { message: 'Account activated successfully' };
+  }
+
+  // Cambiar contraseña
+  async changePassword(changePasswordDto: ChangePasswordDto, user: User) {
+    const { oldPassword, newPassword } = changePasswordDto;
+
+    // Primero obtener el usuario completo de la base de datos para tener acceso a la contraseña
+    const userFromDb = await this.prisma.users.findUnique({
+      where: { id: user.id },
+    });
+
+    if (!userFromDb) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Verificar si la contraseña actual es correcta
+    const isPasswordMatch = await compare(oldPassword, userFromDb.password);
+
+    if (!isPasswordMatch) {
+      throw new BadRequestException('Invalid current password');
+    }
+
+    // Encriptar la nueva contraseña
+    const hashedNewPassword = await encrypt(newPassword);
+
+    // Actualizar la contraseña en la base de datos
+    await this.prisma.users.update({
+      where: { id: user.id },
+      data: {
+        password: hashedNewPassword,
+        passwordUpdatedAt: new Date(), // Actualizar la fecha de última actualización de la contraseña
+      },
+    });
+
+    return { message: 'Password changed successfully' };
   }
 }
