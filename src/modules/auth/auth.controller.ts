@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   Body,
   Controller,
@@ -13,19 +11,25 @@ import { SignUpDto } from './dto/sign-up';
 import { LogInDto } from './dto/log-in';
 import { IsPublic } from './decorators/public.decorator';
 import { ResetPasswordDto } from './dto/request-reset-password.dto';
+import { ActivateUserDto } from './dto/activate-user.dto';
 import { SubmitEmailTokenDto } from './dto/submit-email-token.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @IsPublic()
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
     try {
       return await this.authService.logIn(logInDto);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    } catch (error: unknown) {
+      // Tipamos el error como unknown y luego verificamos su estructura
+      const errorMessage =
+        error instanceof HttpException
+          ? error.message
+          : 'Invalid email or password';
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -34,12 +38,12 @@ export class AuthController {
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
       const user = await this.authService.signUp(signUpDto);
-      if (!user) {
-        throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
-      }
       return user;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    } catch (error: unknown) {
+      // Convertimos el mensaje de error a string de forma segura
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -48,8 +52,10 @@ export class AuthController {
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     try {
       return await this.authService.resetPassword(resetPasswordDto);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -57,5 +63,17 @@ export class AuthController {
   @Post('submit-token')
   async submitEmailToken(@Body() submitEmailTokenDto: SubmitEmailTokenDto) {
     return this.authService.submitEmailToken(submitEmailTokenDto);
+  }
+
+  @IsPublic()
+  @Post('activate')
+  async activate(@Body() activateUserDto: ActivateUserDto) {
+    try {
+      return await this.authService.activateUser(activateUserDto);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    }
   }
 }

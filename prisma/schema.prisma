@@ -92,7 +92,10 @@ model users {
   bloodType          String?   @db.VarChar(3)
   eps                String?   @db.VarChar(60)
   status             Boolean   @default(true)
+  activate           Boolean   @default(false)
+  activationToken    String?   @unique @db.VarChar(255)
   resetPasswordToken String?   @unique @db.VarChar(255)
+  passwordUpdatedAt  DateTime  @default(now()) // Fecha de última actualización de la contraseña
 
   role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
   municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
