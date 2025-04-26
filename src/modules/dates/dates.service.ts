@@ -33,42 +33,32 @@ export class DatesService {
   }
 
   async update(id: number, updateDateDto: UpdateDateDto) {
-    if (updateDateDto) {
-      return await this.prisma.dates.update({
-        where: {
-          id,
-        },
-        data: {
-          start: new Date(updateDateDto.start || new Date()),
-          end: new Date(updateDateDto.end || new Date()),
-          startRegistration: new Date(
-            updateDateDto.startRegistration || new Date(),
-          ),
-          endRegistration: new Date(
-            updateDateDto.endRegistration || new Date(),
-          ),
-          idPackage: updateDateDto.idPackage,
-          amount: updateDateDto.amount,
-        },
-      });
-    }
+    return await this.prisma.dates.update({
+      where: { id },
+      data: {
+        start: updateDateDto.start ? new Date(updateDateDto.start) : undefined,
+        end: updateDateDto.end ? new Date(updateDateDto.end) : undefined,
+        startRegistration: updateDateDto.startRegistration
+          ? new Date(updateDateDto.startRegistration)
+          : undefined,
+        endRegistration: updateDateDto.endRegistration
+          ? new Date(updateDateDto.endRegistration)
+          : undefined,
+        idPackage: updateDateDto.idPackage,
+        amount: updateDateDto.amount,
+      },
+    });
   }
 
   async changeStatus(id: number) {
     const datesData = await this.prisma.dates.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
 
     if (datesData) {
       return await this.prisma.dates.update({
-        where: {
-          id: id,
-        },
-        data: {
-          status: !datesData.status,
-        },
+        where: { id },
+        data: { status: !datesData.status },
       });
     }
   }
