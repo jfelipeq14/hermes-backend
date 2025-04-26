@@ -49,9 +49,9 @@ export class UsersService {
       return {
         ...user,
         message: 'User created successfully. Please activate your account.',
-        activationToken, // Return token so it can be used for activation
+        activationToken,
       };
-    } catch (error) {
+    } catch {
       throw new HttpException(
         'Error creating user. Please try again later.',
         HttpStatus.BAD_REQUEST,
@@ -108,7 +108,7 @@ export class UsersService {
         data: { activationToken: token },
       });
       return token;
-    } catch (error) {
+    } catch {
       throw new HttpException(
         'Error generating activation token',
         HttpStatus.INTERNAL_SERVER_ERROR,

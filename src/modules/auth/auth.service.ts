@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PrismaService } from 'src/config/prisma/prisma.service';
 import { compare, encrypt } from 'src/providers/bcrypt';
 import { BadRequestException, Injectable } from '@nestjs/common';
@@ -38,7 +39,7 @@ export class AuthService {
         },
       });
 
-      const { password: _, ...userWithoutPassword } = user;
+      const { password, ...userWithoutPassword } = user;
 
       return {
         ...userWithoutPassword,
@@ -74,7 +75,7 @@ export class AuthService {
 
     if (!isPasswordMatch) throw new BadRequestException('Invalid credentials');
 
-    const { password: _, ...userWithoutPassword } = userFound;
+    const { password, ...userWithoutPassword } = userFound;
 
     const payload = {
       ...userWithoutPassword,
