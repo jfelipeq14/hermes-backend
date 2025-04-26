@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up';
@@ -13,6 +14,10 @@ import { IsPublic } from './decorators/public.decorator';
 import { ResetPasswordDto } from './dto/request-reset-password.dto';
 import { ActivateUserDto } from './dto/activate-user.dto';
 import { SubmitEmailTokenDto } from './dto/submit-email-token.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { GetUser } from './decorators/get-user.decorator';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from '../users/entities/user.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -70,6 +75,22 @@ export class AuthController {
   async activate(@Body() activateUserDto: ActivateUserDto) {
     try {
       return await this.authService.activateUser(activateUserDto);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @IsPublic()
+  @Patch('change-password')
+  @UseGuards(AuthGuard('jwt'))
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @GetUser() user: User,
+  ) {
+    try {
+      return await this.authService.changePassword(changePasswordDto, user);
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : 'An unknown error occurred';
