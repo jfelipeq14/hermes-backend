@@ -221,8 +221,8 @@ async function main() {
         idRole: 1, // Administrator role
         typeDocument: 'CC',
         document: '1000000000',
-        name: 'Juan',
-        surName: 'Quintero',
+        name: 'Felipe',
+        surName: 'Gutierrez',
         dateBirth: new Date('1990-01-01'),
         email: 'admin@hermes.com',
         password:

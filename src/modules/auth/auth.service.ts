@@ -12,8 +12,6 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import * as crypto from 'crypto';
 import { User } from '../users/entities/user.entity';
 
-
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -92,7 +90,7 @@ export class AuthService {
   }
 
   // Reset password
-  
+
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
     const userFound = await this.prisma.users.findUnique({
       where: {
