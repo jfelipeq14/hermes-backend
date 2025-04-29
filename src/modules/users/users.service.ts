@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,23 +12,34 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.users.findMany();
+    const users = await this.prisma.users.findMany();
+    return users.map(
+      ({ password, ...userWithoutPassword }) => userWithoutPassword,
+    );
   }
 
   async findAllClients() {
-    return await this.prisma.users.findMany({
+    const clients = await this.prisma.users.findMany({
       where: {
         idRole: 3,
       },
     });
+    return clients.map(
+      ({ password, ...clientWithoutPassword }) => clientWithoutPassword,
+    );
   }
 
   async findOne(id: number) {
-    return await this.prisma.users.findUnique({
+    const user = await this.prisma.users.findUnique({
       where: {
         id: id,
       },
     });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -69,12 +81,14 @@ export class UsersService {
       updateUserDto.password = newPassword;
     }
 
-    return await this.prisma.users.update({
+    const user = await this.prisma.users.update({
       where: {
         id: id,
       },
       data: updateUserDto,
     });
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
   async changeStatus(id: number) {
@@ -96,8 +110,8 @@ export class UsersService {
         status: !user.status,
       },
     });
-
-    return updatedUser;
+    const { password, ...userWithoutPassword } = updatedUser;
+    return userWithoutPassword;
   }
 
   async generateActivationToken(userId: number) {
@@ -132,12 +146,14 @@ export class UsersService {
       );
     }
 
-    return await this.prisma.users.update({
+    const updatedUser = await this.prisma.users.update({
       where: { id: userId },
       data: {
         activate: true,
         activationToken: null,
       },
     });
+    const { password, ...userWithoutPassword } = updatedUser;
+    return userWithoutPassword;
   }
 }

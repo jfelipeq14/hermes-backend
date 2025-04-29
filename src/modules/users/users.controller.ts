@@ -45,7 +45,7 @@ export class UsersController {
     return clients_;
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'GUIDE', 'CLIENT')
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user_ = await this.usersService.findOne(+id);
@@ -65,7 +65,7 @@ export class UsersController {
     }
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'GUIDE', 'CLIENT')
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     try {

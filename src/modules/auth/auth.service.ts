@@ -236,6 +236,7 @@ export class AuthService {
       },
     });
 
-    return { message: 'Password changed successfully' };
+    const { password, ...userWithoutPassword } = userFromDb;
+    return userWithoutPassword;
   }
 }
