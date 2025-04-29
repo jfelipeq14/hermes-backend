@@ -43,7 +43,7 @@ async function bootstrap() {
 
 bootstrap()
   .then(() => {
-    console.log('Ok');
+    console.log(`Running: http://localhost:${process.env.PORT ?? 3000}`);
   })
   .catch(() => {
     console.log('Error');
