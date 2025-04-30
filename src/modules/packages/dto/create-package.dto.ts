@@ -1,6 +1,46 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString, MaxLength, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+export class CreatePackageServiceDto {
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'ID of the service',
+    example: 1,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  idService: number;
 
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'Quantity of the service',
+    example: 2,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1)
+  quantity: number;
+
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    description: 'Price of the service',
+    example: 43000,
+  })
+  @IsInt()
+  @IsNotEmpty()
+  price: number;
+}
 export class CreatePackageDto {
   @ApiProperty({
     type: 'string',
@@ -83,4 +123,26 @@ export class CreatePackageDto {
   })
   @IsString()
   image: string;
+
+  @ApiProperty({
+    type: [CreatePackageServiceDto],
+    required: true,
+    description: 'List of services included in the package',
+    example: [
+      {
+        idService: 1,
+        quantity: 1,
+        price: 25000,
+      },
+      {
+        idService: 2,
+        quantity: 1,
+        price: 8000,
+      },
+    ],
+  })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePackageServiceDto)
+  detailPackagesServices: CreatePackageServiceDto[];
 }

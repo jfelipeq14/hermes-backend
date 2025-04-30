@@ -24,15 +24,81 @@ export class PackagesService {
   }
 
   async create(createPackageDto: CreatePackageDto) {
+    const { detailPackagesServices, ...packageData } = createPackageDto;
+
+    // Validate foreign keys
+    const activityExists = await this.prisma.activities.findUnique({
+      where: { id: packageData.idActivity },
+    });
+    if (!activityExists) {
+      throw new Error('Invalid idActivity: Activity does not exist');
+    }
+
+    const municipalityExists = await this.prisma.municipalities.findUnique({
+      where: { id: packageData.idMunicipality },
+    });
+    if (!municipalityExists) {
+      throw new Error('Invalid idMunicipality: Municipality does not exist');
+    }
+
+    for (const service of detailPackagesServices) {
+      const serviceExists = await this.prisma.services.findUnique({
+        where: { id: service.idService },
+      });
+      if (!serviceExists) {
+        throw new Error(
+          `Invalid idService: Service with id ${service.idService} does not exist`,
+        );
+      }
+    }
+
+    // Proceed with package creation
     return await this.prisma.packages.create({
-      data: createPackageDto,
+      data: {
+        ...packageData,
+        detailPackagesServices: {
+          create: detailPackagesServices,
+        },
+      },
+      include: {
+        detailPackagesServices: true,
+      },
     });
   }
 
   async update(id: number, updatePackageDto: UpdatePackageDto) {
-    return await this.prisma.packages.update({
-      where: { id },
-      data: updatePackageDto,
+    const { detailPackagesServices, ...packageData } = updatePackageDto;
+
+    return this.prisma.$transaction(async (prisma) => {
+      if (detailPackagesServices && detailPackagesServices.length > 0) {
+        // Delete existing related entities
+        await prisma.detailPackagesServices.deleteMany({
+          where: { idPackage: id },
+        });
+
+        // Update package and create new related entities
+        return prisma.packages.update({
+          where: { id },
+          data: {
+            ...packageData,
+            detailPackagesServices: {
+              create: detailPackagesServices,
+            },
+          },
+          include: {
+            detailPackagesServices: true,
+          },
+        });
+      } else {
+        // Update package without modifying related entities
+        return prisma.packages.update({
+          where: { id },
+          data: packageData,
+          include: {
+            detailPackagesServices: true,
+          },
+        });
+      }
     });
   }
 
