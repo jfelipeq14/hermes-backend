@@ -37,6 +37,15 @@ export class UsersController {
   }
 
   @IsPublic()
+  @Get('responsibles')
+  async findAllResponsibles() {
+    const responsibles_ = await this.usersService.findAllExceptClients();
+    if (!responsibles_ || responsibles_.length === 0)
+      throw new HttpException('No existen responsables', HttpStatus.NOT_FOUND);
+    return responsibles_;
+  }
+
+  @IsPublic()
   @Get('clients')
   async findAllClients() {
     const clients_ = await this.usersService.findAllClients();

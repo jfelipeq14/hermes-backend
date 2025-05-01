@@ -18,6 +18,19 @@ export class UsersService {
     );
   }
 
+  async findAllExceptClients() {
+    const users = await this.prisma.users.findMany({
+      where: {
+        NOT: {
+          idRole: 3,
+        },
+      },
+    });
+    return users.map(
+      ({ password, ...userWithoutPassword }) => userWithoutPassword,
+    );
+  }
+
   async findAllClients() {
     const clients = await this.prisma.users.findMany({
       where: {
