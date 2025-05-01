@@ -16,7 +16,6 @@ import { DatesModule } from './modules/dates/dates.module';
 import { MeetingsModule } from './modules/meetings/meetings.module';
 import { ReservationsModule } from './modules/reservations/reservations.module';
 import { PaymentsModule } from './modules/payments/payments.module';
-import { ResponsiblesModule } from './modules/responsibles/responsibles.module';
 import { TravelersModule } from './modules/travelers/travelers.module';
 import { ImagesModule } from './providers/images/images.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
@@ -38,7 +37,6 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     PackagesModule,
     DatesModule,
     MeetingsModule,
-    ResponsiblesModule,
     ReservationsModule,
     TravelersModule,
     PaymentsModule,

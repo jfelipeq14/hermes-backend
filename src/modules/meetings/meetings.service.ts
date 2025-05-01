@@ -42,29 +42,58 @@ export class MeetingsService {
   }
 
   async create(createMeetingDto: CreateMeetingDto) {
-    const { hour, ...rest } = createMeetingDto;
+    const { responsibles, hour, ...meetingData } = createMeetingDto;
 
     // Convert the hour string (HH:mm) to a valid Date object
     const hourAsDate = new Date(`1970-01-01T${hour}:00Z`);
-
     if (isNaN(hourAsDate.getTime())) {
       throw new Error('Invalid hour format. Expected HH:mm.');
     }
 
     return await this.prisma.meetings.create({
       data: {
-        ...rest,
+        ...meetingData,
         hour: hourAsDate,
+        responsibles: {
+          create: responsibles,
+        },
+      },
+      include: {
+        responsibles: true,
       },
     });
   }
 
   async update(id: number, updateMeetingDto: UpdateMeetingDto) {
-    return await this.prisma.meetings.update({
-      where: {
-        id,
-      },
-      data: updateMeetingDto,
+    const { responsibles, ...meetingData } = updateMeetingDto;
+
+    return this.prisma.$transaction(async (prisma) => {
+      if (responsibles && responsibles.length > 0) {
+        await prisma.responsibles.deleteMany({
+          where: { idMeeting: id },
+        });
+
+        return prisma.meetings.update({
+          where: { id },
+          data: {
+            ...meetingData,
+            responsibles: {
+              create: responsibles,
+            },
+          },
+          include: {
+            responsibles: true,
+          },
+        });
+      } else {
+        return prisma.meetings.update({
+          where: { id },
+          data: meetingData,
+          include: {
+            responsibles: true,
+          },
+        });
+      }
     });
   }
 

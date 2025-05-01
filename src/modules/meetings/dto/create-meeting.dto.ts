@@ -1,6 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, Matches, IsString, MaxLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNotEmpty,
+  Matches,
+  IsString,
+  MaxLength,
+  IsInt,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { DESCRIPTION_MAXVALUE } from 'src/utils/values';
+
+export class CreateResponsibleDto {
+  @ApiProperty({ required: true, description: 'Id del usuario responsable' })
+  @IsInt()
+  @IsNotEmpty()
+  idUser: number;
+}
 
 export class CreateMeetingDto {
   @ApiProperty({
@@ -44,4 +60,23 @@ export class CreateMeetingDto {
   @IsNotEmpty()
   @MaxLength(DESCRIPTION_MAXVALUE)
   description: string;
+
+  @ApiProperty({
+    type: [CreateResponsibleDto],
+    required: true,
+    description: 'List of responsible users',
+    example: [
+      {
+        idUser: 1,
+      },
+      {
+        idUser: 2,
+      },
+    ],
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateResponsibleDto)
+  responsibles: CreateResponsibleDto[];
 }
