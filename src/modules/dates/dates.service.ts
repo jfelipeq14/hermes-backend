@@ -34,7 +34,7 @@ export class DatesService {
 
   async update(id: number, updateDateDto: UpdateDateDto) {
     return await this.prisma.dates.update({
-      where: { id },
+      where: { id: +id },
       data: {
         start: updateDateDto.start ? new Date(updateDateDto.start) : undefined,
         end: updateDateDto.end ? new Date(updateDateDto.end) : undefined,

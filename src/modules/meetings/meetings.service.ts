@@ -30,10 +30,10 @@ export class MeetingsService {
     });
   }
 
-  async findOne(id: number) {
-    return await this.prisma.meetings.findUnique({
+  async findByIdDate(idDate: number) {
+    return await this.prisma.meetings.findFirst({
       where: {
-        id,
+        idDate,
       },
       include: {
         responsibles: true,
@@ -47,8 +47,11 @@ export class MeetingsService {
     return await this.prisma.meetings.create({
       data: {
         ...meetingData,
+        hour: new Date(`1970-01-01T${meetingData.hour}:00Z`), // Convert hour to ISO-8601 format
         responsibles: {
-          create: responsibles,
+          create: responsibles.map((responsible) => ({
+            idUser: responsible.idUser,
+          })),
         },
       },
       include: {

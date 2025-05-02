@@ -113,7 +113,7 @@ export class DatesController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
+  @Patch('changeStatus/:id')
   @ApiOperation({ summary: 'Change the status of a date by ID' })
   @ApiResponse({
     status: 200,

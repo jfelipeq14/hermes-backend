@@ -70,14 +70,14 @@ export class MeetingsController {
   }
 
   @Roles('ADMIN')
-  @Get(':id')
+  @Get('date/:id')
   @ApiOperation({ summary: 'Get a meeting by ID' })
   @ApiResponse({ status: 200, description: 'Return the meeting.' })
   @ApiResponse({ status: 404, description: 'Meeting not found.' })
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
-  async findOne(@Param('id') id: string): Promise<Meeting> {
+  async findByIdDate(@Param('id') id: string): Promise<Meeting> {
     try {
-      const meeting = await this.meetingsService.findOne(+id);
+      const meeting = await this.meetingsService.findByIdDate(+id);
 
       if (!meeting) {
         throw new HttpException('Meeting not found', HttpStatus.NOT_FOUND);
@@ -104,6 +104,7 @@ export class MeetingsController {
     try {
       const createdMeeting =
         await this.meetingsService.create(createMeetingDto);
+
       if (!createdMeeting) {
         throw new HttpException(
           'Failed to create the meeting',
@@ -153,8 +154,8 @@ export class MeetingsController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
-  @ApiOperation({ summary: 'Delete a meeting by ID' })
+  @Patch('changeStatus/:id')
+  @ApiOperation({ summary: 'Change status a meeting by ID' })
   @ApiResponse({
     status: 200,
     description: 'The meeting has been successfully deleted.',
@@ -163,13 +164,13 @@ export class MeetingsController {
   @ApiResponse({ status: 400, description: 'Invalid ID format.' })
   async changeStatus(@Param('id') id: string): Promise<Meeting> {
     try {
-      const removedMeeting = await this.meetingsService.changeStatus(+id);
+      const changedMeeting = await this.meetingsService.changeStatus(+id);
 
-      if (!removedMeeting) {
+      if (!changedMeeting) {
         throw new HttpException('Meeting not found', HttpStatus.NOT_FOUND);
       }
 
-      return removedMeeting;
+      return changedMeeting;
     } catch (error) {
       throw new HttpException(
         error.message || 'Invalid ID format',
