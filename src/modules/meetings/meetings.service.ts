@@ -42,18 +42,11 @@ export class MeetingsService {
   }
 
   async create(createMeetingDto: CreateMeetingDto) {
-    const { responsibles, hour, ...meetingData } = createMeetingDto;
-
-    // Convert the hour string (HH:mm) to a valid Date object
-    const hourAsDate = new Date(`1970-01-01T${hour}:00Z`);
-    if (isNaN(hourAsDate.getTime())) {
-      throw new Error('Invalid hour format. Expected HH:mm.');
-    }
+    const { responsibles, ...meetingData } = createMeetingDto;
 
     return await this.prisma.meetings.create({
       data: {
         ...meetingData,
-        hour: hourAsDate,
         responsibles: {
           create: responsibles,
         },

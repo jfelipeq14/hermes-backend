@@ -104,7 +104,6 @@ export class MeetingsController {
     try {
       const createdMeeting =
         await this.meetingsService.create(createMeetingDto);
-
       if (!createdMeeting) {
         throw new HttpException(
           'Failed to create the meeting',
