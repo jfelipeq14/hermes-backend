@@ -44,6 +44,16 @@ export class MeetingsService {
   async create(createMeetingDto: CreateMeetingDto) {
     const { responsibles, ...meetingData } = createMeetingDto;
 
+    // Validate hour format
+    if (!/^\d{2}:\d{2}$/.test(meetingData.hour)) {
+      throw new Error('Hour must be in the format HH:mm');
+    }
+
+    // Ensure responsibles is an array
+    if (!Array.isArray(responsibles)) {
+      throw new Error('Responsibles must be an array');
+    }
+
     return await this.prisma.meetings.create({
       data: {
         ...meetingData,
@@ -63,6 +73,16 @@ export class MeetingsService {
   async update(id: number, updateMeetingDto: UpdateMeetingDto) {
     const { responsibles, ...meetingData } = updateMeetingDto;
 
+    // Validate hour format
+    if (meetingData.hour && !/^\d{2}:\d{2}$/.test(meetingData.hour)) {
+      throw new Error('Hour must be in the format HH:mm');
+    }
+
+    // Ensure responsibles is an array if provided
+    if (responsibles && !Array.isArray(responsibles)) {
+      throw new Error('Responsibles must be an array');
+    }
+
     return this.prisma.$transaction(async (prisma) => {
       if (responsibles && responsibles.length > 0) {
         await prisma.responsibles.deleteMany({
@@ -73,6 +93,9 @@ export class MeetingsService {
           where: { id },
           data: {
             ...meetingData,
+            hour: meetingData.hour
+              ? new Date(`1970-01-01T${meetingData.hour}:00Z`)
+              : undefined, // Convert hour to ISO-8601 format
             responsibles: {
               create: responsibles,
             },
@@ -84,7 +107,12 @@ export class MeetingsService {
       } else {
         return prisma.meetings.update({
           where: { id },
-          data: meetingData,
+          data: {
+            ...meetingData,
+            hour: meetingData.hour
+              ? new Date(`1970-01-01T${meetingData.hour}:00Z`)
+              : undefined, // Convert hour to ISO-8601 format
+          },
           include: {
             responsibles: true,
           },
