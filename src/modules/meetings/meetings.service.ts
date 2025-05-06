@@ -59,9 +59,7 @@ export class MeetingsService {
         ...meetingData,
         hour: new Date(`1970-01-01T${meetingData.hour}:00Z`), // Convert hour to ISO-8601 format
         responsibles: {
-          create: responsibles.map((responsible) => ({
-            idUser: responsible.idUser,
-          })),
+          create: responsibles,
         },
       },
       include: {
