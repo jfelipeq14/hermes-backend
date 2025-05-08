@@ -95,8 +95,8 @@ export class ReservationsController {
   }
 
   @Roles('ADMIN')
-  @Patch(':id')
-  async remove(@Param('id') id: string, @Body() status: string) {
+  @Patch(':id/change-status')
+  async changeStatus(@Param('id') id: string, @Body('status') status: string) {
     try {
       return await this.reservationsService.changeStatus(+id, status);
     } catch (error) {
