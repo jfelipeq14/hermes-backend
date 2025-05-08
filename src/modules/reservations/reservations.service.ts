@@ -87,21 +87,6 @@ export class ReservationsService {
     return updatedReservation;
   }
 
-  async remove(id: number) {
-    const reservation = await this.prisma.reservations.delete({
-      where: { id },
-    });
-
-    if (!reservation) {
-      throw new HttpException(
-        'Failed to delete the reservation',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return reservation;
-  }
-
   async changeStatus(id: number, status: string) {
     const reservation = await this.prisma.reservations.findUnique({
       where: {
