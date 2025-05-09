@@ -33,5 +33,5 @@ export class CreateReservationDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateTravelerDto)
-  travelers: CreateTravelerDto[];
+  detailReservationTravelers: CreateTravelerDto[];
 }

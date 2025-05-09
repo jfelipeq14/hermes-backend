@@ -8,12 +8,19 @@ export class ReservationsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
-    return await this.prisma.reservations.findMany();
+    return await this.prisma.reservations.findMany({
+      include: {
+        detailReservationTravelers: true,
+      },
+    });
   }
 
   async findOne(id: number) {
     const reservation = await this.prisma.reservations.findUnique({
       where: { id },
+      include: {
+        detailReservationTravelers: true,
+      },
     });
     if (!reservation) {
       throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
@@ -24,12 +31,9 @@ export class ReservationsService {
   async findAllByUser(idUser: number) {
     return await this.prisma.reservations.findMany({
       where: { idUser },
-    });
-  }
-
-  async findByReservation(idReservation: number) {
-    return await this.prisma.detailReservationTravelers.findMany({
-      where: { idReservation },
+      include: {
+        detailReservationTravelers: true,
+      },
     });
   }
 
@@ -42,12 +46,12 @@ export class ReservationsService {
   }
 
   async create(createReservationDto: CreateReservationDto) {
-    const { travelers, ...reservation } = createReservationDto;
+    const { detailReservationTravelers, ...reservation } = createReservationDto;
     return await this.prisma.reservations.create({
       data: {
         ...reservation,
         detailReservationTravelers: {
-          create: travelers,
+          create: detailReservationTravelers,
         },
       },
       include: {
@@ -57,10 +61,10 @@ export class ReservationsService {
   }
 
   async update(id: number, updateReservationDto: UpdateReservationDto) {
-    const { travelers, ...reservation } = updateReservationDto;
+    const { detailReservationTravelers, ...reservation } = updateReservationDto;
 
     return this.prisma.$transaction(async (prisma) => {
-      if (travelers && travelers.length > 0) {
+      if (detailReservationTravelers && detailReservationTravelers.length > 0) {
         await prisma.detailReservationTravelers.deleteMany({
           where: { idReservation: id },
         });
@@ -70,7 +74,7 @@ export class ReservationsService {
           data: {
             ...reservation,
             detailReservationTravelers: {
-              create: travelers,
+              create: detailReservationTravelers,
             },
           },
           include: {
