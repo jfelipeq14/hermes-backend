@@ -42,49 +42,51 @@ export class ReservationsService {
   }
 
   async create(createReservationDto: CreateReservationDto) {
-    const dates = await this.prisma.dates.findUnique({
-      where: { id: createReservationDto.idDate },
-      include: { packages: true },
-    });
-
-    if (!dates) {
-      throw new HttpException(
-        'Selected reservation date does not exist',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
+    const { travelers, ...reservation } = createReservationDto;
     return await this.prisma.reservations.create({
-      data: createReservationDto,
+      data: {
+        ...reservation,
+        detailReservationTravelers: {
+          create: travelers,
+        },
+      },
+      include: {
+        detailReservationTravelers: true,
+      },
     });
   }
 
   async update(id: number, updateReservationDto: UpdateReservationDto) {
-    const dates = await this.prisma.dates.findUnique({
-      where: { id: updateReservationDto.idDate },
-      include: { packages: true },
+    const { travelers, ...reservation } = updateReservationDto;
+
+    return this.prisma.$transaction(async (prisma) => {
+      if (travelers && travelers.length > 0) {
+        await prisma.detailReservationTravelers.deleteMany({
+          where: { idReservation: id },
+        });
+
+        return prisma.reservations.update({
+          where: { id },
+          data: {
+            ...reservation,
+            detailReservationTravelers: {
+              create: travelers,
+            },
+          },
+          include: {
+            detailReservationTravelers: true,
+          },
+        });
+      } else {
+        return prisma.reservations.update({
+          where: { id },
+          data: reservation,
+          include: {
+            detailReservationTravelers: true,
+          },
+        });
+      }
     });
-
-    if (!dates) {
-      throw new HttpException(
-        'Selected reservation date does not exist',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const updatedReservation = await this.prisma.reservations.update({
-      where: { id },
-      data: updateReservationDto,
-    });
-
-    if (!updatedReservation) {
-      throw new HttpException(
-        'Failed to update the reservation',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    return updatedReservation;
   }
 
   async changeStatus(id: number, status: string) {
