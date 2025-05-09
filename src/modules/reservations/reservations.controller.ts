@@ -72,6 +72,7 @@ export class ReservationsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
   @Roles('ADMIN')
   @Patch(':id')
   async update(
