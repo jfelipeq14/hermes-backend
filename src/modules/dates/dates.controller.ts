@@ -23,28 +23,13 @@ import { IsPublic } from '../auth/decorators/public.decorator';
 export class DatesController {
   constructor(private readonly datesService: DatesService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all dates' })
   @ApiResponse({ status: 200, description: 'Return all dates.' })
   @ApiResponse({ status: 404, description: 'No dates found.' })
   async findAll(): Promise<Date[]> {
     const dates = await this.datesService.findAll();
-
-    if (!dates || dates.length === 0) {
-      throw new HttpException('No dates found', HttpStatus.NOT_FOUND);
-    }
-
-    return dates;
-  }
-
-  @IsPublic()
-  @Get()
-  @ApiOperation({ summary: 'Get all dates' })
-  @ApiResponse({ status: 200, description: 'Return all dates.' })
-  @ApiResponse({ status: 404, description: 'No dates found.' })
-  async findAllActive(): Promise<Date[]> {
-    const dates = await this.datesService.findAllActive();
 
     if (!dates || dates.length === 0) {
       throw new HttpException('No dates found', HttpStatus.NOT_FOUND);
