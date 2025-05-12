@@ -16,13 +16,14 @@ import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { Package } from './entities/package.entity';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @ApiTags('Packages')
 @Controller('packages')
 export class PackagesController {
   constructor(private readonly packagesService: PackagesService) {}
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Get()
   @ApiOperation({ summary: 'Get all packages' })
   @ApiResponse({ status: 200, description: 'Return all packages.' })

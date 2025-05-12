@@ -44,16 +44,6 @@ export class MeetingsService {
   async create(createMeetingDto: CreateMeetingDto) {
     const { responsibles, ...meetingData } = createMeetingDto;
 
-    // Validate hour format
-    if (!/^\d{2}:\d{2}$/.test(meetingData.hour)) {
-      throw new Error('Hour must be in the format HH:mm');
-    }
-
-    // Ensure responsibles is an array
-    if (!Array.isArray(responsibles)) {
-      throw new Error('Responsibles must be an array');
-    }
-
     return await this.prisma.meetings.create({
       data: {
         ...meetingData,
@@ -70,16 +60,6 @@ export class MeetingsService {
 
   async update(id: number, updateMeetingDto: UpdateMeetingDto) {
     const { responsibles, ...meetingData } = updateMeetingDto;
-
-    // Validate hour format
-    if (meetingData.hour && !/^\d{2}:\d{2}$/.test(meetingData.hour)) {
-      throw new Error('Hour must be in the format HH:mm');
-    }
-
-    // Ensure responsibles is an array if provided
-    if (responsibles && !Array.isArray(responsibles)) {
-      throw new Error('Responsibles must be an array');
-    }
 
     return this.prisma.$transaction(async (prisma) => {
       if (responsibles && responsibles.length > 0) {
