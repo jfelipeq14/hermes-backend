@@ -19,6 +19,8 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { TravelersModule } from './modules/travelers/travelers.module';
 import { ImagesModule } from './providers/images/images.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { GmailModule } from './provides/gmail/gmail.module';
+import { GmailModule } from './providers/gmail/gmail.module';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
     PaymentsModule,
     ImagesModule,
     DashboardModule,
+    GmailModule,
   ],
   controllers: [],
   providers: [],
