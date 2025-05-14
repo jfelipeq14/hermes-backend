@@ -14,6 +14,7 @@ import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
@@ -63,7 +64,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   async create(@Body() createReservationDto: CreateReservationDto) {
     try {

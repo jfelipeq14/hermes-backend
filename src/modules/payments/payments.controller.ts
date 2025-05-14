@@ -14,6 +14,7 @@ import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @Controller('payments')
 export class PaymentsController {
@@ -47,7 +48,7 @@ export class PaymentsController {
     return payments_;
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   async create(@Body() createPaymentDto: CreatePaymentDto) {
     try {
