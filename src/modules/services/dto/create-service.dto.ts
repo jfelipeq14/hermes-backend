@@ -4,17 +4,13 @@ import {
   IsNotEmpty,
   IsString,
   Matches,
+  Max,
   MaxLength,
   Min,
   MinLength,
 } from 'class-validator';
 import { IsNameRegex } from 'src/utils/regex';
-import {
-  NAMES_MAXVALUE,
-  NAMES_MINVALUE,
-  PRICE_MAXVALUE,
-  PRICE_MINVALUE,
-} from 'src/utils/values';
+import { NAMES_MAXVALUE, NAMES_MINVALUE } from 'src/utils/values';
 
 export class CreateServiceDto {
   @ApiProperty({
@@ -66,14 +62,11 @@ export class CreateServiceDto {
   @Min(1, {
     message: 'El campo de precio debe ser un valor positivo',
   })
+  @Max(9999999999999, {
+    message: `El campo de precio no puede ser mayor a 9999999999999`,
+  })
   @IsNotEmpty({
     message: 'El campo de precio no puede estar vacío',
-  })
-  @MinLength(PRICE_MINVALUE, {
-    message: `El campo de precio debe tener al menos ${PRICE_MINVALUE} caracteres`,
-  })
-  @MaxLength(PRICE_MAXVALUE, {
-    message: `El campo de precio no puede tener más de ${PRICE_MAXVALUE} caracteres`,
   })
   price: number;
 }
