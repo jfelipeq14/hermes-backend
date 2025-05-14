@@ -1,0 +1,246 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model countries {
+  id   Int    @id @default(autoincrement())
+  code String @unique @db.VarChar(8)
+  name String @unique @db.VarChar(60)
+
+  departments departments[]
+}
+
+model departments {
+  id        Int    @id @default(autoincrement())
+  code      String @unique @db.VarChar(8)
+  name      String @unique @db.VarChar(60)
+  idCountry Int
+
+  countries countries @relation(fields: [idCountry], references: [id], onDelete: Cascade)
+
+  municipalities municipalities[]
+}
+
+model municipalities {
+  id           Int    @id @default(autoincrement())
+  code         String @unique @db.VarChar(8)
+  name         String @unique @db.VarChar(60)
+  idDepartment Int
+
+  departments departments @relation(fields: [idDepartment], references: [id], onDelete: Cascade)
+
+  users    users[]
+  packages packages[]
+}
+
+model permits {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(60)
+  status Boolean @default(true)
+
+  privileges privileges[]
+}
+
+model privileges {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(60)
+  idPermit Int
+
+  permits permits @relation(fields: [idPermit], references: [id], onDelete: Cascade)
+
+  rolePrivileges rolePrivileges[]
+}
+
+model roles {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(60)
+  status Boolean @default(true)
+
+  rolePrivileges rolePrivileges[]
+  users          users[]
+}
+
+model rolePrivileges {
+  id          Int @id @default(autoincrement())
+  idRole      Int
+  idPrivilege Int
+
+  role      roles      @relation(fields: [idRole], references: [id], onDelete: Cascade)
+  privilege privileges @relation(fields: [idPrivilege], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id                 Int       @id @unique @default(autoincrement())
+  idRole             Int
+  typeDocument       String    @db.VarChar(5)
+  document           String    @unique @db.VarChar(60)
+  name               String    @db.VarChar(60)
+  surName            String    @db.VarChar(60)
+  dateBirth          DateTime? @db.Date
+  email              String    @unique @db.VarChar(255)
+  password           String
+  idMunicipality     Int
+  address            String?   @db.VarChar(40)
+  phone              String    @unique @db.VarChar(15)
+  emergency          String?   @unique @db.VarChar(15)
+  sex                String?   @db.Char(1)
+  bloodType          String?   @db.VarChar(3)
+  eps                String?   @db.VarChar(60)
+  status             Boolean   @default(true)
+  activate           Boolean   @default(false)
+  activationToken    String?   @unique @db.VarChar(255)
+  resetPasswordToken String?   @unique @db.VarChar(255)
+  passwordUpdatedAt  DateTime  @default(now()) // Fecha de última actualización de la contraseña
+
+  role           roles          @relation(fields: [idRole], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+
+  reservations               reservations[]
+  detailReservationTravelers detailReservationTravelers[]
+  responsibles               responsibles[]
+}
+
+model activities {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(60)
+  status Boolean @default(true)
+
+  packages packages[]
+}
+
+model categoryServices {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique @db.VarChar(60)
+  status Boolean @default(true)
+
+  services services[]
+}
+
+model services {
+  id                 Int     @id @default(autoincrement())
+  idCategoryServices Int
+  name               String  @db.VarChar(60)
+  price              Decimal @db.Decimal(15, 2)
+  status             Boolean @default(true)
+
+  catergoryServices categoryServices @relation(fields: [idCategoryServices], references: [id], onDelete: Cascade)
+
+  detailPackagesServices detailPackagesServices[]
+}
+
+model packages {
+  id             Int      @id @default(autoincrement())
+  name           String   @db.VarChar(60)
+  idActivity     Int
+  idMunicipality Int
+  level          Decimal? @db.Decimal(2, 1)
+  price          Decimal  @db.Decimal(15, 2)
+  reserve        Decimal  @db.Decimal(15, 2)
+  description    String   @db.VarChar(255)
+  image          String?  @db.VarChar(255)
+  status         Boolean  @default(true)
+
+  activities     activities     @relation(fields: [idActivity], references: [id], onDelete: Cascade)
+  municipalities municipalities @relation(fields: [idMunicipality], references: [id], onDelete: Cascade)
+
+  dates                  dates[]
+  detailPackagesServices detailPackagesServices[]
+}
+
+model detailPackagesServices {
+  id        Int     @id @default(autoincrement())
+  idPackage Int
+  idService Int
+  quantity  Int
+  price     Decimal @db.Decimal(15, 2)
+  status    Boolean @default(true)
+
+  packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+  services services @relation(fields: [idService], references: [id], onDelete: Cascade)
+
+  @@index([idPackage, idService])
+}
+
+model dates {
+  id                Int      @id @default(autoincrement())
+  idPackage         Int
+  amount            Int
+  start             DateTime @db.Date
+  end               DateTime @db.Date
+  startRegistration DateTime @db.Date
+  endRegistration   DateTime @db.Date
+  status            Boolean  @default(true)
+
+  packages packages @relation(fields: [idPackage], references: [id], onDelete: Cascade)
+
+  meetings     meetings[]
+  reservations reservations[]
+}
+
+model meetings {
+  id          Int      @id @default(autoincrement())
+  idDate      Int
+  zone        String   @db.Char(1)
+  hour        DateTime @db.Time
+  description String   @db.VarChar(255)
+  status      Boolean  @default(true)
+
+  dates dates @relation(fields: [idDate], references: [id], onDelete: Cascade)
+
+  responsibles responsibles[]
+}
+
+model responsibles {
+  id        Int     @id @default(autoincrement())
+  idUser    Int
+  idMeeting Int
+  status    Boolean @default(true)
+
+  users    users?    @relation(fields: [idUser], references: [id])
+  meetings meetings? @relation(fields: [idMeeting], references: [id])
+
+  @@index([idUser, idMeeting])
+}
+
+model reservations {
+  id     Int      @id @default(autoincrement())
+  idDate Int
+  idUser Int
+  date   DateTime @default(now()) @db.Timestamp(0)
+  price  Decimal  @db.Decimal(15, 2)
+  status String   @default("N") @db.Char(1)
+
+  dates dates @relation(fields: [idDate], references: [id], onDelete: Cascade)
+  users users @relation(fields: [idUser], references: [id], onDelete: Cascade)
+
+  detailReservationTravelers detailReservationTravelers[]
+  payments                   payments[]
+}
+
+model detailReservationTravelers {
+  id            Int     @id @default(autoincrement())
+  idReservation Int
+  idTraveler    Int
+  status        Boolean @default(true)
+
+  reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
+  users        users        @relation(fields: [idTraveler], references: [id], onDelete: Cascade)
+
+  @@index([idReservation, idTraveler])
+}
+
+model payments {
+  id            Int      @id @default(autoincrement())
+  idReservation Int
+  date          DateTime @default(now())
+  price         Decimal  @db.Decimal(15, 2)
+  voucher       String?  @db.VarChar(255)
+  status        String   @default("R") @db.Char(1)
+
+  reservations reservations @relation(fields: [idReservation], references: [id], onDelete: Cascade)
+}
