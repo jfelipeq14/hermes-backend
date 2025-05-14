@@ -1,15 +1,10 @@
 /* eslint-disable no-useless-escape */
-
-// export const IsStringRegex = new RegExp(
-//   '^[A-Z][a-zñÁÉÍÓÚáéíóúüÜ]+(\\s[A-Z][a-zñÁÉÍÓÚáéíóúüÜ]+)*$',
-// );
 export const IsEmailRegex = new RegExp(
   '^\[a\-z0\-9\.\!\#</span>%&*+/=?^_`{|}~-]+@[a-z0-9-]+\.[a-z0-9.]{2,}$',
 );
 export const IsPassword = new RegExp(
   '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$',
 );
-export const IsDateRegex = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
 export const IsLevelRegex = new RegExp('^[0-5]$');
 export const IsZoneRegex = new RegExp('^(N|S)$');
 export const IsHourRegex = new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$');
