@@ -12,13 +12,8 @@ import {
   MinLength,
   ValidateNested,
 } from 'class-validator';
-import { IsImageRegex, IsLevelRegex, IsNameRegex } from 'src/utils/regex';
-import {
-  NAMES_MAXVALUE,
-  NAMES_MINVALUE,
-  PRICE_MAXVALUE,
-  PRICE_MINVALUE,
-} from 'src/utils/values';
+import { IsImageRegex, IsNameRegex } from 'src/utils/regex';
+import { NAMES_MAXVALUE, NAMES_MINVALUE } from 'src/utils/values';
 export class CreatePackageServiceDto {
   @ApiProperty({
     type: 'integer',
@@ -144,11 +139,11 @@ export class CreatePackageDto {
   @Min(0, {
     message: 'El campo level debe ser un valor positivo',
   })
+  @Max(5, {
+    message: `El campo level no puede ser mayor a 5`,
+  })
   @IsNotEmpty({
     message: 'El campo level no puede estar vacío',
-  })
-  @Matches(IsLevelRegex, {
-    message: 'El campo level solo puede contener números enteros entre 0 y 5',
   })
   level: number;
 
@@ -184,14 +179,11 @@ export class CreatePackageDto {
   @Min(1, {
     message: 'El campo de reserva debe ser un valor positivo',
   })
+  @Max(9999999999999, {
+    message: `El campo de reserva no puede ser mayor a 9999999999999`,
+  })
   @IsNotEmpty({
     message: 'El campo de reserva no puede estar vacío',
-  })
-  @MinLength(PRICE_MINVALUE, {
-    message: `El campo de reserva debe tener al menos ${PRICE_MINVALUE} caracteres`,
-  })
-  @MaxLength(PRICE_MAXVALUE, {
-    message: `El campo de reserva no puede tener más de ${PRICE_MAXVALUE} caracteres`,
   })
   reserve: number;
 

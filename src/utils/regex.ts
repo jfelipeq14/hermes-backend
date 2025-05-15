@@ -5,7 +5,6 @@ export const IsEmailRegex = new RegExp(
 export const IsPassword = new RegExp(
   '^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$',
 );
-export const IsLevelRegex = new RegExp('^[0-5]$');
 export const IsZoneRegex = new RegExp('^(N|S)$');
 export const IsHourRegex = new RegExp('^([01]\\d|2[0-3]):[0-5]\\d$');
 export const IsPhoneRegex = new RegExp('^\\+?[0-9]{1,3}[-\\s\\.]?[0-9]{6,}$');

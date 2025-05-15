@@ -7,5 +7,3 @@ export const PHONE_MAXVALUE = 15;
 export const CHARS_MAXVALUE = 1;
 export const BLOODTYPE_MAXVALUE = 3;
 export const DESCRIPTION_MAXVALUE = 255;
-export const PRICE_MINVALUE = 4;
-export const PRICE_MAXVALUE = 15;
