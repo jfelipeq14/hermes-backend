@@ -38,7 +38,7 @@ export class PaymentsController {
     return payment_;
   }
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'CLIENT')
   @Get('reservation/:idReservation')
   async findAllByReservation(@Param('idReservation') idReservation: string) {
     const payments_ =

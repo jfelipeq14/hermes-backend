@@ -29,7 +29,7 @@ export class ReservationsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'CLIENT')
   @Get('reservations-with-payments')
   async findAllReservationWithPayments() {
     try {
@@ -39,16 +39,6 @@ export class ReservationsController {
         throw new HttpException('No reservations found', HttpStatus.NOT_FOUND);
       }
       return reservation;
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @Roles('ADMIN')
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    try {
-      return await this.reservationsService.findOne(+id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
