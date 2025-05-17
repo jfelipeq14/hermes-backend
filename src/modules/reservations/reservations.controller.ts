@@ -20,7 +20,7 @@ import { IsPublic } from '../auth/decorators/public.decorator';
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'GUIDE')
   @Get()
   async findAll() {
     try {

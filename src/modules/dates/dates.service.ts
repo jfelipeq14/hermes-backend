@@ -11,10 +11,25 @@ export class DatesService {
     return await this.prisma.dates.findMany();
   }
 
-  async findAllActive() {
-    return await this.prisma.dates.findMany({
+  findDatesByResponsible(idUser: number) {
+    return this.prisma.dates.findMany({
       where: {
-        status: true,
+        meetings: {
+          some: {
+            responsibles: {
+              some: {
+                idUser,
+              },
+            },
+          },
+        },
+      },
+      include: {
+        meetings: {
+          include: {
+            responsibles: true,
+          },
+        },
       },
     });
   }
