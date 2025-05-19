@@ -29,7 +29,25 @@ export class ReservationsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
-  @Roles('ADMIN', 'CLIENT')
+
+  @Roles('ADMIN', 'GUIDE')
+  @Get('travelers/:idDate')
+  async findAllTravelers(@Param('idDate') idDate: string) {
+    try {
+      const travelers =
+        await this.reservationsService.findAllTravelers(+idDate);
+
+      if (!travelers || travelers.length === 0) {
+        throw new HttpException('No travelers found', HttpStatus.NOT_FOUND);
+      }
+
+      return travelers;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @Roles('ADMIN')
   @Get('reservations-with-payments')
   async findAllReservationWithPayments() {
     try {

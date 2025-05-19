@@ -25,6 +25,15 @@ export class ReservationsService {
     });
   }
 
+  async findAllTravelers(idDate: number) {
+    return await this.prisma.reservations.findMany({
+      where: { idDate },
+      include: {
+        detailReservationTravelers: true,
+      },
+    });
+  }
+
   async findAllReservationWithPayments() {
     return await this.prisma.reservations.findMany({
       include: {
