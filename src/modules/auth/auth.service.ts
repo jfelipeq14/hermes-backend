@@ -116,7 +116,7 @@ export class AuthService {
     return { message: 'Password reset successfully' };
   }
 
-  async submitEmailToken(submitEmailTokenDto: SubmitEmailTokenDto) {
+  async recuperarContrasena(submitEmailTokenDto: SubmitEmailTokenDto) {
     const user = await this.prisma.users.findUnique({
       where: {
         email: submitEmailTokenDto.email,
