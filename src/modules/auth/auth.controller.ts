@@ -18,7 +18,6 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/entities/user.entity';
-import { sendEmail } from 'src/providers/email';
 
 @Controller('auth')
 export class AuthController {
@@ -27,91 +26,55 @@ export class AuthController {
   @IsPublic()
   @Post('log-in')
   async logIn(@Body() logInDto: LogInDto) {
-    try {
-      return await this.authService.logIn(logInDto);
-    } catch (error: unknown) {
-      // Tipamos el error como unknown y luego verificamos su estructura
-      const errorMessage =
-        error instanceof HttpException
-          ? error.message
-          : 'Invalid email or password';
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    const login = await this.authService.logIn(logInDto);
+    if (!login) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+    return login;
   }
 
   @IsPublic()
   @Post('sign-up')
   async signUp(@Body() signUpDto: SignUpDto) {
-    try {
-      const user = await this.authService.signUp(signUpDto);
-
-      sendEmail({
-        email: user.email,
-        token: user.activationToken,
-        verifyAccount: true,
-      })
-        .then(() => {
-          console.log('Email sent successfully');
-        })
-        .catch((error) => {
-          console.error('Error sending email:', error);
-        });
-      return user;
-    } catch (error: unknown) {
-      // Convertimos el mensaje de error a string de forma segura
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    const signup = await this.authService.signUp(signUpDto);
+    if (!signup) {
+      throw new HttpException('Not created', HttpStatus.BAD_REQUEST);
     }
-  }
-
-  @IsPublic()
-  @Patch('reset-password')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    try {
-      return await this.authService.resetPassword(resetPasswordDto);
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  @IsPublic()
-  @Post('submit-token')
-  async recuperarContrasena(@Body() submitEmailTokenDto: SubmitEmailTokenDto) {
-    try {
-      const user =
-        await this.authService.recuperarContrasena(submitEmailTokenDto);
-      sendEmail({
-        email: '',
-        token: user.token,
-        verifyAccount: false,
-      })
-        .then(() => {
-          console.log('Email sent successfully');
-        })
-        .catch((error) => {
-          console.error('Error sending email:', error);
-        });
-      return user;
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
-    }
+    return signup;
   }
 
   @IsPublic()
   @Post('activate')
   async activate(@Body() activateUserDto: ActivateUserDto) {
-    try {
-      return await this.authService.activateUser(activateUserDto);
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    const activate = await this.authService.activateUser(activateUserDto);
+
+    if (!activate) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+
+    return activate;
+  }
+
+  @IsPublic()
+  @Post('restore-password')
+  async restorePassword(@Body() submitEmailTokenDto: SubmitEmailTokenDto) {
+    const restore = await this.authService.restorePassword(submitEmailTokenDto);
+
+    if (!restore) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return restore;
+  }
+
+  @IsPublic()
+  @Patch('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    const reset = await this.authService.resetPassword(resetPasswordDto);
+    if (!reset) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    return reset;
   }
 
   @IsPublic()
@@ -121,12 +84,15 @@ export class AuthController {
     @Body() changePasswordDto: ChangePasswordDto,
     @GetUser() user: User,
   ) {
-    try {
-      return await this.authService.changePassword(changePasswordDto, user);
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'An unknown error occurred';
-      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    const change = await this.authService.changePassword(
+      changePasswordDto,
+      user,
+    );
+
+    if (!change) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
+
+    return change;
   }
 }
