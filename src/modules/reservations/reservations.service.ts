@@ -15,22 +15,19 @@ export class ReservationsService {
     });
   }
 
-  async findOne(id: number) {
-    const reservation = await this.prisma.reservations.findUnique({
-      where: { id },
-      include: {
-        detailReservationTravelers: true,
-      },
-    });
-    if (!reservation) {
-      throw new HttpException('Reservation not found', HttpStatus.NOT_FOUND);
-    }
-    return reservation;
-  }
-
   async findAllByUser(idUser: number) {
     return await this.prisma.reservations.findMany({
       where: { idUser },
+      include: {
+        detailReservationTravelers: true,
+        payments: true,
+      },
+    });
+  }
+
+  async findAllTravelers(idDate: number) {
+    return await this.prisma.reservations.findMany({
+      where: { idDate },
       include: {
         detailReservationTravelers: true,
       },

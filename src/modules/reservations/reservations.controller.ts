@@ -14,12 +14,13 @@ import { ReservationsService } from './reservations.service';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { IsPublic } from '../auth/decorators/public.decorator';
 
 @Controller('reservations')
 export class ReservationsController {
   constructor(private readonly reservationsService: ReservationsService) {}
 
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'GUIDE')
   @Get()
   async findAll() {
     try {
@@ -28,6 +29,24 @@ export class ReservationsController {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  @Roles('ADMIN', 'GUIDE')
+  @Get('travelers/:idDate')
+  async findAllTravelers(@Param('idDate') idDate: string) {
+    try {
+      const travelers =
+        await this.reservationsService.findAllTravelers(+idDate);
+
+      if (!travelers || travelers.length === 0) {
+        throw new HttpException('No travelers found', HttpStatus.NOT_FOUND);
+      }
+
+      return travelers;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
   @Roles('ADMIN')
   @Get('reservations-with-payments')
   async findAllReservationWithPayments() {
@@ -43,16 +62,6 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN')
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    try {
-      return await this.reservationsService.findOne(+id);
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
-  }
-
   @Roles('CLIENT')
   @Get('user/:idUser')
   async findAllByUser(@Param('idUser') idUser: string) {
@@ -63,7 +72,7 @@ export class ReservationsController {
     }
   }
 
-  @Roles('ADMIN')
+  @IsPublic()
   @Post()
   async create(@Body() createReservationDto: CreateReservationDto) {
     try {

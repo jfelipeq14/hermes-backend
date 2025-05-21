@@ -18,6 +18,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/entities/user.entity';
+import { sendEmail } from 'src/providers/email';
 
 @Controller('auth')
 export class AuthController {
@@ -43,6 +44,18 @@ export class AuthController {
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
       const user = await this.authService.signUp(signUpDto);
+
+      sendEmail({
+        email: user.email,
+        token: user.activationToken,
+        verifyAccount: true,
+      })
+        .then(() => {
+          console.log('Email sent successfully');
+        })
+        .catch((error) => {
+          console.error('Error sending email:', error);
+        });
       return user;
     } catch (error: unknown) {
       // Convertimos el mensaje de error a string de forma segura
@@ -66,8 +79,27 @@ export class AuthController {
 
   @IsPublic()
   @Post('submit-token')
-  async submitEmailToken(@Body() submitEmailTokenDto: SubmitEmailTokenDto) {
-    return this.authService.submitEmailToken(submitEmailTokenDto);
+  async recuperarContrasena(@Body() submitEmailTokenDto: SubmitEmailTokenDto) {
+    try {
+      const user =
+        await this.authService.recuperarContrasena(submitEmailTokenDto);
+      sendEmail({
+        email: '',
+        token: user.token,
+        verifyAccount: false,
+      })
+        .then(() => {
+          console.log('Email sent successfully');
+        })
+        .catch((error) => {
+          console.error('Error sending email:', error);
+        });
+      return user;
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred';
+      throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @IsPublic()
