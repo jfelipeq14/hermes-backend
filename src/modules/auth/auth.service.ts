@@ -19,41 +19,6 @@ export class AuthService {
     private readonly prisma: PrismaService,
   ) {}
 
-  async signUp(signUpDto: SignUpDto) {
-    const userFound = await this.prisma.users.findUnique({
-      where: {
-        email: signUpDto.email,
-      },
-    });
-
-    if (!userFound) {
-      const hashedPassword = await encrypt(signUpDto.password);
-
-      // Generate activation token
-      const activationToken = crypto.randomBytes(32).toString('hex');
-
-      const user = await this.prisma.users.create({
-        data: {
-          ...signUpDto,
-          password: hashedPassword,
-          activate: false,
-          activationToken,
-        },
-      });
-
-      const { password, ...userWithoutPassword } = user;
-
-      return {
-        ...userWithoutPassword,
-        message:
-          'User created successfully. Please activate your account using the activation token.',
-        activationToken, // Return token so it can be used for activation
-      };
-    }
-
-    throw new BadRequestException('User already exists');
-  }
-
   async logIn(logInDto: LogInDto) {
     const userFound = await this.prisma.users.findUnique({
       where: {
@@ -81,7 +46,7 @@ export class AuthService {
 
     const payload = {
       ...userWithoutPassword,
-      passwordUpdatedAt: userFound.passwordUpdatedAt, // Incluir la fecha de última actualización de la contraseña
+      passwordUpdatedAt: userFound.passwordUpdatedAt,
     };
 
     const accessToken = await this.jwtService.signAsync(payload);
@@ -89,87 +54,36 @@ export class AuthService {
     return { accessToken };
   }
 
-  // Reset password
-
-  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+  async signUp(signUpDto: SignUpDto) {
     const userFound = await this.prisma.users.findUnique({
       where: {
-        resetPasswordToken: resetPasswordDto.resetPasswordToken,
+        email: signUpDto.email,
       },
     });
 
-    if (!userFound) throw new BadRequestException('Invalid reset token');
+    if (userFound) throw new BadRequestException('User already exists');
 
-    const hashedPassword = await encrypt(resetPasswordDto.newPassword);
+    const hashedPassword = await encrypt(signUpDto.password);
 
-    await this.prisma.users.update({
-      where: {
-        resetPasswordToken: resetPasswordDto.resetPasswordToken,
-      },
-      data: {
-        password: hashedPassword,
-        resetPasswordToken: null,
-        passwordUpdatedAt: new Date(), // Actualizar la fecha de última actualización de la contraseña
-      },
-    });
-
-    return { message: 'Password reset successfully' };
-  }
-
-  async recuperarContrasena(submitEmailTokenDto: SubmitEmailTokenDto) {
-    const user = await this.prisma.users.findUnique({
-      where: {
-        email: submitEmailTokenDto.email,
-      },
-    });
-
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    const resetToken = await encrypt(
-      submitEmailTokenDto.email + Date.now().toString(),
-    );
-
-    await this.prisma.users.update({
-      where: { email: submitEmailTokenDto.email },
-      data: {
-        resetPasswordToken: resetToken,
-      },
-    });
-
-    return {
-      message: 'Reset password token has been generated',
-      token: resetToken,
-    };
-  }
-
-  //Actiavte acount
-
-  async sendActivationToken(email: string) {
-    const user = await this.prisma.users.findUnique({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    if (user.activate) {
-      throw new BadRequestException('Account is already activated');
-    }
-
-    // Generate new activation token
+    // Generate activation token
     const activationToken = crypto.randomBytes(32).toString('hex');
 
-    await this.prisma.users.update({
-      where: { email },
-      data: { activationToken },
+    const user = await this.prisma.users.create({
+      data: {
+        ...signUpDto,
+        password: hashedPassword,
+        activate: false,
+        activationToken,
+      },
     });
 
+    const { password, ...userWithoutPassword } = user;
+
     return {
-      message: 'Activation token has been generated',
-      token: activationToken,
+      ...userWithoutPassword,
+      message:
+        'User created successfully. Please activate your account using the activation token.',
+      activationToken, // Return token so it can be used for activation
     };
   }
 
@@ -204,7 +118,59 @@ export class AuthService {
     return { message: 'Account activated successfully' };
   }
 
-  // Cambiar contraseña
+  async restorePassword(submitEmailTokenDto: SubmitEmailTokenDto) {
+    const user = await this.prisma.users.findUnique({
+      where: {
+        email: submitEmailTokenDto.email,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const resetToken = await encrypt(
+      submitEmailTokenDto.email + Date.now().toString(),
+    );
+
+    await this.prisma.users.update({
+      where: { email: submitEmailTokenDto.email },
+      data: {
+        resetPasswordToken: resetToken,
+      },
+    });
+
+    return {
+      message: 'Reset password token has been generated',
+      token: resetToken,
+    };
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const userFound = await this.prisma.users.findUnique({
+      where: {
+        resetPasswordToken: resetPasswordDto.resetPasswordToken,
+      },
+    });
+
+    if (!userFound) throw new BadRequestException('Invalid reset token');
+
+    const hashedPassword = await encrypt(resetPasswordDto.newPassword);
+
+    await this.prisma.users.update({
+      where: {
+        resetPasswordToken: resetPasswordDto.resetPasswordToken,
+      },
+      data: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+        passwordUpdatedAt: new Date(), // Actualizar la fecha de última actualización de la contraseña
+      },
+    });
+
+    return { message: 'Password reset successfully' };
+  }
+
   async changePassword(changePasswordDto: ChangePasswordDto, user: User) {
     const { oldPassword, newPassword } = changePasswordDto;
 
