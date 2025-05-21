@@ -18,6 +18,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { GetUser } from './decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../users/entities/user.entity';
+import { sendEmail } from 'src/providers/email';
 
 @Controller('auth')
 export class AuthController {
@@ -43,6 +44,13 @@ export class AuthController {
   async signUp(@Body() signUpDto: SignUpDto) {
     try {
       const user = await this.authService.signUp(signUpDto);
+      sendEmail(user.email, user.activationToken)
+        .then(() => {
+          console.log('Email sent successfully');
+        })
+        .catch((error) => {
+          console.error('Error sending email:', error);
+        });
       return user;
     } catch (error: unknown) {
       // Convertimos el mensaje de error a string de forma segura
