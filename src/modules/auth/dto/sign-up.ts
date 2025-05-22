@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsInt, IsNotEmpty, IsString, Matches } from 'class-validator';
+import {
+  IsDateString,
+  IsEmail,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Matches,
+} from 'class-validator';
 import { IsEmailRegex, IsPassword, IsPhoneRegex } from 'src/utils/regex';
 
 export class SignUpDto {
@@ -38,6 +45,18 @@ export class SignUpDto {
   @IsNotEmpty()
   @Matches(IsPhoneRegex)
   phone: string;
+
+  @ApiProperty({
+    type: 'string',
+    required: true,
+    description: 'Fecha de nacimiento',
+    example: '2021-12-31T00:00:00.000Z',
+  })
+  @IsDateString()
+  @IsNotEmpty({
+    message: "el campo 'dateBirth' no puede estar vacío",
+  })
+  dateBirth: string;
 
   @ApiProperty({ required: true })
   @IsEmail()
