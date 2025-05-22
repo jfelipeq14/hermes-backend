@@ -20,7 +20,6 @@ export class CreateRoleDto {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  // @Matches(IsStringRegex)
   name: string;
 
   @ApiProperty({ required: true })
