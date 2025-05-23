@@ -13,7 +13,7 @@ import { IsPublic } from 'src/modules/auth/decorators/public.decorator';
 @Controller('images')
 export class ImagesController {
   @IsPublic()
-  @Post('package')
+  @Post()
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
