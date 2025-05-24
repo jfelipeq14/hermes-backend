@@ -143,135 +143,135 @@ async function main() {
     const privilege_ = await prisma.privileges.createMany({
       data: [
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 1,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 1,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 1,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 2,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 2,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 2,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 3,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 3,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 3,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 4,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 4,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 4,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 5,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 5,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 5,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 6,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 6,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 6,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 7,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 7,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 7,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 8,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 8,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 8,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 9,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 9,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 9,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 10,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 10,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 10,
         },
         {
-          name: 'Ver',
+          name: 'Read',
           idPermit: 11,
         },
         {
-          name: 'Crear',
+          name: 'Create',
           idPermit: 11,
         },
         {
-          name: 'Editar',
+          name: 'Update',
           idPermit: 11,
         },
       ],
@@ -298,62 +298,74 @@ async function main() {
     return roles_;
   });
 
-  // Create role privilege relationship  const rolePrivileges = await prisma.$transaction(async (prisma) => {
-  // Roles: el administrador tiene todos los privilegios
-  // Guía: tiene privilegios para dates
-  // Cliente: tiene privilegios para reservations y payments
-  const rolePrivilege_ = await prisma.rolePrivileges.createMany({
-    data: [
-      // Rol Administrador - todos los privilegios
-      { idRole: 1, idPrivilege: 1 },
-      { idRole: 1, idPrivilege: 2 },
-      { idRole: 1, idPrivilege: 3 },
-      { idRole: 1, idPrivilege: 4 },
-      { idRole: 1, idPrivilege: 5 },
-      { idRole: 1, idPrivilege: 6 },
-      { idRole: 1, idPrivilege: 7 },
-      { idRole: 1, idPrivilege: 8 },
-      { idRole: 1, idPrivilege: 9 },
-      { idRole: 1, idPrivilege: 10 },
-      { idRole: 1, idPrivilege: 11 },
-      { idRole: 1, idPrivilege: 12 },
-      { idRole: 1, idPrivilege: 13 },
-      { idRole: 1, idPrivilege: 14 },
-      { idRole: 1, idPrivilege: 15 },
-      { idRole: 1, idPrivilege: 16 },
-      { idRole: 1, idPrivilege: 17 },
-      { idRole: 1, idPrivilege: 18 },
-      { idRole: 1, idPrivilege: 19 },
-      { idRole: 1, idPrivilege: 20 },
-      { idRole: 1, idPrivilege: 21 },
-      { idRole: 1, idPrivilege: 22 },
-      { idRole: 1, idPrivilege: 23 },
-      { idRole: 1, idPrivilege: 24 },
-      { idRole: 1, idPrivilege: 25 },
-      { idRole: 1, idPrivilege: 26 },
-      { idRole: 1, idPrivilege: 27 },
-      { idRole: 1, idPrivilege: 28 },
-      { idRole: 1, idPrivilege: 29 },
-      { idRole: 1, idPrivilege: 30 },
-      { idRole: 1, idPrivilege: 31 },
-      { idRole: 1, idPrivilege: 32 },
-      { idRole: 1, idPrivilege: 33 },
-      // Guía role - solo privilegios de dates
-      { idRole: 2, idPrivilege: 19 },
-      { idRole: 2, idPrivilege: 20 },
-      { idRole: 2, idPrivilege: 21 },
+  // Create role privilege relationship
+  const rolePrivileges = await prisma.$transaction(async (prisma) => {
+    // Roles: el administrador tiene todos los privilegios
+    // Guía: tiene privilegios para dates
+    // Cliente: tiene privilegios para reservations y payments
+    const rolePrivilege_ = await prisma.rolePrivileges.createMany({
+      data: [
+        {
+          idRole: 1, // Administrator role
+          idPrivilege: 1,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 2,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 3,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 4,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 5,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 6,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 7,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 8,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 9,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 10,
+        },
+        {
+          idRole: 1,
+          idPrivilege: 11,
+        },
+        {
+          idRole: 2, // Guía role
+          idPrivilege: 7,
+        },
+        {
+          idRole: 3, // Cliente role
+          idPrivilege: 9,
+        },
+        {
+          idRole: 3,
+          idPrivilege: 10,
+        },
+      ],
+    });
 
-      // Cliente role - privilegios de reservations y payments
-      { idRole: 3, idPrivilege: 28 },
-      { idRole: 3, idPrivilege: 29 },
-      { idRole: 3, idPrivilege: 30 },
-      { idRole: 3, idPrivilege: 31 },
-      { idRole: 3, idPrivilege: 32 },
-      { idRole: 3, idPrivilege: 33 },
-    ],
+    return rolePrivilege_;
   });
-
-  return rolePrivilege_;
 }
 
 main()
